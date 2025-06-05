@@ -2,200 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pagla Clickers - Earn Rewards by Clicking</title>
+  <title>Test Page - Pagla Clickers</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      background-color: #f0f2f5;
-    }
-
-    header, footer {
-      background-color: #1976d2;
-      color: white;
+      background-color: #eef6fc;
       text-align: center;
-      padding: 20px;
+      padding: 50px;
+      color: #003366;
     }
-
-    nav {
-      margin-top: 10px;
+    h1 {
+      font-size: 3em;
+      margin-bottom: 0.5em;
     }
-
-    nav a {
-      color: white;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    .hero {
-      background-color: #ffffff;
-      padding: 60px 20px;
-      text-align: center;
-    }
-
-    .hero h1 {
-      font-size: 40px;
-      color: #1976d2;
-      margin-bottom: 20px;
-    }
-
-    .hero p {
-      font-size: 18px;
-      color: #444;
-      max-width: 700px;
-      margin: 0 auto 30px;
-    }
-
-    .hero button {
-      background-color: #1976d2;
-      color: white;
-      border: none;
-      padding: 12px 25px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .hero button:hover {
-      background-color: #155a9c;
-    }
-
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin: 40px 10px;
-    }
-
-    .feature {
-      background: white;
-      margin: 15px;
-      padding: 25px;
-      border-radius: 10px;
-      width: 250px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    .feature h3 {
-      color: #1976d2;
-      margin-bottom: 10px;
-    }
-
-    .feature p {
+    p {
+      font-size: 1.2em;
       color: #555;
-    }
-
-    footer {
-      margin-top: 50px;
     }
   </style>
 </head>
 <body>
-<header class="topbar">
-  <nav>
-    <ul>
-      <li><a href="dashboard.html">Dashboard</a></li>
-      <li><a href="wallet.html">Wallet</a></li>
-      <li><a href="withdrawal.html">Withdrawal</a></li>
-      <li><a href="postjob.html">Post Job</a></li>
-      <li><button id="logoutBtn">Logout</button></li>
-    </ul>
-  </nav>
-</header>
-
-<style>
-  .topbar {
-    background-color: #003366;
-    padding: 0.75rem 1rem;
-  }
-  .topbar nav ul {
-    margin: 0; padding: 0; list-style: none;
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-  }
-  .topbar nav ul li a,
-  .topbar nav ul li button {
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.3rem 0.5rem;
-    border-radius: 3px;
-    transition: background-color 0.3s ease;
-  }
-  .topbar nav ul li a:hover,
-  .topbar nav ul li button:hover {
-    background-color: #00509e;
-  }
-  .topbar nav ul li button:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #00bfff;
-  }
-</style>
-
-<script type="module">
-  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-
-  const logoutBtn = document.getElementById('logoutBtn');
-  const auth = getAuth();
-
-  logoutBtn.addEventListener('click', () => {
-    signOut(auth).then(() => {
-      window.location.href = 'login.html';
-    }).catch((error) => {
-      alert('Error signing out: ' + error.message);
-    });
-  });
-</script>
-
-  <header>
-    <h1>Pagla Clickers</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="register.html">Register</a>
-      <a href="login.html">Login</a>
-      <a href="about.html">About</a>
-      <a href="faq.html">FAQ</a>
-      <a href="terms.html">T&C</a>
-      <a href="referral.html">Refer</a>
-    </nav>
-  </header>
-
-  <section class="hero">
-    <h1>Earn by Just Clicking!</h1>
-    <p>Join Pagla Clickers and start earning rewards by completing small tasks like clicks, views, referrals, and more. No investment, just fun and earnings.</p>
-    <a href="register.html"><button>Get Started</button></a>
-  </section>
-
-  <section class="features">
-    <div class="feature">
-      <h3>Easy to Use</h3>
-      <p>Simple and mobile-friendly platform anyone can use.</p>
-    </div>
-    <div class="feature">
-      <h3>Instant Rewards</h3>
-      <p>Earn points and redeem them for cash or vouchers.</p>
-    </div>
-    <div class="feature">
-      <h3>Referral Program</h3>
-      <p>Refer friends and earn bonus rewards instantly.</p>
-    </div>
-  </section>
-
-  <footer>
-    <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
-  </footer>
-
+  <h1>Welcome to Pagla Clickers!</h1>
+  <p>This is a simple test page to verify GitHub Pages deployment.</p>
+  <p>If you see this, your site is live and working.</p>
 </body>
 </html>
