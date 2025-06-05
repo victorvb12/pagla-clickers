@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pagla Clickers - Wallet</title>
+<style>
+  body { margin:0; font-family: Arial,sans-serif; background:#f4f6f8; display:flex; flex-direction:column; min-height:100vh;}
+  header, footer { background:#003366; color:#fff; text-align:center; padding:1rem 0;}
+  main { flex:1; padding: 2rem; max-width:800px; margin:auto; }
+  h2 { color:#003366; }
+  .balance {
+    background:#e0f0ff;
+    padding:1rem 2rem;
+    border-radius:8px;
+    font-size:1.5rem;
+    font-weight:bold;
+    margin-bottom:2rem;
+    color:#004080;
+  }
+  .transactions {
+    background:#fff;
+    padding:1rem;
+    border-radius:8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  table {
+    width:100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    text-align:left;
+  }
+  th {
+    background:#f0f4f8;
+  }
+  .no-transactions {
+    color: #888;
+    font-style: italic;
+    padding: 1rem;
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <nav>
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="wallet.html">Wallet</a></li>
+      <li><a href="withdrawal.html">Withdrawal</a></li>
+      <li><a href="postjob.html">Post Job</a></li>
+      <li><button id="logoutBtn">Logout</button></li>
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .topbar {
+    background-color: #003366;
+    padding: 0.75rem 1rem;
+  }
+  .topbar nav ul {
+    margin: 0; padding: 0; list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .topbar nav ul li a,
+  .topbar nav ul li button {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.3rem 0.5rem;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+  }
+  .topbar nav ul li a:hover,
+  .topbar nav ul li button:hover {
+    background-color: #00509e;
+  }
+  .topbar nav ul li button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #00bfff;
+  }
+</style>
+
+<script type="module">
+  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+  const logoutBtn = document.getElementById('logoutBtn');
+  const auth = getAuth();
+
+  logoutBtn.addEventListener('click', () => {
+    signOut(auth).then(() => {
+      window.location.href = 'login.html';
+    }).catch((error) => {
+      alert('Error signing out: ' + error.message);
+    });
+  });
+</script>
+
+<header>
+  <h1>Pagla Clickers</h1>
+</header>
+
+<main>
+  <h2>Your Wallet</h2>
+  <div class="balance">Balance: $<span id="balance">0.00</span></div>
+
+  <div class="transactions">
+    <h3>Transaction History</h3>
+    <table id="transactionsTable">
+      <thead>
+        <tr>
+          <th>Date</th><th>Type</th><th>Amount</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="4" class="no-transactions">No transactions yet.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+    authDomain: "pagla-b1c17.firebaseapp.com",
+    projectId: "pagla-b1c17",
+    storageBucket: "pagla-b1c17.firebasestorage.app",
+    messagingSenderId: "192578902502",
+    appId: "1:192578902502:web:1595070cdac289170f5e27",
+    measurementId: "G-M9Y7SBBEXM"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const balanceEl = document.getElementById('balance');
+  const transactionsTableBody = document.querySelector('#transactionsTable tbody');
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // Load user wallet info
+      const walletDoc = await getDoc(doc(db, "wallets", user.uid));
+      if (walletDoc.exists()) {
+        const data = walletDoc.data();
+        balanceEl.textContent = data.balance?.toFixed(2) || '0.00';
+
+        // Load transactions collection
+        const transactionsRef = collection(db, "wallets", user.uid, "transactions");
+        const q = query(transactionsRef, orderBy("date", "desc"));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          transactionsTableBody.innerHTML = `<tr><td colspan="4" class="no-transactions">No transactions yet.</td></tr>`;
+        } else {
+          transactionsTableBody.innerHTML = "";
+          querySnapshot.forEach(doc => {
+            const tx = doc.data();
+            const date = tx.date?.toDate().toLocaleDateString() || 'N/A';
+            transactionsTableBody.innerHTML += `
+              <tr>
+                <td>${date}</td>
+                <td>${tx.type || ''}</td>
+                <td>$${tx.amount?.toFixed(2) || '0.00'}</td>
+                <td>${tx.status || ''}</td>
+              </tr>
+            `;
+          });
+        }
+      } else {
+        balanceEl.textContent = '0.00';
+        transactionsTableBody.innerHTML = `<tr><td colspan="4" class="no-transactions">No transactions yet.</td></tr>`;
+      }
+    } else {
+      // User not logged in, redirect to login page
+      window.location.href = "login.html";
+    }
+  });
+</script>
+
+</body>
+</html>

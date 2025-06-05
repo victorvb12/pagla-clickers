@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task Details - Pagla Clickers</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
+    header, footer { background: #007bff; color: white; text-align: center; padding: 10px; }
+    .container { max-width: 600px; margin: 30px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { color: #007bff; }
+    input, textarea, button { width: 100%; margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    button { background: #007bff; color: white; cursor: pointer; }
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+
+<header><h1>Pagla Clickers - Task Details</h1></header>
+
+<div class="container">
+  <h2 id="taskTitle">Loading...</h2>
+  <p id="taskDescription"></p>
+  <form id="proofForm">
+    <textarea id="proofText" placeholder="Enter proof or link..." required></textarea>
+    <button type="submit">Submit Proof</button>
+  </form>
+</div>
+
+<footer><p>&copy; 2025 Pagla Clickers</p></footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getFirestore, doc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+    authDomain: "pagla-b1c17.firebaseapp.com",
+    projectId: "pagla-b1c17",
+    storageBucket: "pagla-b1c17.appspot.com",
+    messagingSenderId: "192578902502",
+    appId: "1:192578902502:web:1595070cdac289170f5e27"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const taskId = urlParams.get('id');
+
+  const titleEl = document.getElementById('taskTitle');
+  const descEl = document.getElementById('taskDescription');
+  const proofForm = document.getElementById('proofForm');
+  const proofText = document.getElementById('proofText');
+
+  async function loadTask() {
+    const docRef = doc(db, "tasks", taskId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      titleEl.textContent = data.title;
+      descEl.textContent = data.description;
+    } else {
+      titleEl.textContent = "Task not found";
+    }
+  }
+
+  proofForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const proof = proofText.value;
+    const user = auth.currentUser;
+    if (!user) return alert("Please login to submit.");
+
+    await addDoc(collection(db, "tasks", taskId, "submissions"), {
+      userId: user.uid,
+      proof,
+      timestamp: new Date()
+    });
+    alert("Proof submitted!");
+    proofForm.reset();
+  });
+
+  onAuthStateChanged(auth, user => {
+    if (user) loadTask();
+    else alert("Login required to view task.");
+  });
+</script>
+
+</body>
+</html>

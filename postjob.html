@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pagla Clickers - Post Job</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5faff;
+      margin: 0;
+      padding: 0;
+    }
+    header, footer {
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Pagla Clickers</h1>
+    <nav>
+      <a href="dashboard.html" style="color:white; margin: 0 10px;">Dashboard</a>
+      <a href="wallet.html" style="color:white; margin: 0 10px;">Wallet</a>
+      <a href="post-job.html" style="color:white; margin: 0 10px;">Post Job</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Post a Job</h2>
+    <form id="jobForm">
+      <input type="text" id="title" placeholder="Job Title" required>
+      <textarea id="description" placeholder="Job Description" rows="4" required></textarea>
+      <input type="number" id="reward" placeholder="Reward (e.g. 5)" required>
+      <button type="submit">Submit Job</button>
+    </form>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Pagla Clickers</p>
+  </footer>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+      authDomain: "pagla-b1c17.firebaseapp.com",
+      projectId: "pagla-b1c17",
+      storageBucket: "pagla-b1c17.appspot.com",
+      messagingSenderId: "192578902502",
+      appId: "1:192578902502:web:1595070cdac289170f5e27",
+      measurementId: "G-M9Y7SBBEXM"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const jobForm = document.getElementById('jobForm');
+
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        alert("Please login to post a job.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      jobForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const reward = parseFloat(document.getElementById('reward').value);
+
+        try {
+          await addDoc(collection(db, "jobs"), {
+            title,
+            description,
+            reward,
+            createdBy: user.uid,
+            createdAt: new Date()
+          });
+          alert("Job posted successfully!");
+          jobForm.reset();
+        } catch (err) {
+          alert("Failed to post job: " + err.message);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

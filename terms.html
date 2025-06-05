@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Terms & Conditions - Pagla Clickers</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    header, footer {
+      background-color: #1976d2;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #1976d2;
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      color: #333;
+      margin-top: 25px;
+    }
+
+    p {
+      line-height: 1.7;
+      color: #444;
+    }
+
+    ul {
+      margin-left: 20px;
+    }
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <nav>
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="wallet.html">Wallet</a></li>
+      <li><a href="withdrawal.html">Withdrawal</a></li>
+      <li><a href="postjob.html">Post Job</a></li>
+      <li><button id="logoutBtn">Logout</button></li>
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .topbar {
+    background-color: #003366;
+    padding: 0.75rem 1rem;
+  }
+  .topbar nav ul {
+    margin: 0; padding: 0; list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .topbar nav ul li a,
+  .topbar nav ul li button {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.3rem 0.5rem;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+  }
+  .topbar nav ul li a:hover,
+  .topbar nav ul li button:hover {
+    background-color: #00509e;
+  }
+  .topbar nav ul li button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #00bfff;
+  }
+</style>
+
+<script type="module">
+  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+  const logoutBtn = document.getElementById('logoutBtn');
+  const auth = getAuth();
+
+  logoutBtn.addEventListener('click', () => {
+    signOut(auth).then(() => {
+      window.location.href = 'login.html';
+    }).catch((error) => {
+      alert('Error signing out: ' + error.message);
+    });
+  });
+</script>
+
+  <header>
+    <h1>Pagla Clickers</h1>
+  </header>
+
+  <div class="container">
+    <h2>Terms & Conditions</h2>
+    
+    <p>By accessing or using Pagla Clickers, you agree to the following terms and conditions. Please read them carefully before registering or using the site.</p>
+
+    <h3>1. Eligibility</h3>
+    <p>You must be at least 13 years old to use Pagla Clickers. By registering, you confirm that all information you provide is true and accurate.</p>
+
+    <h3>2. Account Responsibility</h3>
+    <p>You are responsible for maintaining the confidentiality of your login credentials. Do not share your account with others.</p>
+
+    <h3>3. Usage</h3>
+    <ul>
+      <li>Only one account per person is allowed.</li>
+      <li>Automated or bot activities are strictly prohibited.</li>
+      <li>Users must follow task instructions honestly. Any form of cheating will result in account suspension.</li>
+    </ul>
+
+    <h3>4. Payments</h3>
+    <p>Payments are made according to the rates and methods specified on the platform. Fraudulent activity will result in loss of earnings.</p>
+
+    <h3>5. Changes to Terms</h3>
+    <p>Pagla Clickers may modify these terms at any time. Continued use of the site after changes indicates acceptance of the updated terms.</p>
+
+    <h3>6. Termination</h3>
+    <p>We reserve the right to suspend or delete any account that violates our rules without prior notice or refund.</p>
+
+    <h3>7. Contact</h3>
+    <p>If you have any questions about these terms, please contact us at <strong>support@paglaclickers.com</strong>.</p>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+  </footer>
+</body>
+</html>

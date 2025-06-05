@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Refer & Earn - Pagla Clickers</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    header, footer {
+      background-color: #1976d2;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h2 {
+      color: #1976d2;
+      margin-bottom: 20px;
+    }
+
+    p {
+      color: #444;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .ref-box {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      border: 1px solid #ccc;
+      padding: 10px;
+      width: 100%;
+      max-width: 400px;
+      font-size: 16px;
+      margin-right: 10px;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #155a9c;
+    }
+
+    .info {
+      background: #fff3cd;
+      color: #856404;
+      padding: 15px;
+      border: 1px solid #ffeeba;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <nav>
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="wallet.html">Wallet</a></li>
+      <li><a href="withdrawal.html">Withdrawal</a></li>
+      <li><a href="postjob.html">Post Job</a></li>
+      <li><button id="logoutBtn">Logout</button></li>
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .topbar {
+    background-color: #003366;
+    padding: 0.75rem 1rem;
+  }
+  .topbar nav ul {
+    margin: 0; padding: 0; list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .topbar nav ul li a,
+  .topbar nav ul li button {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.3rem 0.5rem;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+  }
+  .topbar nav ul li a:hover,
+  .topbar nav ul li button:hover {
+    background-color: #00509e;
+  }
+  .topbar nav ul li button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #00bfff;
+  }
+</style>
+
+<script type="module">
+  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+  const logoutBtn = document.getElementById('logoutBtn');
+  const auth = getAuth();
+
+  logoutBtn.addEventListener('click', () => {
+    signOut(auth).then(() => {
+      window.location.href = 'login.html';
+    }).catch((error) => {
+      alert('Error signing out: ' + error.message);
+    });
+  });
+</script>
+
+  <header>
+    <h1>Pagla Clickers</h1>
+  </header>
+
+  <div class="container">
+    <h2>Refer & Earn</h2>
+    <p>Invite your friends to Pagla Clickers and earn rewards for every successful signup!</p>
+
+    <div class="ref-box">
+      <input type="text" id="refLink" value="https://paglaclickers.com/register?ref=YOURCODE" readonly>
+      <button onclick="copyLink()">Copy</button>
+    </div>
+
+    <div class="info">
+      <p>✅ You earn <strong>10 points</strong> when your referral signs up.<br/>
+         ✅ More active referrals = More rewards!<br/>
+         ✅ Watch the leaderboard and climb ranks!</p>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function copyLink() {
+      const link = document.getElementById("refLink");
+      link.select();
+      link.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      alert("Referral link copied!");
+    }
+  </script>
+</body>
+</html>

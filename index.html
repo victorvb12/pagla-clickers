@@ -1,29 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Test Page - Pagla Clickers</title>
+  <meta charset="UTF-8">
+  <title>Pagla Clickers - Register</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #eef6fc;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 0;
+    }
+    header, footer {
+      background: #007bff;
+      color: white;
       text-align: center;
-      padding: 50px;
-      color: #003366;
+      padding: 15px 0;
     }
-    h1 {
-      font-size: 3em;
-      margin-bottom: 0.5em;
+    .container {
+      max-width: 400px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    p {
-      font-size: 1.2em;
+    input[type="email"],
+    input[type="password"],
+    button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .note {
+      font-size: 14px;
       color: #555;
+      text-align: center;
+    }
+    label.agree {
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    label.agree a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    label.agree a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <h1>Welcome to Pagla Clickers!</h1>
-  <p>This is a simple test page to verify GitHub Pages deployment.</p>
-  <p>If you see this, your site is live and working.</p>
+  <header>
+    <h1>Pagla Clickers</h1>
+  </header>
+
+  <div class="container">
+    <h2>Register</h2>
+    <form id="registerForm">
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <label class="agree">
+        <input type="checkbox" required>
+        I agree to the <a href="terms.html" target="_blank">Terms and Conditions</a>
+      </label>
+      <button type="submit">Register</button>
+    </form>
+    <p class="note">Already have an account? <a href="login.html">Login</a></p>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Pagla Clickers</p>
+  </footer>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+      authDomain: "pagla-b1c17.firebaseapp.com",
+      projectId: "pagla-b1c17",
+      storageBucket: "pagla-b1c17.appspot.com",
+      messagingSenderId: "192578902502",
+      appId: "1:192578902502:web:1595070cdac289170f5e27",
+      measurementId: "G-M9Y7SBBEXM"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const referrerId = urlParams.get('ref');
+
+        const userData = {
+          email: email,
+          referralCount: 0,
+          referredBy: referrerId || null,
+          balance: 0,
+          createdAt: new Date().toISOString()
+        };
+
+        await setDoc(doc(db, "users", user.uid), userData);
+
+        if (referrerId) {
+          const refDoc = doc(db, "users", referrerId);
+          const refSnap = await getDoc(refDoc);
+          if (refSnap.exists()) {
+            await updateDoc(refDoc, {
+              referralCount: increment(1)
+            });
+          }
+        }
+
+        alert("Registration successful!");
+        window.location.href = "dashboard.html";
+      } catch (error) {
+        alert("Registration failed: " + error.message);
+      }
+    });
+  </script>
 </body>
 </html>
