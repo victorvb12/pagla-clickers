@@ -1,12 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pagla Clickers - Earn Rewards by Clicking</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f0f2f5;
+    }
+
+    header, footer {
+      background-color: #1976d2;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .topbar {
+      background-color: #003366;
+      padding: 0.75rem 1rem;
+    }
+
+    .topbar nav ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .topbar nav ul li a,
+    .topbar nav ul li button {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.3rem 0.5rem;
+      border-radius: 3px;
+      transition: background-color 0.3s ease;
+    }
+
+    .topbar nav ul li a:hover,
+    .topbar nav ul li button:hover {
+      background-color: #00509e;
+    }
+
+    .topbar nav ul li button:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #00bfff;
+    }
+
+    .hero {
+      background-color: #ffffff;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 40px;
+      color: #1976d2;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: #444;
+      max-width: 700px;
+      margin: 0 auto 30px;
+    }
+
+    .hero button {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .hero button:hover {
+      background-color: #155a9c;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 40px 10px;
+    }
+
+    .feature {
+      background: white;
+      margin: 15px;
+      padding: 25px;
+      border-radius: 10px;
+      width: 250px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .feature h3 {
+      color: #1976d2;
+      margin-bottom: 10px;
+    }
+
+    .feature p {
+      color: #555;
+    }
+
+    footer {
+      margin-top: 50px;
+    }
+  </style>
+</head>
 <body>
+
 <header class="topbar">
   <nav>
-    <ul>
+    <ul id="navList">
       <li><a href="index.html">Home</a></li>
-      <li><a href="login.html" id="loginLink">Login</a></li>
-      <li><a href="register.html" id="registerLink">Register</a></li>
-      <li><a href="dashboard.html" id="dashboardLink" style="display: none;">Dashboard</a></li>
-      <li><button id="logoutBtn" style="display: none;">Logout</button></li>
+      <li id="loginItem"><a href="login.html">Login</a></li>
+      <li id="registerItem"><a href="register.html">Register</a></li>
+      <li id="dashboardItem" style="display: none;"><a href="dashboard.html">Dashboard</a></li>
+      <li id="logoutItem" style="display: none;"><button id="logoutBtn">Logout</button></li>
     </ul>
   </nav>
 </header>
@@ -15,7 +139,7 @@
   <h1>Earn by Just Clicking!</h1>
   <p>Join Pagla Clickers and start earning rewards by completing small tasks like clicks, views, referrals, and more. No investment, just fun and earnings.</p>
   <a href="register.html"><button>Get Started</button></a>
-  <p>If you are already registered</p>
+  <p>If you are already registered </p>
   <a href="login.html"><button>Login</button></a>
 </section>
 
@@ -38,7 +162,7 @@
   <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
 </footer>
 
-<!-- Firebase Scripts -->
+<!-- Firebase Authentication Control -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
@@ -56,24 +180,23 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  const loginLink = document.getElementById("loginLink");
-  const registerLink = document.getElementById("registerLink");
-  const dashboardLink = document.getElementById("dashboardLink");
-  const logoutBtn = document.getElementById("logoutBtn");
+  const loginItem = document.getElementById('loginItem');
+  const registerItem = document.getElementById('registerItem');
+  const dashboardItem = document.getElementById('dashboardItem');
+  const logoutItem = document.getElementById('logoutItem');
+  const logoutBtn = document.getElementById('logoutBtn');
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      // Logged in
-      loginLink.style.display = "none";
-      registerLink.style.display = "none";
-      dashboardLink.style.display = "inline";
-      logoutBtn.style.display = "inline";
+      loginItem.style.display = 'none';
+      registerItem.style.display = 'none';
+      dashboardItem.style.display = 'block';
+      logoutItem.style.display = 'block';
     } else {
-      // Not logged in
-      loginLink.style.display = "inline";
-      registerLink.style.display = "inline";
-      dashboardLink.style.display = "none";
-      logoutBtn.style.display = "none";
+      loginItem.style.display = 'block';
+      registerItem.style.display = 'block';
+      dashboardItem.style.display = 'none';
+      logoutItem.style.display = 'none';
     }
   });
 
@@ -81,8 +204,10 @@
     signOut(auth).then(() => {
       window.location.href = 'login.html';
     }).catch((error) => {
-      alert('Error signing out: ' + error.message);
+      alert('Logout failed: ' + error.message);
     });
   });
 </script>
+
 </body>
+</html>
