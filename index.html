@@ -18,10 +18,11 @@
       padding: 20px;
     }
 
-    /* Topbar style */
+    /* Dashboard-style Topbar */
     .topbar {
       background-color: #003366;
       padding: 0.75rem 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* optional subtle shadow */
     }
 
     .topbar nav ul {
@@ -162,7 +163,6 @@
   <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
 </footer>
 
-<!-- Firebase Authentication Control -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
