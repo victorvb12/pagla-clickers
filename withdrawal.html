@@ -5,49 +5,84 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Pagla Clickers - Withdrawal</title>
 <style>
-  body { margin:0; font-family: Arial,sans-serif; background:#f4f6f8; display:flex; flex-direction:column; min-height:100vh;}
-  header, footer { background:#003366; color:#fff; text-align:center; padding:1rem 0;}
-  main { flex:1; padding: 2rem; max-width:400px; margin:auto; }
-  h2 { color:#003366; text-align:center; }
-  form {
-    background:#fff;
-    padding:2rem 2.5rem;
-    border-radius:8px;
-    box-shadow:0 3px 8px rgba(0,0,0,0.1);
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f8fc;
+  }
+  header {
+    background-color: #003366;
+    padding: 0.75rem 1rem;
+  }
+  header nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: center;
+  }
+  header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+  }
+  header nav ul li a:hover {
+    background-color: #00509e;
+  }
+  main {
+    max-width: 500px;
+    background: white;
+    margin: 30px auto 60px;
+    padding: 2rem 2.5rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  h2 {
+    color: #003366;
+    text-align: center;
+    margin-bottom: 1.5rem;
   }
   label {
-    display:block;
-    margin-bottom:0.5rem;
-    font-weight:bold;
-    color:#333;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #333;
   }
-  input[type="number"], select, input[type="text"] {
-    width:100%;
-    padding:10px;
-    margin-bottom:1.5rem;
-    border:1px solid #ccc;
-    border-radius:5px;
-    font-size:1rem;
-    box-sizing:border-box;
+  input[type="number"],
+  input[type="text"],
+  select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
   }
   button {
-    width:100%;
-    background:#003366;
-    color:#fff;
-    border:none;
-    padding:12px;
-    border-radius:6px;
-    font-size:1.1rem;
-    cursor:pointer;
-    transition:background-color 0.3s;
+    width: 100%;
+    background: #003366;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
   }
   button:hover {
-    background:#002244;
+    background: #002244;
   }
   .message {
     margin-bottom: 1rem;
-    text-align:center;
-    font-size:0.95rem;
+    text-align: center;
+    font-size: 0.95rem;
   }
   .success {
     color: green;
@@ -55,52 +90,23 @@
   .error {
     color: red;
   }
-
-  /* Topbar style like FAQ page */
-  .topbar {
-    background-color: #003366;
-    padding: 0.75rem 1rem;
-  }
-  .topbar nav ul {
-    margin: 0; padding: 0; list-style: none;
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    justify-content: center;
-  }
-  .topbar nav ul li a,
-  .topbar nav ul li button {
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.3rem 0.5rem;
-    border-radius: 3px;
-    transition: background-color 0.3s ease;
-  }
-  .topbar nav ul li a:hover,
-  .topbar nav ul li button:hover {
-    background-color: #00509e;
-  }
-  .topbar nav ul li button:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #00bfff;
-  }
 </style>
 </head>
 <body>
 
-<header class="topbar">
+<header>
   <nav>
     <ul>
+      <li><a href="about.html">About</a></li>
       <li><a href="dashboard.html">Dashboard</a></li>
-      <li><a href="wallet.html">Wallet</a></li>
-      <li><a href="withdrawal.html">Withdrawal</a></li>
+      <li><a href="referel.html">Referral</a></li>
       <li><a href="postjob.html">Post Job</a></li>
-      <li><button id="logoutBtn">Logout</button></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="wallet.html">Wallet</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="taskdetail.html">Tasks</a></li>
+      <li><a href="terms.html">Terms</a></li>
+      <li><a href="withdrawal.html">Withdraw Money</a></li>
     </ul>
   </nav>
 </header>
@@ -111,35 +117,36 @@
     <label for="amount">Amount to withdraw ($)</label>
     <input type="number" id="amount" min="1" step="0.01" required placeholder="Enter amount" />
 
-    <label for="paymentMethod">Payment Method</label>
+    <label for="paymentMethod">Select Payment Method</label>
     <select id="paymentMethod" required>
-      <option value="" disabled selected>Select payment method</option>
-      <option value="Nagad">Nagad</option>
-      <option value="Bkash">Bkash</option>
+      <option value="" disabled selected>Select a payment method</option>
+      <option value="nagad">Nagad</option>
+      <option value="bkash">Bkash</option>
     </select>
 
     <label for="phoneNumber">Phone Number</label>
-    <input type="text" id="phoneNumber" placeholder="Enter your payment number" required pattern="^\+?\d{8,15}$" />
+    <input type="text" id="phoneNumber" placeholder="Enter your Nagad or Bkash number" required />
 
     <div id="message" class="message"></div>
+
     <button type="submit">Submit Withdrawal Request</button>
   </form>
 </main>
 
-<footer>
+<footer style="text-align:center; padding:15px 0; background:#003366; color:white;">
   <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
 </footer>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-  import { getFirestore, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
     authDomain: "pagla-b1c17.firebaseapp.com",
     projectId: "pagla-b1c17",
-    storageBucket: "pagla-b1c17.appspot.com",
+    storageBucket: "pagla-b1c17.firebasestorage.app",
     messagingSenderId: "192578902502",
     appId: "1:192578902502:web:1595070cdac289170f5e27",
     measurementId: "G-M9Y7SBBEXM"
@@ -149,26 +156,23 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  const logoutBtn = document.getElementById('logoutBtn');
-  logoutBtn.addEventListener('click', () => {
-    signOut(auth).then(() => {
-      window.location.href = 'login.html';
-    }).catch((error) => {
-      alert('Error signing out: ' + error.message);
-    });
-  });
-
-  let userId = null;
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      userId = user.uid;
-    } else {
-      window.location.href = 'login.html';
-    }
-  });
-
   const form = document.getElementById('withdrawForm');
   const messageDiv = document.getElementById('message');
+
+  let userId = null;
+  let userBalance = 0;
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      userId = user.uid;
+      const walletDoc = await getDoc(doc(db, "wallets", userId));
+      if (walletDoc.exists()) {
+        userBalance = walletDoc.data().balance || 0;
+      }
+    } else {
+      window.location.href = "login.html";
+    }
+  });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -179,38 +183,41 @@
     const paymentMethod = document.getElementById('paymentMethod').value;
     const phoneNumber = document.getElementById('phoneNumber').value.trim();
 
-    if (isNaN(amount) || amount <= 0) {
-      messageDiv.textContent = 'Please enter a valid withdrawal amount.';
+    if (!amount || amount < 1) {
+      messageDiv.textContent = "Please enter a valid withdrawal amount.";
       messageDiv.classList.add('error');
       return;
     }
-
     if (!paymentMethod) {
-      messageDiv.textContent = 'Please select a payment method.';
+      messageDiv.textContent = "Please select a payment method.";
       messageDiv.classList.add('error');
       return;
     }
-
-    if (!phoneNumber.match(/^\+?\d{8,15}$/)) {
-      messageDiv.textContent = 'Please enter a valid phone number (8-15 digits, optional +).';
+    if (!phoneNumber) {
+      messageDiv.textContent = "Please enter your phone number.";
+      messageDiv.classList.add('error');
+      return;
+    }
+    if (amount > userBalance) {
+      messageDiv.textContent = "Insufficient balance.";
       messageDiv.classList.add('error');
       return;
     }
 
     try {
       await addDoc(collection(db, "withdrawalRequests"), {
-        userId,
-        amount,
-        paymentMethod,
-        phoneNumber,
+        userId: userId,
+        amount: amount,
+        paymentMethod: paymentMethod,
+        phoneNumber: phoneNumber,
         status: "pending",
         requestedAt: serverTimestamp()
       });
-      messageDiv.textContent = 'Withdrawal request submitted successfully.';
+      messageDiv.textContent = "Withdrawal request submitted successfully.";
       messageDiv.classList.add('success');
       form.reset();
     } catch (error) {
-      messageDiv.textContent = 'Failed to submit withdrawal request: ' + error.message;
+      messageDiv.textContent = "Error submitting request: " + error.message;
       messageDiv.classList.add('error');
     }
   });
