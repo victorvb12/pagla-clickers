@@ -21,7 +21,7 @@
     font-weight:bold;
     color:#333;
   }
-  input[type="number"] {
+  input[type="number"], select, input[type="text"] {
     width:100%;
     padding:10px;
     margin-bottom:1.5rem;
@@ -55,22 +55,8 @@
   .error {
     color: red;
   }
-</style>
-</head>
-<body>
-<header class="topbar">
-  <nav>
-    <ul>
-      <li><a href="dashboard.html">Dashboard</a></li>
-      <li><a href="wallet.html">Wallet</a></li>
-      <li><a href="withdrawal.html">Withdrawal</a></li>
-      <li><a href="postjob.html">Post Job</a></li>
-      <li><button id="logoutBtn">Logout</button></li>
-    </ul>
-  </nav>
-</header>
 
-<style>
+  /* Topbar style like FAQ page */
   .topbar {
     background-color: #003366;
     padding: 0.75rem 1rem;
@@ -80,6 +66,7 @@
     display: flex;
     gap: 1.5rem;
     align-items: center;
+    justify-content: center;
   }
   .topbar nav ul li a,
   .topbar nav ul li button {
@@ -103,24 +90,19 @@
     box-shadow: 0 0 0 2px #00bfff;
   }
 </style>
+</head>
+<body>
 
-<script type="module">
-  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-
-  const logoutBtn = document.getElementById('logoutBtn');
-  const auth = getAuth();
-
-  logoutBtn.addEventListener('click', () => {
-    signOut(auth).then(() => {
-      window.location.href = 'login.html';
-    }).catch((error) => {
-      alert('Error signing out: ' + error.message);
-    });
-  });
-</script>
-
-<header>
-  <h1>Pagla Clickers</h1>
+<header class="topbar">
+  <nav>
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="wallet.html">Wallet</a></li>
+      <li><a href="withdrawal.html">Withdrawal</a></li>
+      <li><a href="postjob.html">Post Job</a></li>
+      <li><button id="logoutBtn">Logout</button></li>
+    </ul>
+  </nav>
 </header>
 
 <main>
@@ -128,6 +110,17 @@
   <form id="withdrawForm" novalidate>
     <label for="amount">Amount to withdraw ($)</label>
     <input type="number" id="amount" min="1" step="0.01" required placeholder="Enter amount" />
+
+    <label for="paymentMethod">Payment Method</label>
+    <select id="paymentMethod" required>
+      <option value="" disabled selected>Select payment method</option>
+      <option value="Nagad">Nagad</option>
+      <option value="Bkash">Bkash</option>
+    </select>
+
+    <label for="phoneNumber">Phone Number</label>
+    <input type="text" id="phoneNumber" placeholder="Enter your payment number" required pattern="^\+?\d{8,15}$" />
+
     <div id="message" class="message"></div>
     <button type="submit">Submit Withdrawal Request</button>
   </form>
@@ -139,14 +132,14 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getFirestore, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
     authDomain: "pagla-b1c17.firebaseapp.com",
     projectId: "pagla-b1c17",
-    storageBucket: "pagla-b1c17.firebasestorage.app",
+    storageBucket: "pagla-b1c17.appspot.com",
     messagingSenderId: "192578902502",
     appId: "1:192578902502:web:1595070cdac289170f5e27",
     measurementId: "G-M9Y7SBBEXM"
@@ -156,24 +149,26 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  const form = document.getElementById('withdrawForm');
-  const messageDiv = document.getElementById('message');
+  const logoutBtn = document.getElementById('logoutBtn');
+  logoutBtn.addEventListener('click', () => {
+    signOut(auth).then(() => {
+      window.location.href = 'login.html';
+    }).catch((error) => {
+      alert('Error signing out: ' + error.message);
+    });
+  });
 
   let userId = null;
-  let userBalance = 0;
-
-  onAuthStateChanged(auth, async (user) => {
+  onAuthStateChanged(auth, user => {
     if (user) {
       userId = user.uid;
-      // Get balance to check if withdrawal possible
-      const walletDoc = await getDoc(doc(db, "wallets", userId));
-      if (walletDoc.exists()) {
-        userBalance = walletDoc.data().balance || 0;
-      }
     } else {
-      window.location.href = "login.html";
+      window.location.href = 'login.html';
     }
   });
+
+  const form = document.getElementById('withdrawForm');
+  const messageDiv = document.getElementById('message');
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -181,4 +176,45 @@
     messageDiv.className = 'message';
 
     const amount = parseFloat(document.getElementById('amount').value);
-    if (is
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    const phoneNumber = document.getElementById('phoneNumber').value.trim();
+
+    if (isNaN(amount) || amount <= 0) {
+      messageDiv.textContent = 'Please enter a valid withdrawal amount.';
+      messageDiv.classList.add('error');
+      return;
+    }
+
+    if (!paymentMethod) {
+      messageDiv.textContent = 'Please select a payment method.';
+      messageDiv.classList.add('error');
+      return;
+    }
+
+    if (!phoneNumber.match(/^\+?\d{8,15}$/)) {
+      messageDiv.textContent = 'Please enter a valid phone number (8-15 digits, optional +).';
+      messageDiv.classList.add('error');
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "withdrawalRequests"), {
+        userId,
+        amount,
+        paymentMethod,
+        phoneNumber,
+        status: "pending",
+        requestedAt: serverTimestamp()
+      });
+      messageDiv.textContent = 'Withdrawal request submitted successfully.';
+      messageDiv.classList.add('success');
+      form.reset();
+    } catch (error) {
+      messageDiv.textContent = 'Failed to submit withdrawal request: ' + error.message;
+      messageDiv.classList.add('error');
+    }
+  });
+</script>
+
+</body>
+</html>
