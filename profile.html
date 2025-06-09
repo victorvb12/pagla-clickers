@@ -5,35 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>User Profile - Pagla Clickers</title>
   <style>
-    .topbar {
-  background-color: #007bff;
-  color: white;
-  padding: 15px;
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.navbar {
-  background-color: #005bb5;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 10px 0;
-}
-
-.navbar a {
-  color: white;
-  text-decoration: none;
-  margin: 0 15px;
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.navbar a:hover {
-  text-decoration: underline;
-}
-
     body {
       font-family: Arial, sans-serif;
       background: #f0f2f5;
@@ -41,21 +12,32 @@
       padding: 0;
     }
 
-    header, footer {
-      background-color: #1976d2;
+    header {
+      background-color: #007bff;
       color: white;
       padding: 15px;
       text-align: center;
-    }
-
-    nav a {
-      color: white;
-      margin: 0 10px;
-      text-decoration: none;
+      font-size: 22px;
       font-weight: bold;
     }
 
-    nav a:hover {
+    .navbar {
+      background-color: #005bb5;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 10px 0;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .navbar a:hover {
       text-decoration: underline;
     }
 
@@ -92,12 +74,19 @@
       color: #333;
     }
 
-    .info-value {
+    .info-value input {
+      border: none;
+      background: transparent;
       color: #555;
+      width: 100%;
+    }
+
+    .info-value input[readonly] {
+      color: #888;
     }
 
     .edit-button {
-      margin-top: 20px;
+      margin-top: 30px;
       text-align: center;
     }
 
@@ -114,51 +103,53 @@
     .edit-button button:hover {
       background-color: #155a9c;
     }
+
+    footer {
+      background-color: #1976d2;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Pagla Clickers Profile</h1>
-<div class="navbar">
-  <a href="about.html">About</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="refer.html">Referral</a>
-  <a href="postjob.html">Post Job</a>
-  <a href="profile.html">Profile</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="faq.html">FAQ</a>
-  <a href="tasks.html">Tasks</a>
-  <a href="terms.html">Terms</a>
-  <a href="withdraw.html">Withdraw Money</a>
-</div>
-
-  </header>
+  <header>Pagla Clickers</header>
+  <div class="navbar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="refer.html">Referral</a>
+    <a href="postjob.html">Post Job</a>
+    <a href="profile.html">Profile</a>
+    <a href="wallet.html">Wallet</a>
+    <a href="faq.html">FAQ</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="terms.html">Terms</a>
+    <a href="withdraw.html">Withdraw</a>
+  </div>
 
   <div class="container">
-    <h2>User Profile</h2>
-
+    <h2>Your Profile</h2>
     <div class="profile-info">
       <div class="info-item">
         <div class="info-label">Name:</div>
-        <div class="info-value" id="user-name">John Doe</div>
+        <div class="info-value"><input type="text" id="user-name" /></div>
       </div>
       <div class="info-item">
         <div class="info-label">Email:</div>
-        <div class="info-value" id="user-email">johndoe@example.com</div>
+        <div class="info-value"><input type="text" id="user-email" readonly /></div>
       </div>
       <div class="info-item">
         <div class="info-label">Points:</div>
-        <div class="info-value" id="user-points">120</div>
+        <div class="info-value"><input type="text" id="user-points" readonly /></div>
       </div>
       <div class="info-item">
         <div class="info-label">Referral Code:</div>
-        <div class="info-value" id="user-ref">JOHN123</div>
+        <div class="info-value"><input type="text" id="user-ref" readonly /></div>
       </div>
     </div>
 
     <div class="edit-button">
-      <button onclick="alert('Profile editing coming soon!')">Edit Profile</button>
+      <button onclick="saveProfile()">Save Changes</button>
     </div>
   </div>
 
@@ -166,5 +157,59 @@
     <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
   </footer>
 
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+      authDomain: "pagla-b1c17.firebaseapp.com",
+      projectId: "pagla-b1c17",
+      storageBucket: "pagla-b1c17.appspot.com",
+      messagingSenderId: "192578902502",
+      appId: "1:192578902502:web:1595070cdac289170f5e27"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser;
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUser = user;
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          document.getElementById("user-name").value = data.name || "";
+          document.getElementById("user-email").value = data.email || user.email;
+          document.getElementById("user-points").value = data.balance || 0;
+          document.getElementById("user-ref").value = data.referralCode || "N/A";
+        }
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+
+    async function saveProfile() {
+      const name = document.getElementById("user-name").value.trim();
+      if (!name) {
+        alert("Name cannot be empty.");
+        return;
+      }
+      try {
+        const userDoc = doc(db, "users", currentUser.uid);
+        await updateDoc(userDoc, { name: name });
+        alert("Profile updated successfully.");
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        alert("Something went wrong.");
+      }
+    }
+  </script>
 </body>
 </html>
