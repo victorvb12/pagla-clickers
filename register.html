@@ -89,7 +89,18 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc,
+      updateDoc,
+      increment,
+      collection,
+      query,
+      where,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -105,37 +116,61 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Generate unique referral code
+    function generateReferralCode(uid) {
+      return uid.slice(0, 6) + Math.random().toString(36).substring(2, 6).toUpperCase();
+    }
+
+    // Get user ID by referral code
+    async function getUserIdByReferralCode(refCode) {
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("referralCode", "==", refCode));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        return querySnapshot.docs[0].id;
+      }
+      return null;
+    }
+
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
+      const urlParams = new URLSearchParams(window.location.search);
+      const refCode = urlParams.get('ref');
 
       try {
+        // Create user in Firebase Auth
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
+        const referralCode = generateReferralCode(user.uid);
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const referrerId = urlParams.get('ref');
+        // Look up the referrer by referralCode
+        let referredById = null;
+        if (refCode) {
+          referredById = await getUserIdByReferralCode(refCode);
+        }
 
+        // Set up user data
         const userData = {
           email: email,
+          referralCode: referralCode,
           referralCount: 0,
-          referredBy: referrerId || null,
+          referredBy: referredById || null,
           balance: 0,
           createdAt: new Date().toISOString()
         };
 
+        // Save user data to Firestore
         await setDoc(doc(db, "users", user.uid), userData);
 
-        if (referrerId) {
-          const refDoc = doc(db, "users", referrerId);
-          const refSnap = await getDoc(refDoc);
-          if (refSnap.exists()) {
-            await updateDoc(refDoc, {
-              referralCount: increment(1)
-            });
-          }
+        // If referred, update the referral count
+        if (referredById) {
+          const refDoc = doc(db, "users", referredById);
+          await updateDoc(refDoc, {
+            referralCount: increment(1)
+          });
         }
 
         alert("Registration successful!");
