@@ -49,6 +49,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
   import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -61,6 +62,7 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const auth = getAuth();
 
   const jobsContainer = document.getElementById('jobsContainer');
 
@@ -91,7 +93,13 @@
     });
   }
 
-  loadAllJobs();
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      loadAllJobs();
+    } else {
+      jobsContainer.innerHTML = "<p>Please log in to view available tasks.</p>";
+    }
+  });
 </script>
 
 </body>
