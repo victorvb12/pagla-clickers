@@ -4,6 +4,65 @@
   <meta charset="UTF-8" />
   <title>All Tasks - Pagla Clickers</title>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f8fc;
+      margin: 0;
+      padding: 0;
+    }
+
+    header, footer {
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 15px;
+    }
+
+    nav {
+      background: #0056b3;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 10px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .task {
+      padding: 15px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+
+    .logout-btn {
+      background: #dc3545;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+  </style>
+  <style>
     body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
     header, footer { background: #007bff; color: white; text-align: center; padding: 10px; }
     .container { max-width: 800px; margin: 30px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
@@ -38,6 +97,18 @@
 
 <header>
   <h1>Pagla Clickers - Available Tasks</h1>
+  <nav>
+  <a href="about.html">About</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="referel.html">Referral</a>
+  <a href="postjob.html">Post Job</a>
+  <a href="profile.html">Profile</a>
+  <a href="wallet.html">Wallet</a>
+  <a href="faq.html">FAQ</a>
+  <a href="taskdetail.html">Tasks</a>
+  <a href="terms.html">Terms</a>
+  <a href="withdrawal.html">Withdraw Money</a>
+</nav>
 </header>
 
 <div class="container" id="jobsContainer">
