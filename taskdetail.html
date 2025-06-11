@@ -1,56 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Task Details - Pagla Clickers</title>
+  <meta charset="UTF-8" />
+  <title>All Tasks - Pagla Clickers</title>
   <style>
     body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
     header, footer { background: #007bff; color: white; text-align: center; padding: 10px; }
-    .container { max-width: 600px; margin: 30px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .container { max-width: 800px; margin: 30px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
     h2 { color: #007bff; }
-    input, textarea, button { width: 100%; margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
-    button { background: #007bff; color: white; cursor: pointer; }
-    button:hover { background: #0056b3; }
+    .job {
+      border-bottom: 1px solid #ddd;
+      padding: 15px 0;
+    }
+    .job:last-child {
+      border-bottom: none;
+    }
+    .job-title {
+      font-weight: bold;
+      font-size: 18px;
+      color: #007bff;
+    }
+    .job-desc {
+      margin: 5px 0 10px 0;
+      color: #333;
+    }
+    a.details-link {
+      color: #0056b3;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    a.details-link:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Pagla Clickers - Task Details</h1>
-  <a href="about.html">About</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="referel.html">Referral</a>
-  <a href="postjob.html">Post Job</a>
-  <a href="profile.html">Profile</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="faq.html">FAQ</a>
-  <a href="taskdetail.html">Tasks</a>
-  <a href="terms.html">Terms</a>
-  <a href="withdrawal.html">Withdraw Money</a>
+  <h1>Pagla Clickers - Available Tasks</h1>
 </header>
 
-<div class="container">
-  <h2 id="taskTitle">Loading...</h2>
-  <p id="taskDescription"></p>
-
-  <form id="proofForm" style="display: none;">
-    <div id="textProofContainer" style="display:none;">
-      <textarea id="proofText" placeholder="Enter proof or link..."></textarea>
-    </div>
-    <div id="screenshotProofContainer" style="display:none;">
-      <label>Upload Screenshot:</label>
-      <input type="file" id="proofScreenshot" accept="image/*" />
-    </div>
-    <button type="submit">Submit Proof</button>
-  </form>
+<div class="container" id="jobsContainer">
+  <h2>Loading tasks...</h2>
 </div>
 
 <footer><p>&copy; 2025 Pagla Clickers</p></footer>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -63,92 +61,37 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  const auth = getAuth(app);
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const taskId = urlParams.get('id');
+  const jobsContainer = document.getElementById('jobsContainer');
 
-  const titleEl = document.getElementById('taskTitle');
-  const descEl = document.getElementById('taskDescription');
-  const proofForm = document.getElementById('proofForm');
-  const proofText = document.getElementById('proofText');
+  async function loadAllJobs() {
+    const jobsCol = collection(db, "jobs");
+    const jobsSnapshot = await getDocs(jobsCol);
+    jobsContainer.innerHTML = ''; // Clear loading
 
-  async function loadTask(user) {
-    const docRef = doc(db, "jobs", taskId);
-    const docSnap = await getDoc(docRef);
-
-    if (!docSnap.exists()) {
-      titleEl.textContent = "Task not found";
+    if (jobsSnapshot.empty) {
+      jobsContainer.innerHTML = "<p>No tasks available at the moment.</p>";
       return;
     }
 
-    const data = docSnap.data();
-    titleEl.textContent = data.title;
-    descEl.textContent = data.description;
+    jobsSnapshot.forEach(doc => {
+      const job = doc.data();
+      const jobId = doc.id;
 
-    const proofType = data.proofType || "text"; // default fallback
-    const isOwner = user.uid === data.ownerId;
+      const jobEl = document.createElement('div');
+      jobEl.classList.add('job');
 
-    if (isOwner) {
-      proofForm.innerHTML = `<p style="color:gray;">You cannot submit your own task.</p>`;
-      return;
-    }
+      jobEl.innerHTML = `
+        <div class="job-title">${job.title || "Untitled"}</div>
+        <div class="job-desc">${job.description ? job.description.substring(0, 150) + '...' : "No description."}</div>
+        <a class="details-link" href="taskdetail.html?id=${jobId}">View Details & Submit Proof</a>
+      `;
 
-    const submissionsRef = doc(db, "jobs", taskId, "submissions", user.uid);
-    const submittedSnap = await getDoc(submissionsRef);
-    if (submittedSnap.exists()) {
-      proofForm.innerHTML = `<p style="color:green;">You already submitted proof for this task.</p>`;
-      return;
-    }
-
-    // Show proof form
-    proofForm.style.display = "block";
-
-    if (proofType === "text" || proofType === "both") {
-      document.getElementById("textProofContainer").style.display = "block";
-    }
-
-    if (proofType === "screenshot" || proofType === "both") {
-      document.getElementById("screenshotProofContainer").style.display = "block";
-    }
+      jobsContainer.appendChild(jobEl);
+    });
   }
 
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      loadTask(user);
-    } else {
-      alert("Login required to view task.");
-    }
-  });
-
-  proofForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const user = auth.currentUser;
-    if (!user) return alert("Please login to submit.");
-
-    const proofTextVal = proofText.value.trim();
-    const screenshotFile = document.getElementById("proofScreenshot").files[0];
-
-    let proofData = {
-      userId: user.uid,
-      timestamp: new Date()
-    };
-
-    if (proofTextVal) {
-      proofData.proofText = proofTextVal;
-    }
-
-    if (screenshotFile) {
-      proofData.screenshotFileName = screenshotFile.name;
-      // Optional: Upload to Firebase Storage and store URL here in future
-    }
-
-    await setDoc(doc(db, "jobs", taskId, "submissions", user.uid), proofData);
-
-    alert("Proof submitted!");
-    proofForm.reset();
-    proofForm.innerHTML = `<p style="color:green;">Your proof has been submitted.</p>`;
-  });
+  loadAllJobs();
 </script>
 
 </body>
