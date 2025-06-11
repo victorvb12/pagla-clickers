@@ -3,84 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <title>All Tasks - Pagla Clickers</title>
-<style>
+  <style>
     body {
       font-family: Arial, sans-serif;
       background: #f4f8fc;
       margin: 0;
       padding: 0;
     }
-
     header, footer {
       background: #007bff;
       color: white;
       text-align: center;
       padding: 15px;
     }
-
     nav {
       background: #0056b3;
       display: flex;
       justify-content: center;
       gap: 20px;
       padding: 10px;
+      flex-wrap: wrap;
     }
-
     nav a {
       color: white;
       text-decoration: none;
       font-weight: bold;
     }
-
     nav a:hover {
       text-decoration: underline;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 30px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    .task {
-      padding: 15px;
-      border: 1px solid #ccc;
-      margin-bottom: 10px;
-      border-radius: 5px;
-    }
-
-    .logout-btn {
-      background: #dc3545;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-  </style>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      margin: 0;
-      padding: 0;
-    }
-    header, footer {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 10px;
     }
     .container {
       max-width: 900px;
       margin: 30px auto;
-      background: white;
       padding: 20px;
-      border-radius: 8px;
+      background: white;
+      border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     .filters {
@@ -114,21 +71,27 @@
       display: flex;
       align-items: center;
       gap: 15px;
+      flex-wrap: wrap;
     }
-    .rate {
+    .reward {
       font-weight: bold;
       background-color: #007bff;
       color: white;
-      padding: 6px 10px;
+      padding: 6px 12px;
       border-radius: 5px;
       font-size: 14px;
-      min-width: 60px;
+      min-width: 70px;
       text-align: center;
+      white-space: nowrap;
     }
     .job-title {
       font-weight: bold;
       font-size: 16px;
       color: #007bff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 450px;
     }
     .badge {
       padding: 4px 10px;
@@ -136,6 +99,8 @@
       font-size: 12px;
       font-weight: bold;
       margin-left: 10px;
+      white-space: nowrap;
+      user-select: none;
     }
     .badge-own {
       background-color: #ffc107;
@@ -151,14 +116,17 @@
     }
     .job-right {
       text-align: right;
-      min-width: 150px;
+      min-width: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      white-space: nowrap;
     }
     .job-right a {
-      display: inline-block;
       color: #0056b3;
       text-decoration: none;
       font-weight: bold;
-      margin-bottom: 5px;
     }
     .job-right a:hover {
       text-decoration: underline;
@@ -174,17 +142,17 @@
 <header>
   <h1>Pagla Clickers - Available Tasks</h1>
   <nav>
-  <a href="about.html">About</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="referel.html">Referral</a>
-  <a href="postjob.html">Post Job</a>
-  <a href="profile.html">Profile</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="faq.html">FAQ</a>
-  <a href="taskdetail.html">Tasks</a>
-  <a href="terms.html">Terms</a>
-  <a href="withdrawal.html">Withdraw Money</a>
-</nav>
+    <a href="about.html">About</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="referel.html">Referral</a>
+    <a href="postjob.html">Post Job</a>
+    <a href="profile.html">Profile</a>
+    <a href="wallet.html">Wallet</a>
+    <a href="faq.html">FAQ</a>
+    <a href="taskdetail.html">Tasks</a>
+    <a href="terms.html">Terms</a>
+    <a href="withdrawal.html">Withdraw Money</a>
+  </nav>
 </header>
 
 <div class="container">
@@ -197,8 +165,8 @@
       <option value="facebook">Facebook</option>
     </select>
     <select id="sortFilter">
-      <option value="rateDesc">Sort by Rate: High to Low</option>
-      <option value="rateAsc">Sort by Rate: Low to High</option>
+      <option value="rewardDesc">Sort by Reward: High to Low</option>
+      <option value="rewardAsc">Sort by Reward: Low to High</option>
     </select>
   </div>
   <div id="jobsContainer">
@@ -262,13 +230,13 @@
       return;
     }
 
-    // Fetch all jobs data + additional info
     allJobs = [];
+
     for (const docSnap of jobsSnapshot.docs) {
       const job = docSnap.data();
       const jobId = docSnap.id;
 
-      // Get submission count for this job
+      // Fetch submission count for this job
       const submissionSnapshot = await getDocs(collection(db, `jobs/${jobId}/submissions`));
       const submissionCount = submissionSnapshot.size;
 
@@ -281,7 +249,7 @@
         id: jobId,
         title: job.title || "Untitled",
         ownerId: job.ownerId || "",
-        rate: job.rate || 0,
+        reward: parseFloat(job.reward) || 0,
         totalSlots: job.totalSlots || 0,
         submissions: submissionCount,
         category: (job.category || "").toLowerCase(),
@@ -307,10 +275,10 @@
       filteredJobs = filteredJobs.filter(job => job.category === selectedCategory);
     }
 
-    if (sortOption === "rateAsc") {
-      filteredJobs.sort((a, b) => a.rate - b.rate);
+    if (sortOption === "rewardAsc") {
+      filteredJobs.sort((a, b) => a.reward - b.reward);
     } else {
-      filteredJobs.sort((a, b) => b.rate - a.rate);
+      filteredJobs.sort((a, b) => b.reward - a.reward);
     }
 
     renderJobs(filteredJobs);
@@ -318,31 +286,35 @@
 
   function renderJobs(jobs) {
     jobsContainer.innerHTML = "";
+
     if (jobs.length === 0) {
-      jobsContainer.innerHTML = "<p>No tasks match your filters.</p>";
+      jobsContainer.innerHTML = "<p>No tasks match your criteria.</p>";
       return;
     }
 
-    for (const job of jobs) {
-      let badgeText = '';
-      let badgeClass = '';
+    jobs.forEach((job, index) => {
+      const isOwnJob = (job.ownerId === currentUser.uid);
+      const isCompleted = (job.submissions >= job.totalSlots);
+      let badgeText = "";
+      let badgeClass = "";
 
-      if (currentUser.uid === job.ownerId) {
-        badgeText = '👑 Your Job';
-        badgeClass = 'badge-own';
-      } else if (job.hasSubmitted) {
-        badgeText = '✅ Completed';
-        badgeClass = 'badge-completed';
+      if (isOwnJob) {
+        badgeText = "👑 Your Job";
+        badgeClass = "badge-own";
+      } else if (isCompleted) {
+        badgeText = "✅ Completed";
+        badgeClass = "badge-completed";
       } else {
-        badgeText = '🔥 Available';
-        badgeClass = 'badge-available';
+        badgeText = "🔥 Available";
+        badgeClass = "badge-available";
       }
 
       const jobEl = document.createElement('div');
       jobEl.classList.add('job');
+
       jobEl.innerHTML = `
         <div class="job-left">
-          <div class="rate">$${parseFloat(job.rate).toFixed(2)}</div>
+          <div class="reward">$${job.reward.toFixed(2)}</div>
           <div>
             <div class="job-title">${job.title} <span class="badge ${badgeClass}">${badgeText}</span></div>
           </div>
@@ -352,14 +324,15 @@
           <div class="job-stats">${job.submissions}/${job.totalSlots} Done</div>
         </div>
       `;
+
       jobsContainer.appendChild(jobEl);
-    }
+    });
   }
 
-  // Event listeners for filters
-  searchInput.addEventListener('input', applyFilters);
-  categoryFilter.addEventListener('change', applyFilters);
-  sortFilter.addEventListener('change', applyFilters);
+  searchInput.addEventListener("input", applyFilters);
+  categoryFilter.addEventListener("change", applyFilters);
+  sortFilter.addEventListener("change", applyFilters);
+
 </script>
 
 </body>
