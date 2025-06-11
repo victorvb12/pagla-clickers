@@ -127,6 +127,7 @@
       color: #0056b3;
       text-decoration: none;
       font-weight: bold;
+      cursor: pointer;
     }
     .job-right a:hover {
       text-decoration: underline;
@@ -134,6 +135,70 @@
     .job-stats {
       font-size: 13px;
       color: #666;
+    }
+
+    /* Modal styles */
+    .modal {
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px; right: 15px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #555;
+      user-select: none;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+
+    #proofInput {
+      width: 100%;
+      font-size: 14px;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+
+    #submitProofBtn {
+      margin-top: 10px;
+      padding: 10px 18px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #submitProofBtn:disabled {
+      background-color: #999;
+      cursor: not-allowed;
     }
   </style>
 </head>
@@ -174,6 +239,28 @@
   </div>
 </div>
 
+<!-- Job Detail & Submission Modal -->
+<div id="jobModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span id="closeModal" class="close">&times;</span>
+    <h2 id="modalJobTitle"></h2>
+    <p id="modalJobDesc"></p>
+    <p><strong>Reward:</strong> $<span id="modalJobReward"></span></p>
+    <p><strong>Slots:</strong> <span id="modalJobSlots"></span></p>
+    <p><strong>Submissions:</strong> <span id="modalJobSubmissions"></span></p>
+
+    <div id="submissionSection" style="display:none;">
+      <h3>Submit Your Proof</h3>
+      <textarea id="proofInput" rows="4" placeholder="Enter your proof here..."></textarea>
+      <br />
+      <button id="submitProofBtn">Submit</button>
+      <p id="submissionStatus" style="color:green; display:none;">Submitted successfully!</p>
+    </div>
+
+    <p id="modalMessage" style="color:red;"></p>
+  </div>
+</div>
+
 <footer><p>&copy; 2025 Pagla Clickers</p></footer>
 
 <script type="module">
@@ -183,7 +270,8 @@
     collection,
     getDocs,
     doc,
-    getDoc
+    getDoc,
+    setDoc
   } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
   import {
@@ -197,91 +285,74 @@
     projectId: "pagla-b1c17",
     storageBucket: "pagla-b1c17.appspot.com",
     messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:1595070cdac289170f5e27"
+    appId: "1:192578902502:web:4b441210b15cfebf008ecf",
+    measurementId: "G-2Z08RL7X9H"
   };
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  const auth = getAuth();
+  const auth = getAuth(app);
+
+  let currentUser = null;
+  let allJobs = [];
 
   const jobsContainer = document.getElementById('jobsContainer');
   const searchInput = document.getElementById('searchInput');
   const categoryFilter = document.getElementById('categoryFilter');
   const sortFilter = document.getElementById('sortFilter');
 
-  let allJobs = [];
-  let currentUser = null;
+  // Modal elements
+  const jobModal = document.getElementById('jobModal');
+  const closeModalBtn = document.getElementById('closeModal');
+  const modalJobTitle = document.getElementById('modalJobTitle');
+  const modalJobDesc = document.getElementById('modalJobDesc');
+  const modalJobReward = document.getElementById('modalJobReward');
+  const modalJobSlots = document.getElementById('modalJobSlots');
+  const modalJobSubmissions = document.getElementById('modalJobSubmissions');
+  const submissionSection = document.getElementById('submissionSection');
+  const proofInput = document.getElementById('proofInput');
+  const submitProofBtn = document.getElementById('submitProofBtn');
+  const submissionStatus = document.getElementById('submissionStatus');
+  const modalMessage = document.getElementById('modalMessage');
 
+  let currentJobInModal = null;
+
+  // Wait for user auth state
   onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      jobsContainer.innerHTML = "<p>Please log in to view tasks.</p>";
-      return;
+    if (user) {
+      currentUser = user;
+      await loadJobs();
+      applyFilters();
+    } else {
+      // Not signed in, show message or redirect
+      jobsContainer.innerHTML = "<p>Please log in to see and submit tasks.</p>";
     }
-    currentUser = user;
-    await loadAllJobs();
   });
 
-  async function loadAllJobs() {
-    const jobsCol = collection(db, "jobs");
-    const jobsSnapshot = await getDocs(jobsCol);
-
-    if (jobsSnapshot.empty) {
-      jobsContainer.innerHTML = "<p>No tasks available at the moment.</p>";
-      return;
-    }
-
-    allJobs = [];
+  async function loadJobs() {
+    const jobsSnapshot = await getDocs(collection(db, "jobs"));
+    const jobsTemp = [];
 
     for (const docSnap of jobsSnapshot.docs) {
-      const job = docSnap.data();
-      const jobId = docSnap.id;
+      const jobData = docSnap.data();
+      // Check if user submitted for this job
+      const submissionDoc = await getDoc(doc(db, "jobs", docSnap.id, "submissions", currentUser.uid));
+      const hasSubmitted = submissionDoc.exists();
 
-      // Fetch submission count for this job
-      const submissionSnapshot = await getDocs(collection(db, `jobs/${jobId}/submissions`));
-      const submissionCount = submissionSnapshot.size;
-
-      // Check if user already submitted
-      const userSubmissionRef = doc(db, `jobs/${jobId}/submissions/${currentUser.uid}`);
-      const userSubmissionSnap = await getDoc(userSubmissionRef);
-      const hasSubmitted = userSubmissionSnap.exists();
-
-      allJobs.push({
-        id: jobId,
-        title: job.title || "Untitled",
-        ownerId: job.ownerId || "",
-        reward: parseFloat(job.reward) || 0,
-        totalSlots: job.totalSlots || 0,
-        submissions: submissionCount,
-        category: (job.category || "").toLowerCase(),
-        hasSubmitted: hasSubmitted
+      jobsTemp.push({
+        id: docSnap.id,
+        title: jobData.title || "No title",
+        category: jobData.category || "",
+        reward: Number(jobData.reward) || 0,
+        totalSlots: Number(jobData.slots) || 0,
+        submissions: Number(jobData.submissions) || 0,
+        ownerId: jobData.ownerId || "",
+        hasSubmitted: hasSubmitted,
+        isOwnJob: (jobData.ownerId === currentUser.uid)
       });
     }
 
-    applyFilters();
-  }
-
-  function applyFilters() {
-    const searchTerm = searchInput.value.trim().toLowerCase();
-    const selectedCategory = categoryFilter.value;
-    const sortOption = sortFilter.value;
-
-    let filteredJobs = allJobs;
-
-    if (searchTerm) {
-      filteredJobs = filteredJobs.filter(job => job.title.toLowerCase().includes(searchTerm));
-    }
-
-    if (selectedCategory) {
-      filteredJobs = filteredJobs.filter(job => job.category === selectedCategory);
-    }
-
-    if (sortOption === "rewardAsc") {
-      filteredJobs.sort((a, b) => a.reward - b.reward);
-    } else {
-      filteredJobs.sort((a, b) => b.reward - a.reward);
-    }
-
-    renderJobs(filteredJobs);
+    allJobs = jobsTemp;
   }
 
   function renderJobs(jobs) {
@@ -293,7 +364,7 @@
     }
 
     jobs.forEach((job, index) => {
-      const isOwnJob = (job.ownerId === currentUser.uid);
+      const isOwnJob = job.isOwnJob;
       const isCompleted = (job.submissions >= job.totalSlots);
       let badgeText = "";
       let badgeClass = "";
@@ -316,23 +387,153 @@
         <div class="job-left">
           <div class="reward">$${job.reward.toFixed(2)}</div>
           <div>
-            <div class="job-title">${job.title} <span class="badge ${badgeClass}">${badgeText}</span></div>
+            <div class="job-title" title="${job.title}">${job.title} <span class="badge ${badgeClass}">${badgeText}</span></div>
           </div>
         </div>
         <div class="job-right">
-          <a href="taskdetail.html?id=${job.id}" target="_blank" rel="noopener noreferrer">View Details</a>
+          <a href="#" class="viewDetailsLink" data-job-index="${index}">View Details</a>
           <div class="job-stats">${job.submissions}/${job.totalSlots} Done</div>
         </div>
       `;
 
       jobsContainer.appendChild(jobEl);
     });
+
+    // Add click listeners for all "View Details" links
+    document.querySelectorAll('.viewDetailsLink').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const index = e.target.getAttribute('data-job-index');
+        openJobModal(allJobs[index]);
+      });
+    });
   }
 
-  searchInput.addEventListener("input", applyFilters);
-  categoryFilter.addEventListener("change", applyFilters);
-  sortFilter.addEventListener("change", applyFilters);
+  function applyFilters() {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    const selectedCategory = categoryFilter.value;
+    const sortOrder = sortFilter.value;
 
+    let filteredJobs = allJobs;
+
+    if (selectedCategory) {
+      filteredJobs = filteredJobs.filter(job => job.category.toLowerCase() === selectedCategory.toLowerCase());
+    }
+
+    if (searchTerm) {
+      filteredJobs = filteredJobs.filter(job => job.title.toLowerCase().includes(searchTerm));
+    }
+
+    if (sortOrder === "rewardAsc") {
+      filteredJobs.sort((a, b) => a.reward - b.reward);
+    } else {
+      filteredJobs.sort((a, b) => b.reward - a.reward);
+    }
+
+    renderJobs(filteredJobs);
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+  categoryFilter.addEventListener('change', applyFilters);
+  sortFilter.addEventListener('change', applyFilters);
+
+  // Modal functions
+
+  closeModalBtn.onclick = () => {
+    closeJobModal();
+  };
+
+  window.onclick = (event) => {
+    if (event.target === jobModal) {
+      closeJobModal();
+    }
+  };
+
+  function openJobModal(job) {
+    currentJobInModal = job;
+
+    modalJobTitle.textContent = job.title;
+    modalJobDesc.textContent = `Category: ${job.category.charAt(0).toUpperCase() + job.category.slice(1)}`;
+    modalJobReward.textContent = job.reward.toFixed(2);
+    modalJobSlots.textContent = job.totalSlots;
+    modalJobSubmissions.textContent = job.submissions;
+
+    submissionStatus.style.display = 'none';
+    proofInput.value = '';
+    proofInput.style.display = 'block';
+    submitProofBtn.style.display = 'inline-block';
+    submitProofBtn.disabled = false;
+    submitProofBtn.textContent = "Submit";
+    modalMessage.textContent = '';
+
+    // Show submission form only if:
+    // - user is not owner
+    // - job slots not full (submissions < totalSlots)
+    // - user hasn't submitted yet
+    if (!job.hasSubmitted && !job.isOwnJob && job.submissions < job.totalSlots) {
+      submissionSection.style.display = 'block';
+    } else {
+      submissionSection.style.display = 'none';
+      if (job.isOwnJob) {
+        modalMessage.textContent = "You cannot submit proof to your own job.";
+      } else if (job.hasSubmitted) {
+        modalMessage.textContent = "You have already submitted proof for this job.";
+      } else if (job.submissions >= job.totalSlots) {
+        modalMessage.textContent = "This job has already been completed.";
+      }
+    }
+
+    jobModal.style.display = 'flex';
+  }
+
+  function closeJobModal() {
+    jobModal.style.display = 'none';
+    currentJobInModal = null;
+  }
+
+  submitProofBtn.onclick = async () => {
+    const proofText = proofInput.value.trim();
+
+    if (!proofText) {
+      modalMessage.textContent = "Please enter your proof before submitting.";
+      return;
+    }
+
+    modalMessage.textContent = "";
+    submitProofBtn.disabled = true;
+    submitProofBtn.textContent = "Submitting...";
+
+    try {
+      // Save proof to Firestore:
+      // Collection path: jobs/{jobId}/submissions/{userId}
+      const submissionRef = doc(db, `jobs/${currentJobInModal.id}/submissions`, currentUser.uid);
+
+      await setDoc(submissionRef, {
+        proof: proofText,
+        timestamp: new Date(),
+        userId: currentUser.uid,
+        userEmail: currentUser.email
+      });
+
+      submissionStatus.style.display = 'block';
+      submissionStatus.textContent = "Submitted successfully!";
+      submitProofBtn.style.display = 'none';
+      proofInput.style.display = 'none';
+
+      // Update submissions count locally to reflect in modal UI
+      currentJobInModal.submissions += 1;
+      currentJobInModal.hasSubmitted = true;
+      modalJobSubmissions.textContent = currentJobInModal.submissions;
+
+      // Refresh main list to update badges/stats
+      applyFilters();
+    } catch (error) {
+      modalMessage.textContent = "Error submitting proof: " + error.message;
+    } finally {
+      submitProofBtn.disabled = false;
+      submitProofBtn.textContent = "Submit";
+    }
+  };
 </script>
 
 </body>
