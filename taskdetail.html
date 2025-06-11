@@ -18,23 +18,29 @@
 <header>
   <h1>Pagla Clickers - Task Details</h1>
   <a href="about.html">About</a>
- <a href="dashboard.html">Dashboard</a>
- <a href="referel.html">Referral</a>
- <a href="postjob.html">Post Job</a>
- <a href="profile.html">Profile</a>
- <a href="wallet.html">Wallet</a>
- <a href="faq.html">FAQ</a>
- <a href="taskdetail.html">Tasks</a>
- <a href="terms.html">Terms</a>
- <a href="withdrawal.html">Withdraw Money</a>
-
+  <a href="dashboard.html">Dashboard</a>
+  <a href="referel.html">Referral</a>
+  <a href="postjob.html">Post Job</a>
+  <a href="profile.html">Profile</a>
+  <a href="wallet.html">Wallet</a>
+  <a href="faq.html">FAQ</a>
+  <a href="taskdetail.html">Tasks</a>
+  <a href="terms.html">Terms</a>
+  <a href="withdrawal.html">Withdraw Money</a>
 </header>
 
 <div class="container">
   <h2 id="taskTitle">Loading...</h2>
   <p id="taskDescription"></p>
-  <form id="proofForm">
-    <textarea id="proofText" placeholder="Enter proof or link..." required></textarea>
+
+  <form id="proofForm" style="display: none;">
+    <div id="textProofContainer" style="display:none;">
+      <textarea id="proofText" placeholder="Enter proof or link..."></textarea>
+    </div>
+    <div id="screenshotProofContainer" style="display:none;">
+      <label>Upload Screenshot:</label>
+      <input type="file" id="proofScreenshot" accept="image/*" />
+    </div>
     <button type="submit">Submit Proof</button>
   </form>
 </div>
@@ -43,7 +49,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getFirestore, doc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, collection, setDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
   const firebaseConfig = {
@@ -67,36 +73,78 @@
   const proofForm = document.getElementById('proofForm');
   const proofText = document.getElementById('proofText');
 
-  async function loadTask() {
+  async function loadTask(user) {
     const docRef = doc(db, "tasks", taskId);
     const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      titleEl.textContent = data.title;
-      descEl.textContent = data.description;
-    } else {
+
+    if (!docSnap.exists()) {
       titleEl.textContent = "Task not found";
+      return;
+    }
+
+    const data = docSnap.data();
+    titleEl.textContent = data.title;
+    descEl.textContent = data.description;
+
+    const proofType = data.proofType || "text";
+    const isOwner = user.uid === data.ownerId;
+
+    if (isOwner) {
+      proofForm.innerHTML = `<p style="color:gray;">You cannot submit your own task.</p>`;
+      return;
+    }
+
+    const submissionsRef = doc(db, "tasks", taskId, "submissions", user.uid);
+    const submittedSnap = await getDoc(submissionsRef);
+    if (submittedSnap.exists()) {
+      proofForm.innerHTML = `<p style="color:green;">You already submitted proof for this task.</p>`;
+      return;
+    }
+
+    proofForm.style.display = "block";
+
+    if (proofType === "text" || proofType === "both") {
+      document.getElementById("textProofContainer").style.display = "block";
+    }
+    if (proofType === "screenshot" || proofType === "both") {
+      document.getElementById("screenshotProofContainer").style.display = "block";
     }
   }
 
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      loadTask(user);
+    } else {
+      alert("Login required to view task.");
+    }
+  });
+
   proofForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const proof = proofText.value;
     const user = auth.currentUser;
     if (!user) return alert("Please login to submit.");
 
-    await addDoc(collection(db, "tasks", taskId, "submissions"), {
+    const proofTextVal = proofText.value.trim();
+    const screenshotFile = document.getElementById("proofScreenshot").files[0];
+
+    let proofData = {
       userId: user.uid,
-      proof,
       timestamp: new Date()
-    });
+    };
+
+    if (proofTextVal) {
+      proofData.proofText = proofTextVal;
+    }
+
+    if (screenshotFile) {
+      proofData.screenshotFileName = screenshotFile.name;
+      // You can later upload it to Firebase Storage and save the download URL
+    }
+
+    await setDoc(doc(db, "tasks", taskId, "submissions", user.uid), proofData);
     alert("Proof submitted!");
     proofForm.reset();
-  });
-
-  onAuthStateChanged(auth, user => {
-    if (user) loadTask();
-    else alert("Login required to view task.");
+    proofForm.innerHTML = `<p style="color:green;">Your proof has been submitted.</p>`;
   });
 </script>
 
