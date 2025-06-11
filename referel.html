@@ -5,48 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Refer & Earn - Pagla Clickers</title>
   <style>
-    .topbar {
-  background-color: #007bff;
-  color: white;
-  padding: 15px;
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.navbar {
-  background-color: #005bb5;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 10px 0;
-}
-
-.navbar a {
-  color: white;
-  text-decoration: none;
-  margin: 0 15px;
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.navbar a:hover {
-  text-decoration: underline;
-}
     body {
       font-family: Arial, sans-serif;
       background: #f0f2f5;
       margin: 0;
       padding: 0;
     }
-    header, footer {
+
+    header {
       background-color: #1976d2;
       color: white;
       padding: 15px;
       text-align: center;
     }
+
+    .navbar {
+      background-color: #005bb5;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 10px 0;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
     .container {
-      max-width: 800px;
+      max-width: 700px;
       margin: 30px auto;
       background: white;
       padding: 30px;
@@ -54,75 +48,104 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       text-align: center;
     }
+
+    h2 {
+      color: #1976d2;
+      margin-bottom: 10px;
+    }
+
     .ref-box {
       background: #e3f2fd;
       padding: 15px;
       border-radius: 8px;
       display: flex;
-      justify-content: space-between;
+      flex-wrap: wrap;
+      justify-content: center;
       align-items: center;
-      margin-bottom: 20px;
       gap: 10px;
+      margin-bottom: 20px;
     }
+
     input[type="text"] {
-      border: 1px solid #ccc;
       padding: 10px;
-      width: 100%;
-      max-width: 400px;
-      font-size: 16px;
       border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 60%;
+      max-width: 400px;
     }
+
     button {
       background-color: #1976d2;
       color: white;
       border: none;
-      padding: 10px 20px;
-      font-size: 16px;
+      padding: 10px 16px;
+      font-size: 14px;
       border-radius: 5px;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #155a9c;
     }
-    .info {
-      background: #fff3cd;
-      color: #856404;
+
+    .copied-msg {
+      color: green;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .share-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .share-buttons a {
+      text-decoration: none;
+      background: #1976d2;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    footer {
+      background-color: #1976d2;
+      color: white;
       padding: 15px;
-      border: 1px solid #ffeeba;
-      border-radius: 8px;
+      text-align: center;
+      margin-top: 30px;
     }
   </style>
 </head>
 <body>
+
   <header>
     <h1>Pagla Clickers</h1>
     <div class="navbar">
-  <a href="about.html">About</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="refer.html">Referral</a>
-  <a href="postjob.html">Post Job</a>
-  <a href="profile.html">Profile</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="faq.html">FAQ</a>
-  <a href="tasks.html">Tasks</a>
-  <a href="terms.html">Terms</a>
-  <a href="withdraw.html">Withdraw Money</a>
-</div>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="refer.html">Referral</a>
+      <a href="profile.html">Profile</a>
+      <a href="wallet.html">Wallet</a>
+      <a href="tasks.html">Tasks</a>
+    </div>
   </header>
 
   <div class="container">
     <h2>Refer & Earn</h2>
-    <p>Invite friends and earn when they sign up using your link!</p>
+    <p>Invite your friends using the link below and earn <strong>10 points</strong> for each signup!</p>
 
     <div class="ref-box">
-      <input type="text" id="refLink" readonly>
+      <input type="text" id="refLink" readonly />
       <button onclick="copyLink()">Copy</button>
     </div>
+    <div class="copied-msg" id="copiedMsg" style="display: none;">Copied to clipboard ✅</div>
 
-    <div class="info">
-      <p>✅ Earn <strong>10 points</strong> per referral.<br/>
-         ✅ Share your link to earn more.<br/>
-         ✅ Happy inviting!</p>
+    <div class="share-buttons" id="shareButtons" style="display:none;">
+      <a id="waShare" target="_blank">WhatsApp</a>
+      <a id="fbShare" target="_blank">Facebook</a>
+      <a id="twShare" target="_blank">Twitter</a>
     </div>
   </div>
 
@@ -151,6 +174,13 @@
     const db = getFirestore(app);
 
     const refInput = document.getElementById("refLink");
+    const copiedMsg = document.getElementById("copiedMsg");
+    const shareButtons = document.getElementById("shareButtons");
+    const waShare = document.getElementById("waShare");
+    const fbShare = document.getElementById("fbShare");
+    const twShare = document.getElementById("twShare");
+
+    let referralURL = "";
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -159,12 +189,13 @@
         if (userSnap.exists()) {
           const data = userSnap.data();
           const referralCode = data.referralCode;
-
           if (referralCode) {
-            const referralURL = `https://paglaclickers.com/register?ref=${referralCode}`;
+            referralURL = `https://paglaclickers.com/register?ref=${referralCode}`;
             refInput.value = referralURL;
+            setupShareLinks(referralURL);
+            shareButtons.style.display = "flex";
           } else {
-            refInput.value = "Referral code not found.";
+            refInput.value = "No referral code found.";
           }
         } else {
           alert("User data not found.");
@@ -178,8 +209,17 @@
       refInput.select();
       refInput.setSelectionRange(0, 99999);
       navigator.clipboard.writeText(refInput.value)
-        .then(() => alert("Referral link copied!"))
+        .then(() => {
+          copiedMsg.style.display = "block";
+          setTimeout(() => copiedMsg.style.display = "none", 2000);
+        })
         .catch(() => alert("Copy failed."));
+    }
+
+    function setupShareLinks(link) {
+      waShare.href = `https://wa.me/?text=Join Pagla Clickers and earn! Use my referral link: ${encodeURIComponent(link)}`;
+      fbShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
+      twShare.href = `https://twitter.com/intent/tweet?text=Join Pagla Clickers and earn rewards! ${encodeURIComponent(link)}`;
     }
   </script>
 </body>
