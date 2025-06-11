@@ -49,7 +49,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getFirestore, doc, getDoc, collection, setDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
   const firebaseConfig = {
@@ -86,7 +86,7 @@
     titleEl.textContent = data.title;
     descEl.textContent = data.description;
 
-    const proofType = data.proofType || "text";
+    const proofType = data.proofType || "text"; // default fallback
     const isOwner = user.uid === data.ownerId;
 
     if (isOwner) {
@@ -94,18 +94,20 @@
       return;
     }
 
-    const submissionsRef = doc(db, "tasks", taskId, "submissions", user.uid);
+    const submissionsRef = doc(db, "jobs", taskId, "submissions", user.uid);
     const submittedSnap = await getDoc(submissionsRef);
     if (submittedSnap.exists()) {
       proofForm.innerHTML = `<p style="color:green;">You already submitted proof for this task.</p>`;
       return;
     }
 
+    // Show proof form
     proofForm.style.display = "block";
 
     if (proofType === "text" || proofType === "both") {
       document.getElementById("textProofContainer").style.display = "block";
     }
+
     if (proofType === "screenshot" || proofType === "both") {
       document.getElementById("screenshotProofContainer").style.display = "block";
     }
@@ -138,10 +140,11 @@
 
     if (screenshotFile) {
       proofData.screenshotFileName = screenshotFile.name;
-      // You can later upload it to Firebase Storage and save the download URL
+      // Optional: Upload to Firebase Storage and store URL here in future
     }
 
-    await setDoc(doc(db, "tasks", taskId, "submissions", user.uid), proofData);
+    await setDoc(doc(db, "jobs", taskId, "submissions", user.uid), proofData);
+
     alert("Proof submitted!");
     proofForm.reset();
     proofForm.innerHTML = `<p style="color:green;">Your proof has been submitted.</p>`;
