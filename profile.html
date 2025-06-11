@@ -13,12 +13,10 @@
     }
 
     header {
-      background-color: #007bff;
+      background-color: #1976d2;
       color: white;
       padding: 15px;
       text-align: center;
-      font-size: 22px;
-      font-weight: bold;
     }
 
     .navbar {
@@ -65,8 +63,7 @@
     .info-item {
       display: flex;
       justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #ddd;
+      align-items: center;
     }
 
     .info-label {
@@ -74,23 +71,25 @@
       color: #333;
     }
 
-    .info-value input {
+    input {
+      border: 1px solid #ccc;
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 4px;
+    }
+
+    input[readonly] {
+      background-color: #eee;
       border: none;
-      background: transparent;
-      color: #555;
-      width: 100%;
     }
 
-    .info-value input[readonly] {
-      color: #888;
-    }
-
-    .edit-button {
-      margin-top: 30px;
+    .buttons {
       text-align: center;
+      margin-top: 20px;
     }
 
-    .edit-button button {
+    .buttons button {
+      margin: 0 10px;
       background-color: #1976d2;
       color: white;
       padding: 10px 20px;
@@ -100,56 +99,67 @@
       cursor: pointer;
     }
 
-    .edit-button button:hover {
+    .buttons button:hover {
       background-color: #155a9c;
     }
 
     footer {
       background-color: #1976d2;
       color: white;
-      padding: 15px;
       text-align: center;
+      padding: 15px;
+      margin-top: 40px;
     }
   </style>
 </head>
 <body>
 
-  <header>Pagla Clickers</header>
-  <div class="navbar">
-    <a href="dashboard.html">Dashboard</a>
-    <a href="refer.html">Referral</a>
-    <a href="postjob.html">Post Job</a>
-    <a href="profile.html">Profile</a>
-    <a href="wallet.html">Wallet</a>
-    <a href="faq.html">FAQ</a>
-    <a href="tasks.html">Tasks</a>
-    <a href="terms.html">Terms</a>
-    <a href="withdraw.html">Withdraw</a>
-  </div>
+  <header>
+    <h1>Pagla Clickers Profile</h1>
+    <div class="navbar">
+      <a href="about.html">About</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="refer.html">Referral</a>
+      <a href="postjob.html">Post Job</a>
+      <a href="profile.html">Profile</a>
+      <a href="wallet.html">Wallet</a>
+      <a href="faq.html">FAQ</a>
+      <a href="tasks.html">Tasks</a>
+      <a href="terms.html">Terms</a>
+      <a href="withdraw.html">Withdraw</a>
+    </div>
+  </header>
 
   <div class="container">
-    <h2>Your Profile</h2>
+    <h2>User Profile</h2>
+
     <div class="profile-info">
       <div class="info-item">
-        <div class="info-label">Name:</div>
-        <div class="info-value"><input type="text" id="user-name" /></div>
+        <span class="info-label">Name:</span>
+        <input type="text" id="user-name" readonly />
       </div>
       <div class="info-item">
-        <div class="info-label">Email:</div>
-        <div class="info-value"><input type="text" id="user-email" readonly /></div>
+        <span class="info-label">Phone Number:</span>
+        <input type="text" id="user-phone" readonly />
       </div>
       <div class="info-item">
-        <div class="info-label">Points:</div>
-        <div class="info-value"><input type="text" id="user-points" readonly /></div>
+        <span class="info-label">Email:</span>
+        <input type="text" id="user-email" readonly />
       </div>
       <div class="info-item">
-        <div class="info-label">Referral Code:</div>
-        <div class="info-value"><input type="text" id="user-ref" readonly /></div>
+        <span class="info-label">Points:</span>
+        <input type="text" id="user-points" readonly />
+      </div>
+      <div class="info-item">
+        <span class="info-label">Referral Code:</span>
+        <input type="text" id="user-ref" readonly />
       </div>
     </div>
 
-    <div class="edit-button">
-      <button onclick="saveProfile()">Save Changes</button>
+    <div class="buttons">
+      <button id="editBtn" onclick="enableEdit()">Edit Profile</button>
+      <button id="saveBtn" onclick="saveProfile()" style="display:none;">Save</button>
+      <button onclick="resetPassword()">Reset Password</button>
     </div>
   </div>
 
@@ -157,10 +167,10 @@
     <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
   </footer>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
     import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -169,7 +179,8 @@
       projectId: "pagla-b1c17",
       storageBucket: "pagla-b1c17.appspot.com",
       messagingSenderId: "192578902502",
-      appId: "1:192578902502:web:1595070cdac289170f5e27"
+      appId: "1:192578902502:web:1595070cdac289170f5e27",
+      measurementId: "G-M9Y7SBBEXM"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -178,38 +189,75 @@
 
     let currentUser;
 
+    const nameInput = document.getElementById("user-name");
+    const phoneInput = document.getElementById("user-phone");
+    const emailInput = document.getElementById("user-email");
+    const pointsInput = document.getElementById("user-points");
+    const refInput = document.getElementById("user-ref");
+    const saveBtn = document.getElementById("saveBtn");
+    const editBtn = document.getElementById("editBtn");
+
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         currentUser = user;
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          document.getElementById("user-name").value = data.name || "";
-          document.getElementById("user-email").value = data.email || user.email;
-          document.getElementById("user-points").value = data.balance || 0;
-          document.getElementById("user-ref").value = data.referralCode || "N/A";
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          nameInput.value = data.name || "";
+          phoneInput.value = data.phone || "";
+          emailInput.value = user.email;
+          pointsInput.value = data.points || 0;
+          refInput.value = data.referralCode || "";
+        } else {
+          alert("User data not found.");
         }
       } else {
         window.location.href = "login.html";
       }
     });
 
-    async function saveProfile() {
-      const name = document.getElementById("user-name").value.trim();
-      if (!name) {
-        alert("Name cannot be empty.");
+    window.enableEdit = () => {
+      nameInput.readOnly = false;
+      phoneInput.readOnly = false;
+      saveBtn.style.display = "inline-block";
+      editBtn.style.display = "none";
+    };
+
+    window.saveProfile = async () => {
+      const newName = nameInput.value.trim();
+      const newPhone = phoneInput.value.trim();
+
+      if (!newName || !newPhone) {
+        alert("Name and Phone cannot be empty.");
         return;
       }
+
       try {
-        const userDoc = doc(db, "users", currentUser.uid);
-        await updateDoc(userDoc, { name: name });
-        alert("Profile updated successfully.");
+        const userRef = doc(db, "users", currentUser.uid);
+        await updateDoc(userRef, {
+          name: newName,
+          phone: newPhone
+        });
+        alert("Profile updated.");
+        nameInput.readOnly = true;
+        phoneInput.readOnly = true;
+        saveBtn.style.display = "none";
+        editBtn.style.display = "inline-block";
       } catch (error) {
         console.error("Error updating profile:", error);
-        alert("Something went wrong.");
+        alert("Failed to update profile.");
       }
-    }
+    };
+
+    window.resetPassword = () => {
+      sendPasswordResetEmail(auth, currentUser.email)
+        .then(() => alert("Password reset email sent."))
+        .catch((error) => {
+          console.error("Reset error:", error);
+          alert("Failed to send reset email.");
+        });
+    };
   </script>
 </body>
 </html>
