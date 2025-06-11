@@ -74,7 +74,7 @@
   const proofText = document.getElementById('proofText');
 
   async function loadTask(user) {
-    const docRef = doc(db, "tasks", taskId);
+    const docRef = doc(db, "jobs", taskId);
     const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {
