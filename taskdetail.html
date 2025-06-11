@@ -6,90 +6,107 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f8fc;
+      background: #f9f9f9;
       margin: 0;
       padding: 0;
     }
-
     header, footer {
       background: #007bff;
       color: white;
       text-align: center;
-      padding: 15px;
-    }
-
-    nav {
-      background: #0056b3;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
       padding: 10px;
     }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 30px auto;
-      padding: 20px;
       background: white;
-      border-radius: 10px;
+      padding: 20px;
+      border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
-    .task {
-      padding: 15px;
+    .filters {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .filters > * {
+      flex: 1 1 200px;
+    }
+    input[type="search"], select {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 16px;
       border: 1px solid #ccc;
-      margin-bottom: 10px;
-      border-radius: 5px;
+      border-radius: 6px;
     }
-
-    .logout-btn {
-      background: #dc3545;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-  </style>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
-    header, footer { background: #007bff; color: white; text-align: center; padding: 10px; }
-    .container { max-width: 800px; margin: 30px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h2 { color: #007bff; }
     .job {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       border-bottom: 1px solid #ddd;
       padding: 15px 0;
     }
     .job:last-child {
       border-bottom: none;
     }
+    .job-left {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .rate {
+      font-weight: bold;
+      background-color: #007bff;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      min-width: 60px;
+      text-align: center;
+    }
     .job-title {
       font-weight: bold;
-      font-size: 18px;
+      font-size: 16px;
       color: #007bff;
     }
-    .job-desc {
-      margin: 5px 0 10px 0;
-      color: #333;
+    .badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-left: 10px;
     }
-    a.details-link {
+    .badge-own {
+      background-color: #ffc107;
+      color: #000;
+    }
+    .badge-completed {
+      background-color: #28a745;
+      color: white;
+    }
+    .badge-available {
+      background-color: #dc3545;
+      color: white;
+    }
+    .job-right {
+      text-align: right;
+      min-width: 150px;
+    }
+    .job-right a {
+      display: inline-block;
       color: #0056b3;
       text-decoration: none;
       font-weight: bold;
+      margin-bottom: 5px;
     }
-    a.details-link:hover {
+    .job-right a:hover {
       text-decoration: underline;
+    }
+    .job-stats {
+      font-size: 13px;
+      color: #666;
     }
   </style>
 </head>
@@ -97,30 +114,43 @@
 
 <header>
   <h1>Pagla Clickers - Available Tasks</h1>
-  <nav>
-  <a href="about.html">About</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="referel.html">Referral</a>
-  <a href="postjob.html">Post Job</a>
-  <a href="profile.html">Profile</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="faq.html">FAQ</a>
-  <a href="taskdetail.html">Tasks</a>
-  <a href="terms.html">Terms</a>
-  <a href="withdrawal.html">Withdraw Money</a>
-</nav>
 </header>
 
-<div class="container" id="jobsContainer">
-  <h2>Loading tasks...</h2>
+<div class="container">
+  <div class="filters">
+    <input type="search" id="searchInput" placeholder="Search tasks by title..." />
+    <select id="categoryFilter">
+      <option value="">All Categories</option>
+      <option value="youtube">YouTube</option>
+      <option value="telegram">Telegram</option>
+      <option value="facebook">Facebook</option>
+    </select>
+    <select id="sortFilter">
+      <option value="rateDesc">Sort by Rate: High to Low</option>
+      <option value="rateAsc">Sort by Rate: Low to High</option>
+    </select>
+  </div>
+  <div id="jobsContainer">
+    <h2>Loading tasks...</h2>
+  </div>
 </div>
 
 <footer><p>&copy; 2025 Pagla Clickers</p></footer>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    getDocs,
+    doc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+  import {
+    getAuth,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -136,41 +166,129 @@
   const auth = getAuth();
 
   const jobsContainer = document.getElementById('jobsContainer');
+  const searchInput = document.getElementById('searchInput');
+  const categoryFilter = document.getElementById('categoryFilter');
+  const sortFilter = document.getElementById('sortFilter');
+
+  let allJobs = [];
+  let currentUser = null;
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      jobsContainer.innerHTML = "<p>Please log in to view tasks.</p>";
+      return;
+    }
+    currentUser = user;
+    await loadAllJobs();
+  });
 
   async function loadAllJobs() {
     const jobsCol = collection(db, "jobs");
     const jobsSnapshot = await getDocs(jobsCol);
-    jobsContainer.innerHTML = ''; // Clear loading
 
     if (jobsSnapshot.empty) {
       jobsContainer.innerHTML = "<p>No tasks available at the moment.</p>";
       return;
     }
 
-    jobsSnapshot.forEach(doc => {
-      const job = doc.data();
-      const jobId = doc.id;
+    // Fetch all jobs data + additional info
+    allJobs = [];
+    for (const docSnap of jobsSnapshot.docs) {
+      const job = docSnap.data();
+      const jobId = docSnap.id;
+
+      // Get submission count for this job
+      const submissionSnapshot = await getDocs(collection(db, `jobs/${jobId}/submissions`));
+      const submissionCount = submissionSnapshot.size;
+
+      // Check if user already submitted
+      const userSubmissionRef = doc(db, `jobs/${jobId}/submissions/${currentUser.uid}`);
+      const userSubmissionSnap = await getDoc(userSubmissionRef);
+      const hasSubmitted = userSubmissionSnap.exists();
+
+      allJobs.push({
+        id: jobId,
+        title: job.title || "Untitled",
+        ownerId: job.ownerId || "",
+        rate: job.rate || 0,
+        totalSlots: job.totalSlots || 0,
+        submissions: submissionCount,
+        category: (job.category || "").toLowerCase(),
+        hasSubmitted: hasSubmitted
+      });
+    }
+
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    const selectedCategory = categoryFilter.value;
+    const sortOption = sortFilter.value;
+
+    let filteredJobs = allJobs;
+
+    if (searchTerm) {
+      filteredJobs = filteredJobs.filter(job => job.title.toLowerCase().includes(searchTerm));
+    }
+
+    if (selectedCategory) {
+      filteredJobs = filteredJobs.filter(job => job.category === selectedCategory);
+    }
+
+    if (sortOption === "rateAsc") {
+      filteredJobs.sort((a, b) => a.rate - b.rate);
+    } else {
+      filteredJobs.sort((a, b) => b.rate - a.rate);
+    }
+
+    renderJobs(filteredJobs);
+  }
+
+  function renderJobs(jobs) {
+    jobsContainer.innerHTML = "";
+    if (jobs.length === 0) {
+      jobsContainer.innerHTML = "<p>No tasks match your filters.</p>";
+      return;
+    }
+
+    for (const job of jobs) {
+      let badgeText = '';
+      let badgeClass = '';
+
+      if (currentUser.uid === job.ownerId) {
+        badgeText = '👑 Your Job';
+        badgeClass = 'badge-own';
+      } else if (job.hasSubmitted) {
+        badgeText = '✅ Completed';
+        badgeClass = 'badge-completed';
+      } else {
+        badgeText = '🔥 Available';
+        badgeClass = 'badge-available';
+      }
 
       const jobEl = document.createElement('div');
       jobEl.classList.add('job');
-
       jobEl.innerHTML = `
-        <div class="job-title">${job.title || "Untitled"}</div>
-        <div class="job-desc">${job.description ? job.description.substring(0, 150) + '...' : "No description."}</div>
-        <a class="details-link" href="taskdetail.html?id=${jobId}">View Details & Submit Proof</a>
+        <div class="job-left">
+          <div class="rate">$${parseFloat(job.rate).toFixed(2)}</div>
+          <div>
+            <div class="job-title">${job.title} <span class="badge ${badgeClass}">${badgeText}</span></div>
+          </div>
+        </div>
+        <div class="job-right">
+          <a href="taskdetail.html?id=${job.id}" target="_blank" rel="noopener noreferrer">View Details</a>
+          <div class="job-stats">${job.submissions}/${job.totalSlots} Done</div>
+        </div>
       `;
-
       jobsContainer.appendChild(jobEl);
-    });
+    }
   }
 
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      loadAllJobs();
-    } else {
-      jobsContainer.innerHTML = "<p>Please log in to view available tasks.</p>";
-    }
-  });
+  // Event listeners for filters
+  searchInput.addEventListener('input', applyFilters);
+  categoryFilter.addEventListener('change', applyFilters);
+  sortFilter.addEventListener('change', applyFilters);
 </script>
 
 </body>
