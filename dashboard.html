@@ -82,7 +82,7 @@
 </header>
 
 <div class="container">
-  <h2>Welcome, <span id="userName">Loading...</span> (<span id="userEmail">Loading...</span>)</h2>
+  <h2>Welcome, <span id="userName">Loading...</span></h2>
   <p>Your Balance: <strong id="userBalance">Loading...</strong></p>
 
   <h3>Available Tasks</h3>
@@ -114,8 +114,6 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-
-  const userEmail = document.getElementById('userEmail');
   const userName = document.getElementById('userName');
   const userBalance = document.getElementById('userBalance');
   const tasksList = document.getElementById('tasksList');
@@ -131,8 +129,6 @@
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      userEmail.innerText = user.email;
-
       const userDocSnap = await getDoc(doc(db, "users", user.uid));
       if (userDocSnap.exists()) {
         const data = userDocSnap.data();
