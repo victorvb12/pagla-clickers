@@ -24,6 +24,7 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
+    input[type="text"],
     input[type="email"],
     input[type="password"],
     button {
@@ -70,6 +71,7 @@
   <div class="container">
     <h2>Register</h2>
     <form id="registerForm">
+      <input type="text" id="username" placeholder="Username" required>
       <input type="email" id="email" placeholder="Email" required>
       <input type="password" id="password" placeholder="Password" required>
       <label class="agree">
@@ -122,6 +124,7 @@
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      const username = document.getElementById('username').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
 
@@ -135,6 +138,7 @@
         const referralCode = generateReferralCode(user.uid);
 
         const userData = {
+          name: username, // Save username here
           email: email,
           referralCode: referralCode,
           referralCount: 0,
