@@ -68,23 +68,21 @@
 <header>
   <h1>Pagla Clickers Dashboard</h1>
   <nav>
-  <a href="about.html">About</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="referel.html">Referral</a>
-  <a href="postjob.html">Post Job</a>
-  <a href="profile.html">Profile</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="faq.html">FAQ</a>
-  <a href="taskdetail.html">Tasks</a>
-  <a href="terms.html">Terms</a>
-  <a href="withdrawal.html">Withdraw Money</a>
-</nav>
+    <a href="about.html">About</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="referel.html">Referral</a>
+    <a href="postjob.html">Post Job</a>
+    <a href="profile.html">Profile</a>
+    <a href="wallet.html">Wallet</a>
+    <a href="faq.html">FAQ</a>
+    <a href="taskdetail.html">Tasks</a>
+    <a href="terms.html">Terms</a>
+    <a href="withdrawal.html">Withdraw Money</a>
+  </nav>
 </header>
 
-
-
 <div class="container">
-  <h2>Welcome, <span id="userEmail">Loading...</span></h2>
+  <h2>Welcome, <span id="userName">Loading...</span> (<span id="userEmail">Loading...</span>)</h2>
   <p>Your Balance: <strong id="userBalance">Loading...</strong></p>
 
   <h3>Available Tasks</h3>
@@ -118,6 +116,7 @@
   const db = getFirestore(app);
 
   const userEmail = document.getElementById('userEmail');
+  const userName = document.getElementById('userName');
   const userBalance = document.getElementById('userBalance');
   const tasksList = document.getElementById('tasksList');
   const logoutBtn = document.getElementById('logoutBtn');
@@ -134,14 +133,16 @@
     if (user) {
       userEmail.innerText = user.email;
 
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (userDoc.exists()) {
-        userBalance.innerText = "৳" + (userDoc.data().balance || 0);
+      const userDocSnap = await getDoc(doc(db, "users", user.uid));
+      if (userDocSnap.exists()) {
+        const data = userDocSnap.data();
+        userName.innerText = data.name || "User";
+        userBalance.innerText = "৳" + (data.balance || 0);
       } else {
+        userName.innerText = "User";
         userBalance.innerText = "৳0";
       }
 
-      // Load tasks
       const querySnapshot = await getDocs(collection(db, "tasks"));
       tasksList.innerHTML = "";
       querySnapshot.forEach((doc) => {
