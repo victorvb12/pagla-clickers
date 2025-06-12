@@ -1,44 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Pagla Clickers - Post Job</title>
   <style>
     .topbar {
-  background-color: #007bff;
-  color: white;
-  padding: 15px;
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.navbar {
-  background-color: #005bb5;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 10px 0;
-}
-
-.navbar a {
-  color: white;
-  text-decoration: none;
-  margin: 0 15px;
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.navbar a:hover {
-  text-decoration: underline;
-}
+      background-color: #007bff;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .navbar {
+      background-color: #005bb5;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 10px 0;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .navbar a:hover {
+      text-decoration: underline;
+    }
     body {
       font-family: Arial, sans-serif;
       background: #f5faff;
       margin: 0;
       padding: 0;
     }
-    header, footer {
+    header,
+    footer {
       background: #007bff;
       color: white;
       text-align: center;
@@ -50,14 +48,18 @@
       background: white;
       padding: 25px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-    input, textarea, button {
+    input,
+    textarea,
+    select,
+    button {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
       border-radius: 5px;
       border: 1px solid #ccc;
+      font-size: 16px;
     }
     button {
       background: #007bff;
@@ -68,31 +70,94 @@
     button:hover {
       background: #0056b3;
     }
+    .proof-group {
+      margin: 15px 0;
+      font-size: 14px;
+    }
+    .proof-group label {
+      margin-right: 10px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>Pagla Clickers</h1>
     <div class="navbar">
-  <a href="about.html">About</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="refer.html">Referral</a>
-  <a href="postjob.html">Post Job</a>
-  <a href="profile.html">Profile</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="faq.html">FAQ</a>
-  <a href="tasks.html">Tasks</a>
-  <a href="terms.html">Terms</a>
-  <a href="withdraw.html">Withdraw Money</a>
-</div>
+      <a href="about.html">About</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="refer.html">Referral</a>
+      <a href="postjob.html">Post Job</a>
+      <a href="profile.html">Profile</a>
+      <a href="wallet.html">Wallet</a>
+      <a href="faq.html">FAQ</a>
+      <a href="tasks.html">Tasks</a>
+      <a href="terms.html">Terms</a>
+      <a href="withdraw.html">Withdraw Money</a>
+    </div>
   </header>
 
   <div class="container">
     <h2>Post a Job</h2>
     <form id="jobForm">
-      <input type="text" id="title" placeholder="Job Title" required>
-      <textarea id="description" placeholder="Job Description" rows="4" required></textarea>
-      <input type="number" id="reward" placeholder="Reward (e.g. 5)" required>
+      <input type="text" id="title" placeholder="Job Title" required />
+      <textarea
+        id="description"
+        placeholder="Job Description"
+        rows="4"
+        required
+      ></textarea>
+      <input
+        type="number"
+        id="reward"
+        placeholder="Reward (e.g. 5)"
+        min="0"
+        required
+      />
+
+      <!-- Category -->
+      <select id="category" required>
+        <option value="" disabled selected>Select Category</option>
+        <option value="Facebook">Facebook</option>
+        <option value="Telegram">Telegram</option>
+        <option value="YouTube">YouTube</option>
+      </select>
+
+      <!-- Slots -->
+      <input
+        type="number"
+        id="slots"
+        placeholder="Number of Slots"
+        min="1"
+        required
+      />
+
+      <!-- Proof selectors -->
+      <div class="proof-group">
+        <label>Proof 1:</label>
+        <label><input type="radio" name="proof1" value="" checked /> None</label>
+        <label><input type="radio" name="proof1" value="screenshot" /> Screenshot</label>
+        <label><input type="radio" name="proof1" value="text" /> Text</label>
+      </div>
+      <div class="proof-group">
+        <label>Proof 2:</label>
+        <label><input type="radio" name="proof2" value="" checked /> None</label>
+        <label><input type="radio" name="proof2" value="screenshot" /> Screenshot</label>
+        <label><input type="radio" name="proof2" value="text" /> Text</label>
+      </div>
+      <div class="proof-group">
+        <label>Proof 3:</label>
+        <label><input type="radio" name="proof3" value="" checked /> None</label>
+        <label><input type="radio" name="proof3" value="screenshot" /> Screenshot</label>
+        <label><input type="radio" name="proof3" value="text" /> Text</label>
+      </div>
+      <div class="proof-group">
+        <label>Proof 4:</label>
+        <label><input type="radio" name="proof4" value="" checked /> None</label>
+        <label><input type="radio" name="proof4" value="screenshot" /> Screenshot</label>
+        <label><input type="radio" name="proof4" value="text" /> Text</label>
+      </div>
+
       <button type="submit">Submit Job</button>
     </form>
   </div>
@@ -104,8 +169,15 @@
   <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -114,35 +186,62 @@
       storageBucket: "pagla-b1c17.appspot.com",
       messagingSenderId: "192578902502",
       appId: "1:192578902502:web:1595070cdac289170f5e27",
-      measurementId: "G-M9Y7SBBEXM"
+      measurementId: "G-M9Y7SBBEXM",
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const jobForm = document.getElementById('jobForm');
+    const jobForm = document.getElementById("jobForm");
 
-    onAuthStateChanged(auth, user => {
+    onAuthStateChanged(auth, (user) => {
       if (!user) {
         alert("Please login to post a job.");
         window.location.href = "login.html";
         return;
       }
 
-      jobForm.addEventListener('submit', async (e) => {
+      jobForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const title = document.getElementById('title').value;
-        const description = document.getElementById('description').value;
-        const reward = parseFloat(document.getElementById('reward').value);
+        const title = document.getElementById("title").value.trim();
+        const description = document.getElementById("description").value.trim();
+        const reward = parseFloat(document.getElementById("reward").value);
+        const category = document.getElementById("category").value;
+        const slots = parseInt(document.getElementById("slots").value);
+
+        // Get proof types from radio buttons
+        const proof1 = document.querySelector(
+          'input[name="proof1"]:checked'
+        ).value;
+        const proof2 = document.querySelector(
+          'input[name="proof2"]:checked'
+        ).value;
+        const proof3 = document.querySelector(
+          'input[name="proof3"]:checked'
+        ).value;
+        const proof4 = document.querySelector(
+          'input[name="proof4"]:checked'
+        ).value;
+
+        // Collect proofs which are not empty
+        const proofs = [proof1, proof2, proof3, proof4].filter((p) => p !== "");
+
+        if (proofs.length === 0) {
+          alert("Please select at least one proof type.");
+          return;
+        }
 
         try {
           await addDoc(collection(db, "jobs"), {
             title,
             description,
             reward,
+            category,
+            slots,
+            proofs, // array of proof types, e.g. ["screenshot", "text", "screenshot"]
             createdBy: user.uid,
-            createdAt: new Date()
+            createdAt: new Date(),
           });
           alert("Job posted successfully!");
           jobForm.reset();
