@@ -5,8 +5,8 @@
   <title>Task Details - Pagla Clickers</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f4fa;
+      font-family: Arial, sans-serif;
+      background: #eef;
       margin: 0;
       padding: 0;
     }
@@ -14,7 +14,7 @@
     header {
       background: #007bff;
       color: white;
-      padding: 15px;
+      padding: 10px;
       text-align: center;
     }
 
@@ -30,10 +30,9 @@
     nav a {
       color: white;
       text-decoration: none;
-      padding: 6px 12px;
+      padding: 5px 10px;
       border-radius: 4px;
       background: #0069d9;
-      transition: background 0.2s;
     }
 
     nav a:hover {
@@ -42,53 +41,31 @@
 
     h2 {
       text-align: center;
-      margin: 30px 0 20px;
-      font-size: 28px;
-      color: #333;
+      padding: 20px;
     }
 
     .job {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
       margin: 15px auto;
-      max-width: 800px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid #ddd;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    .job-info {
-      display: flex;
-      flex-direction: column;
+      max-width: 600px;
+      border: 1px solid #ccc;
     }
 
     .job-title {
-      font-size: 20px;
-      font-weight: 600;
-      color: #007bff;
-    }
-
-    .job-meta {
-      margin-top: 5px;
-      font-size: 14px;
-      color: #555;
+      font-size: 18px;
+      font-weight: bold;
     }
 
     .viewBtn {
       background: #007bff;
       color: white;
-      padding: 8px 16px;
+      padding: 6px 12px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .viewBtn:hover {
-      background: #0056b3;
+      margin-top: 10px;
     }
 
     .modal {
@@ -104,75 +81,36 @@
 
     .modal-content {
       background: white;
-      padding: 25px;
-      border-radius: 10px;
+      padding: 20px;
+      border-radius: 8px;
       width: 90%;
-      max-width: 550px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    .modal-content h3 {
-      margin-top: 0;
-      font-size: 22px;
-      color: #333;
-    }
-
-    .modal-content p {
-      margin-bottom: 15px;
-      color: #555;
+      max-width: 500px;
     }
 
     .proof-input {
-      margin-bottom: 12px;
-      width: 100%;
+      margin-bottom: 10px;
     }
 
     input[type="file"], input[type="text"] {
       width: 100%;
-      padding: 10px;
+      padding: 8px;
       border-radius: 4px;
       border: 1px solid #ccc;
-      font-size: 14px;
     }
 
     button {
-      padding: 10px 16px;
-      margin-top: 15px;
-      background: #28a745;
+      padding: 10px;
+      margin-top: 10px;
+      background: green;
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      font-weight: bold;
-      transition: background 0.2s;
-    }
-
-    button:hover {
-      background: #218838;
     }
 
     .status {
-      margin-top: 15px;
+      margin-top: 10px;
       color: darkgreen;
-      font-weight: bold;
-    }
-
-    @media screen and (max-width: 600px) {
-      .job {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
-
-      .viewBtn {
-        align-self: flex-end;
-      }
     }
   </style>
 </head>
@@ -208,12 +146,190 @@
     <form id="proofForm"></form>
     <button id="submitBtn">Submit Proof</button>
     <div class="status" id="submitStatus"></div>
-    <button onclick="closeModal()" style="background:#dc3545;">Close</button>
+    <button onclick="closeModal()">Close</button>
   </div>
 </div>
 
-<!-- Your Firebase <script type="module"> block remains unchanged below -->
-<!-- (Keep your current Firebase JS block here) -->
+<!-- Firebase Scripts (unchanged logic) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+    authDomain: "pagla-b1c17.firebaseapp.com",
+    projectId: "pagla-b1c17",
+    storageBucket: "pagla-b1c17.appspot.com",
+    messagingSenderId: "192578902502",
+    appId: "1:192578902502:web:4b441210b15cfebf008ecf"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const storage = getStorage(app);
+
+  const jobsContainer = document.getElementById("jobsContainer");
+  const jobModal = document.getElementById("jobModal");
+  const jobTitle = document.getElementById("jobTitle");
+  const jobDetails = document.getElementById("jobDetails");
+  const proofForm = document.getElementById("proofForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const submitStatus = document.getElementById("submitStatus");
+
+  let currentUser = null;
+  let currentJob = null;
+  let jobList = [];
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      currentUser = user;
+      await loadJobs();
+    } else {
+      jobsContainer.innerHTML = "<p>Please log in to view jobs.</p>";
+    }
+  });
+
+  async function loadJobs() {
+    const jobSnap = await getDocs(collection(db, "jobs"));
+    jobList = [];
+    jobSnap.forEach(docSnap => {
+      const data = docSnap.data();
+      jobList.push({ id: docSnap.id, ...data });
+    });
+    renderJobs();
+  }
+
+  function renderJobs() {
+    jobsContainer.innerHTML = "";
+    jobList.forEach(job => {
+      const div = document.createElement("div");
+      div.className = "job";
+      div.innerHTML = 
+        <div class="job-title">${job.title}</div>
+        <p>Reward: $${job.reward}</p>
+        <p>Category: ${job.category}</p>
+        <button class="viewBtn" onclick="openModal('${job.id}')">View & Submit</button>
+      ;
+      jobsContainer.appendChild(div);
+    });
+  }
+
+  window.openModal = async (jobId) => {
+    currentJob = jobList.find(j => j.id === jobId);
+    if (!currentJob) return;
+
+    const submissionDoc = await getDoc(doc(db, jobs/${jobId}/submissions/${currentUser.uid}));
+    if (submissionDoc.exists()) {
+      jobTitle.textContent = "Already Submitted";
+      jobDetails.textContent = "You have already submitted proof for this job.";
+      proofForm.innerHTML = "";
+      submitBtn.style.display = "none";
+    } else {
+      jobTitle.textContent = currentJob.title;
+      jobDetails.textContent = Submit the following proofs:;
+
+      proofForm.innerHTML = "";
+      const proofs = (currentJob.proofType || "").split(',').map(p => p.trim()).filter(Boolean);
+      proofs.forEach((type, index) => {
+        const label = document.createElement("label");
+        label.textContent = Proof ${index + 1} (${type});
+
+        let input;
+        if (type === "text") {
+          input = document.createElement("input");
+          input.type = "text";
+          input.required = true;
+        } else if (type === "screenshot") {
+          input = document.createElement("input");
+          input.type = "file";
+          input.accept = "image/*";
+          input.required = true;
+        }
+
+        input.name = proof${index + 1};
+        input.className = "proof-input";
+
+        proofForm.appendChild(label);
+        proofForm.appendChild(input);
+      });
+
+      submitBtn.style.display = "block";
+    }
+
+    submitStatus.textContent = "";
+    jobModal.style.display = "flex";
+  };
+
+  submitBtn.onclick = async (e) => {
+    e.preventDefault();
+
+    const inputs = proofForm.querySelectorAll("input");
+    const proofData = {};
+    submitStatus.style.color = "black";
+    submitStatus.textContent = "Uploading proofs... Please wait.";
+
+    async function uploadFile(file, proofName) {
+      return new Promise((resolve, reject) => {
+        const fileName = ${currentUser.uid}_${currentJob.id}_${proofName}_${Date.now()};
+        const storageReference = storageRef(storage, submissions/${fileName});
+        const uploadTask = uploadBytesResumable(storageReference, file);
+
+        uploadTask.on('state_changed',
+          () => {},
+          (error) => reject(error),
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then(url => resolve(url));
+          }
+        );
+      });
+    }
+
+    try {
+      for (const input of inputs) {
+        if (input.type === "text") {
+          if (!input.value.trim()) {
+            submitStatus.style.color = "red";
+            submitStatus.textContent = "Please fill all text fields.";
+            return;
+          }
+          proofData[input.name] = input.value.trim();
+        } else if (input.type === "file") {
+          if (!input.files[0]) {
+            submitStatus.style.color = "red";
+            submitStatus.textContent = "Please select all screenshots.";
+            return;
+          }
+          const url = await uploadFile(input.files[0], input.name);
+          proofData[input.name] = url;
+        }
+      }
+
+      await setDoc(doc(db, jobs/${currentJob.id}/submissions/${currentUser.uid}), {
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        timestamp: new Date(),
+        proofs: proofData
+      });
+
+      submitStatus.style.color = "green";
+      submitStatus.textContent = "✅ Submission successful!";
+      submitBtn.style.display = "none";
+    } catch (err) {
+      submitStatus.style.color = "red";
+      submitStatus.textContent = "❌ Submission failed: " + err.message;
+    }
+  };
+
+  window.closeModal = () => {
+    jobModal.style.display = "none";
+    currentJob = null;
+    proofForm.innerHTML = "";
+    submitStatus.textContent = "";
+  };
+</script>
 
 </body>
 </html>
