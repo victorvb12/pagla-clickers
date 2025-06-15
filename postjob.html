@@ -4,83 +4,118 @@
   <meta charset="UTF-8">
   <title>Post Job - Pagla Clickers</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f8fa;
     }
 
     header {
       background-color: #007bff;
       color: white;
-      padding: 15px;
+      padding: 20px;
       text-align: center;
-      font-size: 20px;
+      font-size: 24px;
       font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     nav {
-      background: #f8f9fa;
-      padding: 10px;
+      background: #ffffff;
+      padding: 12px 0;
       text-align: center;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #e3e3e3;
     }
 
     nav a {
-      margin: 0 10px;
+      margin: 0 15px;
       text-decoration: none;
       color: #007bff;
-      font-weight: bold;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: #0056b3;
     }
 
     .container {
-      max-width: 500px;
-      margin: 30px auto;
-      background: white;
-      padding: 25px;
+      max-width: 600px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
     }
 
     h2 {
       text-align: center;
-      color: #333;
-      margin-bottom: 20px;
+      color: #343a40;
+      margin-bottom: 25px;
     }
 
     label {
       display: block;
-      margin-top: 12px;
-      font-weight: bold;
+      margin-top: 16px;
+      font-weight: 600;
+      color: #333;
     }
 
     input, select, button {
       width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      border-radius: 5px;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 6px;
       border: 1px solid #ccc;
       font-size: 16px;
+      transition: border 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: #007bff;
+      outline: none;
     }
 
     button {
       background-color: #007bff;
       color: white;
       border: none;
-      margin-top: 20px;
+      margin-top: 25px;
       font-weight: bold;
       cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
     }
 
     button:disabled {
-      background: #ccc;
+      background: #adb5bd;
+      cursor: not-allowed;
     }
 
     .status {
-      margin-top: 15px;
+      margin-top: 20px;
       text-align: center;
-      font-weight: bold;
-      color: #333;
+      font-weight: 600;
+      color: #28a745;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
+
+      nav a {
+        display: inline-block;
+        margin: 8px 5px;
+      }
     }
   </style>
 </head>
@@ -179,6 +214,7 @@
     const proof4 = document.getElementById('proof4').value;
 
     if (!title || !category || isNaN(reward) || isNaN(slots)) {
+      statusDiv.style.color = "#dc3545";
       statusDiv.textContent = "Please fill all job fields.";
       return;
     }
@@ -196,9 +232,11 @@
         proofType: proofString,
         createdAt: new Date()
       });
+      statusDiv.style.color = "#28a745";
       statusDiv.textContent = "✅ Job posted successfully!";
     } catch (error) {
       console.error("Error posting job:", error);
+      statusDiv.style.color = "#dc3545";
       statusDiv.textContent = "❌ Failed to post job.";
     }
   };
