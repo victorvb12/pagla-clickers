@@ -5,42 +5,95 @@
   <title>Post Job - Pagla Clickers</title>
   <style>
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
+      background-color: #f2f2f2;
     }
-    .container {
-      max-width: 500px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-    button {
-      background-color: #28a745;
+
+    header {
+      background-color: #007bff;
       color: white;
-      border: none;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
       font-weight: bold;
     }
+
+    nav {
+      background: #f8f9fa;
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
     h2 {
       text-align: center;
       color: #333;
+      margin-bottom: 20px;
     }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      margin-top: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background: #ccc;
+    }
+
     .status {
-      margin-top: 10px;
+      margin-top: 15px;
       text-align: center;
       font-weight: bold;
+      color: #333;
     }
   </style>
 </head>
 <body>
+
+<header>Pagla Clickers</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="profile.html">Profile</a>
+  <a href="postjob.html">Post Job</a>
+  <a href="taskdetail.html">Tasks</a>
+</nav>
 
 <div class="container">
   <h2>Post a Job</h2>
@@ -103,7 +156,6 @@
 
   const postJobBtn = document.getElementById('postJobBtn');
   const statusDiv = document.getElementById('status');
-
   let currentUser = null;
 
   onAuthStateChanged(auth, (user) => {
@@ -122,37 +174,4 @@
     const slots = parseInt(document.getElementById('slots').value.trim());
 
     const proof1 = document.getElementById('proof1').value;
-    const proof2 = document.getElementById('proof2').value;
-    const proof3 = document.getElementById('proof3').value;
-    const proof4 = document.getElementById('proof4').value;
-
-    if (!title || !category || isNaN(reward) || isNaN(slots)) {
-      statusDiv.textContent = "Please fill all job fields.";
-      return;
-    }
-
-    // Combine all selected proof types as string (e.g., "text,screenshot,text")
-    const proofString = [proof1, proof2, proof3, proof4].filter(Boolean).join(',');
-
-    try {
-      await addDoc(collection(db, "jobs"), {
-        title,
-        category,
-        reward,
-        slots,
-        submissions: 0,
-        ownerId: currentUser.uid,
-        proofType: proofString,
-        createdAt: new Date()
-      });
-
-      statusDiv.textContent = "✅ Job posted successfully!";
-    } catch (error) {
-      console.error("Error posting job:", error);
-      statusDiv.textContent = "❌ Failed to post job.";
-    }
-  };
-</script>
-
-</body>
-</html>
+    const proof2 = document.getElementById('proof2').
