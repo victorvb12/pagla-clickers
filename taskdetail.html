@@ -5,8 +5,8 @@
   <title>Task Details - Pagla Clickers</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #eef;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
       margin: 0;
       padding: 0;
     }
@@ -14,7 +14,7 @@
     header {
       background: #007bff;
       color: white;
-      padding: 10px;
+      padding: 12px;
       text-align: center;
     }
 
@@ -30,8 +30,8 @@
     nav a {
       color: white;
       text-decoration: none;
-      padding: 5px 10px;
-      border-radius: 4px;
+      padding: 8px 12px;
+      border-radius: 5px;
       background: #0069d9;
     }
 
@@ -41,54 +41,66 @@
 
     h2 {
       text-align: center;
-      padding: 20px;
+      padding: 20px 10px 10px;
+      margin: 0;
+      color: #333;
     }
 
     .job {
-      background: white;
-      padding: 15px;
-      border-radius: 6px;
+      background: #fff;
+      padding: 16px;
+      border-radius: 8px;
       margin: 15px auto;
       max-width: 600px;
-      border: 1px solid #ccc;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      border-left: 4px solid #007bff;
     }
 
     .job-title {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: bold;
+      color: #007bff;
+      margin-bottom: 5px;
     }
 
     .viewBtn {
-      background: #007bff;
+      background: #28a745;
       color: white;
-      padding: 6px 12px;
+      padding: 8px 16px;
       border: none;
-      border-radius: 4px;
+      border-radius: 5px;
       cursor: pointer;
       margin-top: 10px;
+    }
+
+    .viewBtn:hover {
+      background: #218838;
     }
 
     .modal {
       display: none;
       position: fixed;
       z-index: 99;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
       align-items: center;
       justify-content: center;
     }
 
     .modal-content {
       background: white;
-      padding: 20px;
-      border-radius: 8px;
+      padding: 25px;
+      border-radius: 10px;
       width: 90%;
       max-width: 500px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
     .proof-input {
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     input[type="file"], input[type="text"] {
@@ -96,21 +108,26 @@
       padding: 8px;
       border-radius: 4px;
       border: 1px solid #ccc;
+      margin-top: 5px;
     }
 
     button {
-      padding: 10px;
-      margin-top: 10px;
-      background: green;
+      padding: 10px 20px;
+      background: #007bff;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 5px;
       cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #0056b3;
     }
 
     .status {
-      margin-top: 10px;
-      color: darkgreen;
+      margin-top: 12px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -150,7 +167,6 @@
   </div>
 </div>
 
-<!-- Firebase Scripts (unchanged logic) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
   import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
@@ -207,12 +223,12 @@
     jobList.forEach(job => {
       const div = document.createElement("div");
       div.className = "job";
-      div.innerHTML = 
+      div.innerHTML = `
         <div class="job-title">${job.title}</div>
         <p>Reward: $${job.reward}</p>
         <p>Category: ${job.category}</p>
         <button class="viewBtn" onclick="openModal('${job.id}')">View & Submit</button>
-      ;
+      `;
       jobsContainer.appendChild(div);
     });
   }
@@ -221,7 +237,7 @@
     currentJob = jobList.find(j => j.id === jobId);
     if (!currentJob) return;
 
-    const submissionDoc = await getDoc(doc(db, jobs/${jobId}/submissions/${currentUser.uid}));
+    const submissionDoc = await getDoc(doc(db, `jobs/${jobId}/submissions/${currentUser.uid}`));
     if (submissionDoc.exists()) {
       jobTitle.textContent = "Already Submitted";
       jobDetails.textContent = "You have already submitted proof for this job.";
@@ -229,27 +245,24 @@
       submitBtn.style.display = "none";
     } else {
       jobTitle.textContent = currentJob.title;
-      jobDetails.textContent = Submit the following proofs:;
+      jobDetails.textContent = "Submit the following proofs:";
 
       proofForm.innerHTML = "";
       const proofs = (currentJob.proofType || "").split(',').map(p => p.trim()).filter(Boolean);
       proofs.forEach((type, index) => {
         const label = document.createElement("label");
-        label.textContent = Proof ${index + 1} (${type});
+        label.textContent = `Proof ${index + 1} (${type})`;
+        const input = document.createElement("input");
 
-        let input;
         if (type === "text") {
-          input = document.createElement("input");
           input.type = "text";
-          input.required = true;
         } else if (type === "screenshot") {
-          input = document.createElement("input");
           input.type = "file";
           input.accept = "image/*";
-          input.required = true;
         }
 
-        input.name = proof${index + 1};
+        input.name = `proof${index + 1}`;
+        input.required = true;
         input.className = "proof-input";
 
         proofForm.appendChild(label);
@@ -273,8 +286,8 @@
 
     async function uploadFile(file, proofName) {
       return new Promise((resolve, reject) => {
-        const fileName = ${currentUser.uid}_${currentJob.id}_${proofName}_${Date.now()};
-        const storageReference = storageRef(storage, submissions/${fileName});
+        const fileName = `${currentUser.uid}_${currentJob.id}_${proofName}_${Date.now()}`;
+        const storageReference = storageRef(storage, `submissions/${fileName}`);
         const uploadTask = uploadBytesResumable(storageReference, file);
 
         uploadTask.on('state_changed',
@@ -307,7 +320,7 @@
         }
       }
 
-      await setDoc(doc(db, jobs/${currentJob.id}/submissions/${currentUser.uid}), {
+      await setDoc(doc(db, `jobs/${currentJob.id}/submissions/${currentUser.uid}`), {
         userId: currentUser.uid,
         userEmail: currentUser.email,
         timestamp: new Date(),
