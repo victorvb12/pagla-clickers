@@ -24,6 +24,7 @@
       justify-content: center;
       gap: 20px;
       padding: 10px;
+      flex-wrap: wrap;
     }
 
     nav a {
@@ -45,11 +46,21 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    .task {
-      padding: 15px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
       border: 1px solid #ccc;
-      margin-bottom: 10px;
-      border-radius: 5px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
     }
 
     .logout-btn {
@@ -88,8 +99,19 @@
   <h2>Welcome, <span id="userName">Loading...</span></h2>
   <p>Your Balance: <strong id="userBalance">Loading...</strong></p>
 
-  <h3>Available Tasks</h3>
-  <div id="tasksList">Loading tasks...</div>
+  <h3>Completed Tasks</h3>
+  <table id="completedTasksTable">
+    <thead>
+      <tr>
+        <th>Task Title</th>
+        <th>Status</th>
+        <th>Submitted At</th>
+      </tr>
+    </thead>
+    <tbody id="completedTasksBody">
+      <tr><td colspan="3">Loading completed tasks...</td></tr>
+    </tbody>
+  </table>
 
   <button class="logout-btn" id="logoutBtn">Logout</button>
 </div>
@@ -110,16 +132,16 @@
     projectId: "pagla-b1c17",
     storageBucket: "pagla-b1c17.appspot.com",
     messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:1595070cdac289170f5e27",
-    measurementId: "G-M9Y7SBBEXM"
+    appId: "1:192578902502:web:1595070cdac289170f5e27"
   };
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+
   const userName = document.getElementById('userName');
   const userBalance = document.getElementById('userBalance');
-  const tasksList = document.getElementById('tasksList');
+  const completedTasksBody = document.getElementById('completedTasksBody');
   const logoutBtn = document.getElementById('logoutBtn');
 
   logoutBtn.addEventListener('click', () => {
@@ -132,9 +154,10 @@
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      const userDocSnap = await getDoc(doc(db, "users", user.uid));
-      if (userDocSnap.exists()) {
-        const data = userDocSnap.data();
+      // Show user info
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
         userName.innerText = data.name || "User";
         userBalance.innerText = "৳" + (data.balance || 0);
       } else {
@@ -142,20 +165,38 @@
         userBalance.innerText = "৳0";
       }
 
-      const querySnapshot = await getDocs(collection(db, "tasks"));
-      tasksList.innerHTML = "";
-      querySnapshot.forEach((doc) => {
-        const task = doc.data();
-        const taskEl = document.createElement("div");
-        taskEl.className = "task";
-        taskEl.innerHTML = `
-          <h4>${task.title}</h4>
-          <p>${task.description}</p>
-          <a href="task-details.html?id=${doc.id}">View Details</a>
-        `;
-        tasksList.appendChild(taskEl);
+      // Get user's submitted tasks
+      const submissionsSnap = await getDocs(collection(db, "submissions"));
+      const userSubs = [];
+      submissionsSnap.forEach(doc => {
+        const data = doc.data();
+        if (data.userId === user.uid) {
+          userSubs.push({ ...data, id: doc.id });
+        }
       });
 
+      completedTasksBody.innerHTML = "";
+      if (userSubs.length === 0) {
+        completedTasksBody.innerHTML = "<tr><td colspan='3'>No completed tasks found.</td></tr>";
+      } else {
+        for (const sub of userSubs) {
+          let title = "Loading...";
+          try {
+            const taskDoc = await getDoc(doc(db, "tasks", sub.taskId));
+            title = taskDoc.exists() ? taskDoc.data().title : "Unknown Task";
+          } catch {
+            title = "Error Loading Title";
+          }
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${title}</td>
+            <td>${sub.status || "Pending"}</td>
+            <td>${sub.submittedAt?.toDate().toLocaleString() || "N/A"}</td>
+          `;
+          completedTasksBody.appendChild(tr);
+        }
+      }
     } else {
       window.location.href = "login.html";
     }
