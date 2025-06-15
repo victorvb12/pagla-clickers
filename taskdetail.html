@@ -7,19 +7,57 @@
     body {
       font-family: Arial, sans-serif;
       background: #eef;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #007bff;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav {
+      background: #0056b3;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      background: #0069d9;
+    }
+
+    nav a:hover {
+      background: #004a99;
+    }
+
+    h2 {
+      text-align: center;
       padding: 20px;
     }
+
     .job {
       background: white;
       padding: 15px;
       border-radius: 6px;
-      margin-bottom: 15px;
+      margin: 15px auto;
+      max-width: 600px;
       border: 1px solid #ccc;
     }
+
     .job-title {
       font-size: 18px;
       font-weight: bold;
     }
+
     .viewBtn {
       background: #007bff;
       color: white;
@@ -27,7 +65,9 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      margin-top: 10px;
     }
+
     .modal {
       display: none;
       position: fixed;
@@ -38,6 +78,7 @@
       align-items: center;
       justify-content: center;
     }
+
     .modal-content {
       background: white;
       padding: 20px;
@@ -45,13 +86,18 @@
       width: 90%;
       max-width: 500px;
     }
+
     .proof-input {
       margin-bottom: 10px;
     }
+
     input[type="file"], input[type="text"] {
       width: 100%;
       padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
     }
+
     button {
       padding: 10px;
       margin-top: 10px;
@@ -59,11 +105,35 @@
       color: white;
       border: none;
       border-radius: 4px;
+      cursor: pointer;
     }
-    .status { margin-top: 10px; color: darkgreen; }
+
+    .status {
+      margin-top: 10px;
+      color: darkgreen;
+    }
   </style>
 </head>
 <body>
+
+<header>
+  <h1>Pagla Clickers Dashboard</h1>
+  <nav>
+    <a href="about.html">About</a>
+    <a href="notifications.html">Notifications</a>
+    <a href="profile.html">Profile</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="postjob.html">Post Job</a>
+    <a href="taskdetail.html">Tasks</a>
+    <a href="referel.html">Referral</a>
+    <a href="deposit.html">Deposit</a>
+    <a href="wallet.html">Wallet</a>
+    <a href="withdrawal.html">Withdraw Money</a>
+    <a href="terms.html">Terms</a>
+    <a href="faq.html">FAQ</a>
+    <a href="support.html">Support</a>
+  </nav>
+</header>
 
 <h2>Available Jobs</h2>
 <div id="jobsContainer"></div>
@@ -80,6 +150,7 @@
   </div>
 </div>
 
+<!-- Firebase Scripts (unchanged logic) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
   import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
@@ -200,7 +271,6 @@
     submitStatus.style.color = "black";
     submitStatus.textContent = "Uploading proofs... Please wait.";
 
-    // Upload function for screenshots
     async function uploadFile(file, proofName) {
       return new Promise((resolve, reject) => {
         const fileName = `${currentUser.uid}_${currentJob.id}_${proofName}_${Date.now()}`;
@@ -208,9 +278,7 @@
         const uploadTask = uploadBytesResumable(storageReference, file);
 
         uploadTask.on('state_changed',
-          (snapshot) => {
-            // Optionally could show progress here
-          },
+          () => {},
           (error) => reject(error),
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then(url => resolve(url));
@@ -220,7 +288,6 @@
     }
 
     try {
-      // Process each proof input:
       for (const input of inputs) {
         if (input.type === "text") {
           if (!input.value.trim()) {
@@ -235,13 +302,11 @@
             submitStatus.textContent = "Please select all screenshots.";
             return;
           }
-          // Upload screenshot & get URL
           const url = await uploadFile(input.files[0], input.name);
           proofData[input.name] = url;
         }
       }
 
-      // Save submission doc
       await setDoc(doc(db, `jobs/${currentJob.id}/submissions/${currentUser.uid}`), {
         userId: currentUser.uid,
         userEmail: currentUser.email,
