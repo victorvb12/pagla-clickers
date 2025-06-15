@@ -1,270 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>All Tasks - Pagla Clickers</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f8fc;
-      margin: 0;
-      padding: 0;
-    }
-    header, footer {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 15px;
-    }
-    nav {
-      background: #0056b3;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      padding: 10px;
-      flex-wrap: wrap;
-    }
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    .container {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .filters {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    .filters > * {
-      flex: 1 1 200px;
-    }
-    input[type="search"], select {
-      width: 100%;
-      padding: 8px 12px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    .job {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #ddd;
-      padding: 15px 0;
-    }
-    .job:last-child {
-      border-bottom: none;
-    }
-    .job-left {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    .reward {
-      font-weight: bold;
-      background-color: #007bff;
-      color: white;
-      padding: 6px 12px;
-      border-radius: 5px;
-      font-size: 14px;
-      min-width: 70px;
-      text-align: center;
-      white-space: nowrap;
-    }
-    .job-title {
-      font-weight: bold;
-      font-size: 16px;
-      color: #007bff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 450px;
-    }
-    .badge {
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: bold;
-      margin-left: 10px;
-      white-space: nowrap;
-      user-select: none;
-    }
-    .badge-own {
-      background-color: #ffc107;
-      color: #000;
-    }
-    .badge-completed {
-      background-color: #28a745;
-      color: white;
-    }
-    .badge-available {
-      background-color: #dc3545;
-      color: white;
-    }
-    .job-right {
-      text-align: right;
-      min-width: 180px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 5px;
-      white-space: nowrap;
-    }
-    .job-right a {
-      color: #0056b3;
-      text-decoration: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .job-right a:hover {
-      text-decoration: underline;
-    }
-    .job-stats {
-      font-size: 13px;
-      color: #666;
-    }
-
-    /* Modal styles */
-    .modal {
-      position: fixed;
-      z-index: 1000;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      background: white;
-      padding: 20px 30px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 500px;
-      position: relative;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .close {
-      position: absolute;
-      top: 10px; right: 15px;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-      color: #555;
-      user-select: none;
-    }
-
-    .close:hover {
-      color: #000;
-    }
-
-    #proofInput {
-      width: 100%;
-      font-size: 14px;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      resize: vertical;
-    }
-
-    #submitProofBtn {
-      margin-top: 10px;
-      padding: 10px 18px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    #submitProofBtn:disabled {
-      background-color: #999;
-      cursor: not-allowed;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pagla Clickers - Tasks</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
+  header, footer { background: #007bff; color: white; text-align: center; padding: 10px; }
+  #jobsContainer { padding: 20px; max-width: 800px; margin: 0 auto; }
+  .job { display: flex; justify-content: space-between; padding: 10px; background: white; margin-bottom: 10px; border-radius: 5px; }
+  .job-left { display: flex; align-items: center; }
+  .reward { font-weight: bold; font-size: 18px; color: green; margin-right: 15px; }
+  .job-title { font-weight: bold; }
+  .badge { padding: 3px 8px; border-radius: 4px; font-size: 12px; color: white; margin-left: 8px; }
+  .badge-own { background: purple; }
+  .badge-completed { background: gray; }
+  .badge-available { background: orange; }
+  .job-right { display: flex; flex-direction: column; justify-content: center; }
+  .job-stats { font-size: 12px; color: #666; margin-top: 5px; }
+  .viewDetailsLink { color: #007bff; cursor: pointer; text-decoration: underline; font-size: 14px; }
+  /* Modal styles */
+  #jobModal {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    justify-content: center; align-items: center;
+  }
+  #jobModalContent {
+    background: white; padding: 20px; border-radius: 8px; width: 400px; max-height: 90vh; overflow-y: auto;
+    position: relative;
+  }
+  #closeModal {
+    position: absolute; top: 10px; right: 10px; cursor: pointer; font-weight: bold; font-size: 18px;
+  }
+  label { display: block; margin-top: 12px; font-weight: bold; }
+  textarea { width: 100%; height: 70px; margin-top: 5px; }
+  input[type="file"] { margin-top: 5px; }
+  #submissionStatus { margin-top: 10px; font-weight: bold; color: green; }
+  #modalMessage { color: red; margin-top: 10px; font-weight: bold; }
+  button { margin-top: 15px; padding: 10px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+  button:disabled { background: gray; cursor: not-allowed; }
+  #searchInput, #categoryFilter, #sortFilter {
+    margin: 10px 10px 20px 10px;
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+</style>
 </head>
 <body>
 
 <header>
   <h1>Pagla Clickers - Available Tasks</h1>
-  <nav>
-    <a href="about.html">About</a>
-    <a href="notifications.html">Notifications</a>
-    <a href="profile.html">Profile</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="postjob.html">Post Job</a>
-    <a href="taskdetail.html">Tasks</a>
-    <a href="referel.html">Referral</a>
-    <a href="deposit.html">Deposit</a>
-    <a href="wallet.html">Wallet</a>
-    <a href="withdrawal.html">Withdraw Money</a>
-    <a href="terms.html">Terms</a>
-    <a href="faq.html">FAQ</a>
-    <a href="support.html">Support</a>
-  </nav>
 </header>
 
-<div class="container">
-  <div class="filters">
-    <input type="search" id="searchInput" placeholder="Search tasks by title..." />
-    <select id="categoryFilter">
-      <option value="">All Categories</option>
-      <option value="youtube">YouTube</option>
-      <option value="telegram">Telegram</option>
-      <option value="facebook">Facebook</option>
-    </select>
-    <select id="sortFilter">
-      <option value="rewardDesc">Sort by Reward: High to Low</option>
-      <option value="rewardAsc">Sort by Reward: Low to High</option>
-    </select>
-  </div>
-  <div id="jobsContainer">
-    <h2>Loading tasks...</h2>
-  </div>
+<div style="max-width: 800px; margin: 20px auto; display: flex; gap: 10px;">
+  <input type="text" id="searchInput" placeholder="Search tasks..." />
+  <select id="categoryFilter">
+    <option value="">All Categories</option>
+    <option value="marketing">Marketing</option>
+    <option value="design">Design</option>
+    <option value="writing">Writing</option>
+    <!-- Add more categories as needed -->
+  </select>
+  <select id="sortFilter">
+    <option value="rewardDesc">Sort by Reward: High to Low</option>
+    <option value="rewardAsc">Sort by Reward: Low to High</option>
+  </select>
 </div>
 
-<!-- Job Detail & Submission Modal -->
-<div id="jobModal" class="modal" style="display:none;">
-  <div class="modal-content">
-    <span id="closeModal" class="close">&times;</span>
+<div id="jobsContainer">
+  <!-- Jobs will be loaded here -->
+</div>
+
+<!-- Job Details Modal -->
+<div id="jobModal">
+  <div id="jobModalContent">
+    <span id="closeModal">&times;</span>
     <h2 id="modalJobTitle"></h2>
     <p id="modalJobDesc"></p>
     <p><strong>Reward:</strong> $<span id="modalJobReward"></span></p>
     <p><strong>Slots:</strong> <span id="modalJobSlots"></span></p>
     <p><strong>Submissions:</strong> <span id="modalJobSubmissions"></span></p>
 
-    <div id="submissionSection" style="display:none;">
-      <h3>Submit Your Proof</h3>
-      <textarea id="proofInput" rows="4" placeholder="Enter your proof here..."></textarea>
-      <br />
-      <button id="submitProofBtn">Submit</button>
-      <p id="submissionStatus" style="color:green; display:none;">Submitted successfully!</p>
+    <div id="submissionSection" style="margin-top: 15px;">
+      <form id="proofForm">
+        <div id="proofInput"></div>
+        <button type="button" id="submitProofBtn">Submit</button>
+      </form>
+      <div id="submissionStatus" style="display:none;"></div>
+      <div id="modalMessage"></div>
     </div>
-
-    <p id="modalMessage" style="color:red;"></p>
   </div>
 </div>
-
-<footer><p>&copy; 2025 Pagla Clickers</p></footer>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
@@ -276,11 +103,16 @@
     getDoc,
     setDoc
   } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-
   import {
     getAuth,
     onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import {
+    getStorage,
+    ref as storageRef,
+    uploadBytes,
+    getDownloadURL
+  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -295,6 +127,7 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
+  const storage = getStorage(app);
 
   let currentUser = null;
   let allJobs = [];
@@ -320,14 +153,12 @@
 
   let currentJobInModal = null;
 
-  // Wait for user auth state
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = user;
       await loadJobs();
       applyFilters();
     } else {
-      // Not signed in, show message or redirect
       jobsContainer.innerHTML = "<p>Please log in to see and submit tasks.</p>";
     }
   });
@@ -351,7 +182,8 @@
         submissions: Number(jobData.submissions) || 0,
         ownerId: jobData.ownerId || "",
         hasSubmitted: hasSubmitted,
-        isOwnJob: (jobData.ownerId === currentUser.uid)
+        isOwnJob: (jobData.ownerId === currentUser.uid),
+        proofType: jobData.proofType || ["text"]  // Expecting array e.g. ["text","ss"]
       });
     }
 
@@ -441,7 +273,6 @@
   sortFilter.addEventListener('change', applyFilters);
 
   // Modal functions
-
   closeModalBtn.onclick = () => {
     closeJobModal();
   };
@@ -462,17 +293,43 @@
     modalJobSubmissions.textContent = job.submissions;
 
     submissionStatus.style.display = 'none';
-    proofInput.value = '';
-    proofInput.style.display = 'block';
+    modalMessage.textContent = '';
     submitProofBtn.style.display = 'inline-block';
     submitProofBtn.disabled = false;
     submitProofBtn.textContent = "Submit";
-    modalMessage.textContent = '';
 
-    // Show submission form only if:
-    // - user is not owner
-    // - job slots not full (submissions < totalSlots)
-    // - user hasn't submitted yet
+    // Clear previous proof inputs
+    proofInput.innerHTML = '';
+
+    if (job.proofType && Array.isArray(job.proofType)) {
+      job.proofType.forEach((type, index) => {
+        const stepNumber = index + 1;
+        const label = document.createElement('label');
+        label.htmlFor = `proof${stepNumber}`;
+        label.textContent = `Proof Step ${stepNumber}: ${type === 'ss' ? 'Upload Screenshot' : 'Enter Text'}`;
+        proofInput.appendChild(label);
+
+        if (type === 'ss') {
+          const fileInput = document.createElement('input');
+          fileInput.type = 'file';
+          fileInput.accept = 'image/*';
+          fileInput.id = `proof${stepNumber}`;
+          proofInput.appendChild(fileInput);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.id = `proof${stepNumber}`;
+          textarea.placeholder = `Enter proof text for step ${stepNumber}...`;
+          proofInput.appendChild(textarea);
+        }
+      });
+    } else {
+      // fallback
+      const textarea = document.createElement('textarea');
+      textarea.id = 'proof1';
+      textarea.placeholder = 'Enter proof text...';
+      proofInput.appendChild(textarea);
+    }
+
     if (!job.hasSubmitted && !job.isOwnJob && job.submissions < job.totalSlots) {
       submissionSection.style.display = 'block';
     } else {
@@ -495,24 +352,60 @@
   }
 
   submitProofBtn.onclick = async () => {
-    const proofText = proofInput.value.trim();
+    modalMessage.textContent = "";
 
-    if (!proofText) {
-      modalMessage.textContent = "Please enter your proof before submitting.";
+    if (!currentJobInModal || !currentJobInModal.proofType) {
+      modalMessage.textContent = "Invalid job proof requirements.";
       return;
     }
 
-    modalMessage.textContent = "";
     submitProofBtn.disabled = true;
     submitProofBtn.textContent = "Submitting...";
 
     try {
-      // Save proof to Firestore:
-      // Collection path: jobs/{jobId}/submissions/{userId}
+      const proofs = {};
+
+      for (let i = 0; i < currentJobInModal.proofType.length; i++) {
+        const step = i + 1;
+        const proofType = currentJobInModal.proofType[i];
+        const inputEl = document.getElementById(`proof${step}`);
+
+        if (!inputEl) throw new Error(`Proof input for step ${step} not found.`);
+
+        if (proofType === 'ss') {
+          if (inputEl.files.length === 0) {
+            throw new Error(`Please upload a screenshot for proof step ${step}.`);
+          }
+
+          const file = inputEl.files[0];
+          const storagePath = `jobProofs/${currentJobInModal.id}/${currentUser.uid}/proof${step}_${Date.now()}_${file.name}`;
+          const proofStorageRef = storageRef(storage, storagePath);
+
+          await uploadBytes(proofStorageRef, file);
+
+          const downloadURL = await getDownloadURL(proofStorageRef);
+          proofs[`proof${step}`] = {
+            type: 'ss',
+            url: downloadURL,
+            name: file.name
+          };
+
+        } else {
+          const val = inputEl.value.trim();
+          if (!val) {
+            throw new Error(`Please enter text for proof step ${step}.`);
+          }
+          proofs[`proof${step}`] = {
+            type: 'text',
+            content: val
+          };
+        }
+      }
+
       const submissionRef = doc(db, `jobs/${currentJobInModal.id}/submissions`, currentUser.uid);
 
       await setDoc(submissionRef, {
-        proof: proofText,
+        proofs,
         timestamp: new Date(),
         userId: currentUser.uid,
         userEmail: currentUser.email
@@ -523,13 +416,12 @@
       submitProofBtn.style.display = 'none';
       proofInput.style.display = 'none';
 
-      // Update submissions count locally to reflect in modal UI
       currentJobInModal.submissions += 1;
       currentJobInModal.hasSubmitted = true;
       modalJobSubmissions.textContent = currentJobInModal.submissions;
 
-      // Refresh main list to update badges/stats
       applyFilters();
+
     } catch (error) {
       modalMessage.textContent = "Error submitting proof: " + error.message;
     } finally {
@@ -538,6 +430,10 @@
     }
   };
 </script>
+
+<footer>
+  <p>© 2025 Pagla Clickers</p>
+</footer>
 
 </body>
 </html>
