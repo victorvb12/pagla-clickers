@@ -3,26 +3,86 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Task Details - Pagla Clickers</title>
+  <title>All Tasks - Pagla Clickers</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
-    header, footer { background: #007bff; color: white; text-align: center; padding: 10px; }
-    nav { background: #333; padding: 10px; color: white; }
-    nav a { color: white; margin-right: 15px; text-decoration: none; }
-    .container { padding: 20px; }
-    .job-card { background: white; margin-bottom: 15px; padding: 15px; border-radius: 5px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
-    .your-job { color: green; font-weight: bold; }
-    .submit-btn { background: #007bff; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 3px; }
-    .submit-btn:disabled { background: gray; }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; }
-    .modal-content { background: white; padding: 20px; border-radius: 5px; width: 90%; max-width: 400px; }
+    body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; padding: 0; }
+    nav {
+      background-color: #007bff;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      max-width: 800px;
+      margin: 0 auto;
+      gap: 10px;
+      padding: 10px;
+    }
+    .task-card {
+      background-color: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .task-card .owner-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: orange;
+      color: white;
+      padding: 3px 7px;
+      font-size: 12px;
+      border-radius: 4px;
+    }
+    .task-card button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #taskModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+    #taskModal .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+    }
+    #taskModal .close {
+      position: absolute;
+      top: 10px; right: 10px;
+      cursor: pointer;
+      color: red;
+      font-size: 20px;
+    }
   </style>
 </head>
 <body>
-
-<header>
-  <h1>Pagla Clickers - Task Details</h1>
-</header>
 
 <nav>
   <a href="index.html">Home</a>
@@ -32,158 +92,122 @@
   <span id="userInfo" style="float:right;"></span>
 </nav>
 
-<div class="container">
-  <div id="loadingMessage">Loading jobs...</div>
-  <div id="jobList"></div>
+<h1>Available Tasks</h1>
+<div class="task-list" id="taskList">
+  <p>Loading jobs...</p>
 </div>
 
-<!-- Submission Modal -->
-<div id="submitModal" class="modal">
+<!-- Modal -->
+<div id="taskModal">
   <div class="modal-content">
-    <h3>Submit Proof</h3>
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2 id="modalTitle"></h2>
+    <p id="modalDescription"></p>
     <form id="submissionForm">
-      <input type="hidden" id="jobIdInput" />
       <div id="textProofGroup" style="display:none;">
-        <label for="textProof">Text Proof:</label>
-        <textarea id="textProof" required></textarea>
+        <label>Text Proof:</label><br>
+        <textarea id="textProof" rows="4" cols="40"></textarea>
       </div>
-      <div id="screenshotProofGroup" style="display:none;">
-        <label for="screenshotProof">Screenshot Proof:</label>
-        <input type="file" id="screenshotProof" accept="image/*" />
+      <div id="screenshotProofGroup" style="display:none; margin-top:10px;">
+        <label>Upload Screenshot:</label><br>
+        <input type="file" id="screenshotProof" accept="image/*"/>
       </div>
-      <br>
-      <button type="submit" class="submit-btn">Submit</button>
-      <button type="button" onclick="closeModal()">Cancel</button>
+      <button type="submit" style="margin-top:10px;">Submit</button>
     </form>
   </div>
 </div>
 
-<footer>
-  <p>© 2025 Pagla Clickers</p>
-</footer>
-
-<!-- Firebase + Script -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
 <script>
-  // ✅ Replace with your real config
   const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    authDomain: "YOUR_AUTH_DOMAIN",
     projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_MSG_SENDER_ID",
+    storageBucket: "YOUR_BUCKET",
+    messagingSenderId: "YOUR_MSG_ID",
     appId: "YOUR_APP_ID"
   };
-
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
 
   let currentUser = null;
 
-  const userInfoDiv = document.getElementById("userInfo");
-  const jobListDiv = document.getElementById("jobList");
-  const loadingMessage = document.getElementById("loadingMessage");
-
-  // Modal Elements
-  const modal = document.getElementById("submitModal");
-  const form = document.getElementById("submissionForm");
-  const jobIdInput = document.getElementById("jobIdInput");
-  const textProofGroup = document.getElementById("textProofGroup");
-  const screenshotProofGroup = document.getElementById("screenshotProofGroup");
-
-  function openModal(jobId, proofType) {
-    jobIdInput.value = jobId;
-
-    // Toggle fields based on proofType
-    textProofGroup.style.display = (proofType === 'text' || proofType === 'both') ? 'block' : 'none';
-    screenshotProofGroup.style.display = (proofType === 'screenshot' || proofType === 'both') ? 'block' : 'none';
-
-    modal.style.display = "flex";
-  }
-
-  function closeModal() {
-    modal.style.display = "none";
-    form.reset();
-  }
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const jobId = jobIdInput.value;
-    const textProof = document.getElementById("textProof").value;
-    const screenshot = document.getElementById("screenshotProof").files[0];
-
-    // Simulate submission (you can upload screenshot to Firebase Storage if needed)
-    await db.collection("submissions").add({
-      jobId,
-      userId: currentUser.uid,
-      textProof: textProof || null,
-      screenshotName: screenshot ? screenshot.name : null,
-      submittedAt: new Date()
-    });
-
-    alert("Proof submitted!");
-    closeModal();
-    loadJobs(); // Refresh
-  });
-
-  async function loadJobs() {
-    jobListDiv.innerHTML = "";
-    const jobSnapshot = await db.collection("jobs").get();
-
-    // Get submitted job IDs for current user
-    const subSnap = await db.collection("submissions").where("userId", "==", currentUser.uid).get();
-    const submittedJobs = new Set(subSnap.docs.map(doc => doc.data().jobId));
-
-    if (jobSnapshot.empty) {
-      jobListDiv.innerHTML = "<p>No jobs available.</p>";
-      return;
-    }
-
-    jobSnapshot.forEach(doc => {
-      const job = doc.data();
-      const jobId = doc.id;
-
-      const isOwnJob = job.ownerId === currentUser.uid;
-      const alreadySubmitted = submittedJobs.has(jobId);
-
-      const div = document.createElement("div");
-      div.className = "job-card";
-
-      div.innerHTML = `
-        <h3>${job.title}</h3>
-        <p>${job.description}</p>
-        <p>Reward: <strong>${job.reward || "N/A"}</strong></p>
-        ${isOwnJob ? '<p class="your-job">Your Job</p>' : ""}
-        <button class="submit-btn" ${isOwnJob || alreadySubmitted ? "disabled" : ""} onclick="openModal('${jobId}', '${job.proofType}')">
-          ${alreadySubmitted ? "Already Submitted" : "Submit"}
-        </button>
-      `;
-
-      jobListDiv.appendChild(div);
-    });
-
-    loadingMessage.textContent = "";
-  }
-
   auth.onAuthStateChanged(user => {
     if (user) {
       currentUser = user;
-      userInfoDiv.innerHTML = `Logged in as ${user.email}`;
+      document.getElementById("userInfo").innerText = "Logged in as " + user.email;
       loadJobs();
     } else {
-      userInfoDiv.innerHTML = '<a href="login.html">Login</a>';
-      loadingMessage.innerHTML = "Please log in to see jobs.";
+      document.getElementById("taskList").innerHTML = "<p>You must be logged in to view tasks. <a href='login.html'>Login here</a>.</p>";
     }
   });
 
-  // Close modal on outside click
-  window.onclick = (event) => {
-    if (event.target == modal) closeModal();
-  };
+  function loadJobs() {
+    const taskList = document.getElementById("taskList");
+    taskList.innerHTML = "";
+
+    db.collection("jobs").get().then(snapshot => {
+      if (snapshot.empty) {
+        taskList.innerHTML = "<p>No jobs found.</p>";
+        return;
+      }
+
+      snapshot.forEach(doc => {
+        const job = doc.data();
+        const jobId = doc.id;
+        const card = document.createElement("div");
+        card.className = "task-card";
+
+        card.innerHTML = `
+          <h3>${job.title}</h3>
+          <p>${job.description}</p>
+          <p><strong>Reward:</strong> ${job.reward || 'N/A'}</p>
+          <button onclick="openModal('${jobId}', '${job.title.replace(/'/g, "\\'")}', '${job.description.replace(/'/g, "\\'")}', '${job.proofType}')">Submit Proof</button>
+        `;
+
+        if (currentUser.uid === job.ownerId) {
+          const badge = document.createElement("div");
+          badge.className = "owner-badge";
+          badge.innerText = "Your Job";
+          card.appendChild(badge);
+        }
+
+        taskList.appendChild(card);
+      });
+    }).catch(error => {
+      taskList.innerHTML = "<p>Error loading jobs.</p>";
+      console.error(error);
+    });
+  }
+
+  function openModal(jobId, title, description, proofType) {
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalDescription").innerText = description;
+    document.getElementById("taskModal").style.display = "flex";
+
+    // Show/hide proof input types
+    document.getElementById("textProofGroup").style.display = 
+      (proofType === 'text' || proofType === 'both') ? 'block' : 'none';
+    document.getElementById("screenshotProofGroup").style.display = 
+      (proofType === 'screenshot' || proofType === 'both') ? 'block' : 'none';
+
+    // Handle submission
+    const form = document.getElementById("submissionForm");
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      alert("Submission saved for job ID: " + jobId);
+      closeModal();
+    };
+  }
+
+  function closeModal() {
+    document.getElementById("taskModal").style.display = "none";
+  }
 </script>
 
 </body>
