@@ -1,80 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Pagla Clickers - Tasks</title>
-<style>
-  body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
-  header, footer { background: #007bff; color: white; text-align: center; padding: 10px; }
-  #jobsContainer { padding: 20px; max-width: 800px; margin: 0 auto; }
-  .job { display: flex; justify-content: space-between; padding: 10px; background: white; margin-bottom: 10px; border-radius: 5px; }
-  .job-left { display: flex; align-items: center; }
-  .reward { font-weight: bold; font-size: 18px; color: green; margin-right: 15px; }
-  .job-title { font-weight: bold; }
-  .badge { padding: 3px 8px; border-radius: 4px; font-size: 12px; color: white; margin-left: 8px; }
-  .badge-own { background: purple; }
-  .badge-completed { background: gray; }
-  .badge-available { background: orange; }
-  .job-right { display: flex; flex-direction: column; justify-content: center; }
-  .job-stats { font-size: 12px; color: #666; margin-top: 5px; }
-  .viewDetailsLink { color: #007bff; cursor: pointer; text-decoration: underline; font-size: 14px; }
-  /* Modal styles */
-  #jobModal {
-    display: none;
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
-    justify-content: center; align-items: center;
-  }
-  #jobModalContent {
-    background: white; padding: 20px; border-radius: 8px; width: 400px; max-height: 90vh; overflow-y: auto;
-    position: relative;
-  }
-  #closeModal {
-    position: absolute; top: 10px; right: 10px; cursor: pointer; font-weight: bold; font-size: 18px;
-  }
-  label { display: block; margin-top: 12px; font-weight: bold; }
-  textarea { width: 100%; height: 70px; margin-top: 5px; }
-  input[type="file"] { margin-top: 5px; }
-  #submissionStatus { margin-top: 10px; font-weight: bold; color: green; }
-  #modalMessage { color: red; margin-top: 10px; font-weight: bold; }
-  button { margin-top: 15px; padding: 10px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-  button:disabled { background: gray; cursor: not-allowed; }
-  #searchInput, #categoryFilter, #sortFilter {
-    margin: 10px 10px 20px 10px;
-    padding: 5px 10px;
-    font-size: 14px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>Pagla Clickers - Task Detail</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
+    #jobsContainer { max-width: 700px; margin: 20px auto; }
+    .job { background: white; margin-bottom: 15px; padding: 10px 15px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px #ddd; }
+    .job-title { font-weight: bold; font-size: 18px; }
+    .badge { padding: 2px 8px; border-radius: 12px; font-size: 12px; color: white; margin-left: 8px; }
+    .badge-own { background: #6c757d; }
+    .badge-completed { background: #28a745; }
+    .badge-available { background: #dc3545; }
+    .job-stats { font-size: 14px; color: #555; }
+    a.viewDetailsLink { cursor: pointer; color: #007bff; text-decoration: none; }
+    a.viewDetailsLink:hover { text-decoration: underline; }
+    #jobModal {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    #jobModal > div {
+      background: white;
+      max-width: 600px;
+      width: 90%;
+      border-radius: 6px;
+      padding: 20px;
+      position: relative;
+    }
+    #closeModal {
+      position: absolute;
+      right: 15px; top: 10px;
+      font-size: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #333;
+    }
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    textarea { width: 100%; height: 100px; margin-top: 5px; resize: vertical; }
+    input[type="file"] { margin-top: 5px; }
+    #submitProofBtn {
+      margin-top: 15px;
+      background: #007bff;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    #submitProofBtn:disabled {
+      background: #a0c6ff;
+      cursor: not-allowed;
+    }
+    #submissionStatus {
+      margin-top: 10px;
+      font-weight: bold;
+      color: green;
+      display: none;
+    }
+    #modalMessage {
+      margin-top: 10px;
+      color: red;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <h1>Pagla Clickers - Available Tasks</h1>
-</header>
+<div id="jobsContainer"></div>
 
-<div style="max-width: 800px; margin: 20px auto; display: flex; gap: 10px;">
-  <input type="text" id="searchInput" placeholder="Search tasks..." />
-  <select id="categoryFilter">
-    <option value="">All Categories</option>
-    <option value="marketing">Marketing</option>
-    <option value="design">Design</option>
-    <option value="writing">Writing</option>
-    <!-- Add more categories as needed -->
-  </select>
-  <select id="sortFilter">
-    <option value="rewardDesc">Sort by Reward: High to Low</option>
-    <option value="rewardAsc">Sort by Reward: Low to High</option>
-  </select>
-</div>
-
-<div id="jobsContainer">
-  <!-- Jobs will be loaded here -->
-</div>
-
-<!-- Job Details Modal -->
 <div id="jobModal">
-  <div id="jobModalContent">
+  <div>
     <span id="closeModal">&times;</span>
     <h2 id="modalJobTitle"></h2>
     <p id="modalJobDesc"></p>
@@ -82,14 +82,15 @@
     <p><strong>Slots:</strong> <span id="modalJobSlots"></span></p>
     <p><strong>Submissions:</strong> <span id="modalJobSubmissions"></span></p>
 
-    <div id="submissionSection" style="margin-top: 15px;">
+    <div id="submissionSection">
       <form id="proofForm">
         <div id="proofInput"></div>
         <button type="button" id="submitProofBtn">Submit</button>
       </form>
-      <div id="submissionStatus" style="display:none;"></div>
-      <div id="modalMessage"></div>
     </div>
+
+    <div id="submissionStatus"></div>
+    <div id="modalMessage"></div>
   </div>
 </div>
 
@@ -133,11 +134,6 @@
   let allJobs = [];
 
   const jobsContainer = document.getElementById('jobsContainer');
-  const searchInput = document.getElementById('searchInput');
-  const categoryFilter = document.getElementById('categoryFilter');
-  const sortFilter = document.getElementById('sortFilter');
-
-  // Modal elements
   const jobModal = document.getElementById('jobModal');
   const closeModalBtn = document.getElementById('closeModal');
   const modalJobTitle = document.getElementById('modalJobTitle');
@@ -157,7 +153,7 @@
     if (user) {
       currentUser = user;
       await loadJobs();
-      applyFilters();
+      renderJobs(allJobs);
     } else {
       jobsContainer.innerHTML = "<p>Please log in to see and submit tasks.</p>";
     }
@@ -169,7 +165,7 @@
 
     for (const docSnap of jobsSnapshot.docs) {
       const jobData = docSnap.data();
-      // Check if user submitted for this job
+
       const submissionDoc = await getDoc(doc(db, "jobs", docSnap.id, "submissions", currentUser.uid));
       const hasSubmitted = submissionDoc.exists();
 
@@ -183,7 +179,7 @@
         ownerId: jobData.ownerId || "",
         hasSubmitted: hasSubmitted,
         isOwnJob: (jobData.ownerId === currentUser.uid),
-        proofType: jobData.proofType || ["text"]  // Expecting array e.g. ["text","ss"]
+        proofType: jobData.proofType || "text" // default to text if missing
       });
     }
 
@@ -194,7 +190,7 @@
     jobsContainer.innerHTML = "";
 
     if (jobs.length === 0) {
-      jobsContainer.innerHTML = "<p>No tasks match your criteria.</p>";
+      jobsContainer.innerHTML = "<p>No tasks available.</p>";
       return;
     }
 
@@ -219,22 +215,18 @@
       jobEl.classList.add('job');
 
       jobEl.innerHTML = `
-        <div class="job-left">
-          <div class="reward">$${job.reward.toFixed(2)}</div>
-          <div>
-            <div class="job-title" title="${job.title}">${job.title} <span class="badge ${badgeClass}">${badgeText}</span></div>
-          </div>
+        <div>
+          <div class="job-title" title="${job.title}">${job.title} <span class="badge ${badgeClass}">${badgeText}</span></div>
+          <div>Reward: $${job.reward.toFixed(2)} | Slots: ${job.submissions}/${job.totalSlots}</div>
         </div>
-        <div class="job-right">
+        <div>
           <a href="#" class="viewDetailsLink" data-job-index="${index}">View Details</a>
-          <div class="job-stats">${job.submissions}/${job.totalSlots} Done</div>
         </div>
       `;
 
       jobsContainer.appendChild(jobEl);
     });
 
-    // Add click listeners for all "View Details" links
     document.querySelectorAll('.viewDetailsLink').forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -244,35 +236,6 @@
     });
   }
 
-  function applyFilters() {
-    const searchTerm = searchInput.value.trim().toLowerCase();
-    const selectedCategory = categoryFilter.value;
-    const sortOrder = sortFilter.value;
-
-    let filteredJobs = allJobs;
-
-    if (selectedCategory) {
-      filteredJobs = filteredJobs.filter(job => job.category.toLowerCase() === selectedCategory.toLowerCase());
-    }
-
-    if (searchTerm) {
-      filteredJobs = filteredJobs.filter(job => job.title.toLowerCase().includes(searchTerm));
-    }
-
-    if (sortOrder === "rewardAsc") {
-      filteredJobs.sort((a, b) => a.reward - b.reward);
-    } else {
-      filteredJobs.sort((a, b) => b.reward - a.reward);
-    }
-
-    renderJobs(filteredJobs);
-  }
-
-  searchInput.addEventListener('input', applyFilters);
-  categoryFilter.addEventListener('change', applyFilters);
-  sortFilter.addEventListener('change', applyFilters);
-
-  // Modal functions
   closeModalBtn.onclick = () => {
     closeJobModal();
   };
@@ -282,6 +245,10 @@
       closeJobModal();
     }
   };
+
+  function clearProofInputs() {
+    proofInput.innerHTML = '';
+  }
 
   function openJobModal(job) {
     currentJobInModal = job;
@@ -298,42 +265,74 @@
     submitProofBtn.disabled = false;
     submitProofBtn.textContent = "Submit";
 
-    // Clear previous proof inputs
-    proofInput.innerHTML = '';
-
-    if (job.proofType && Array.isArray(job.proofType)) {
-      job.proofType.forEach((type, index) => {
-        const stepNumber = index + 1;
-        const label = document.createElement('label');
-        label.htmlFor = `proof${stepNumber}`;
-        label.textContent = `Proof Step ${stepNumber}: ${type === 'ss' ? 'Upload Screenshot' : 'Enter Text'}`;
-        proofInput.appendChild(label);
-
-        if (type === 'ss') {
-          const fileInput = document.createElement('input');
-          fileInput.type = 'file';
-          fileInput.accept = 'image/*';
-          fileInput.id = `proof${stepNumber}`;
-          proofInput.appendChild(fileInput);
-        } else {
-          const textarea = document.createElement('textarea');
-          textarea.id = `proof${stepNumber}`;
-          textarea.placeholder = `Enter proof text for step ${stepNumber}...`;
-          proofInput.appendChild(textarea);
-        }
-      });
-    } else {
-      // fallback
-      const textarea = document.createElement('textarea');
-      textarea.id = 'proof1';
-      textarea.placeholder = 'Enter proof text...';
-      proofInput.appendChild(textarea);
-    }
+    clearProofInputs();
 
     if (!job.hasSubmitted && !job.isOwnJob && job.submissions < job.totalSlots) {
+      // Show inputs based on proofType
       submissionSection.style.display = 'block';
+
+      if (job.proofType === 'text') {
+        const label = document.createElement('label');
+        label.htmlFor = 'proofText';
+        label.textContent = 'Enter Proof Text:';
+        proofInput.appendChild(label);
+
+        const textarea = document.createElement('textarea');
+        textarea.id = 'proofText';
+        textarea.placeholder = 'Enter proof text here...';
+        proofInput.appendChild(textarea);
+
+      } else if (job.proofType === 'ss') {
+        const label = document.createElement('label');
+        label.htmlFor = 'proofSS';
+        label.textContent = 'Upload Screenshot Proof:';
+        proofInput.appendChild(label);
+
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        fileInput.id = 'proofSS';
+        proofInput.appendChild(fileInput);
+
+      } else if (job.proofType === 'both') {
+        // Text area first
+        const labelText = document.createElement('label');
+        labelText.htmlFor = 'proofText';
+        labelText.textContent = 'Enter Proof Text:';
+        proofInput.appendChild(labelText);
+
+        const textarea = document.createElement('textarea');
+        textarea.id = 'proofText';
+        textarea.placeholder = 'Enter proof text here...';
+        proofInput.appendChild(textarea);
+
+        // File input second
+        const labelSS = document.createElement('label');
+        labelSS.htmlFor = 'proofSS';
+        labelSS.textContent = 'Upload Screenshot Proof:';
+        proofInput.appendChild(labelSS);
+
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        fileInput.id = 'proofSS';
+        proofInput.appendChild(fileInput);
+      } else {
+        // fallback: text input
+        const label = document.createElement('label');
+        label.htmlFor = 'proofText';
+        label.textContent = 'Enter Proof Text:';
+        proofInput.appendChild(label);
+
+        const textarea = document.createElement('textarea');
+        textarea.id = 'proofText';
+        textarea.placeholder = 'Enter proof text here...';
+        proofInput.appendChild(textarea);
+      }
+
     } else {
       submissionSection.style.display = 'none';
+
       if (job.isOwnJob) {
         modalMessage.textContent = "You cannot submit proof to your own job.";
       } else if (job.hasSubmitted) {
@@ -363,43 +362,54 @@
     submitProofBtn.textContent = "Submitting...";
 
     try {
+      const proofType = currentJobInModal.proofType;
       const proofs = {};
 
-      for (let i = 0; i < currentJobInModal.proofType.length; i++) {
-        const step = i + 1;
-        const proofType = currentJobInModal.proofType[i];
-        const inputEl = document.getElementById(`proof${step}`);
-
-        if (!inputEl) throw new Error(`Proof input for step ${step} not found.`);
-
-        if (proofType === 'ss') {
-          if (inputEl.files.length === 0) {
-            throw new Error(`Please upload a screenshot for proof step ${step}.`);
-          }
-
-          const file = inputEl.files[0];
-          const storagePath = `jobProofs/${currentJobInModal.id}/${currentUser.uid}/proof${step}_${Date.now()}_${file.name}`;
-          const proofStorageRef = storageRef(storage, storagePath);
-
-          await uploadBytes(proofStorageRef, file);
-
-          const downloadURL = await getDownloadURL(proofStorageRef);
-          proofs[`proof${step}`] = {
-            type: 'ss',
-            url: downloadURL,
-            name: file.name
-          };
-
-        } else {
-          const val = inputEl.value.trim();
-          if (!val) {
-            throw new Error(`Please enter text for proof step ${step}.`);
-          }
-          proofs[`proof${step}`] = {
-            type: 'text',
-            content: val
-          };
+      if (proofType === 'text') {
+        const textInput = document.getElementById('proofText');
+        if (!textInput || !textInput.value.trim()) {
+          throw new Error("Please enter proof text.");
         }
+        proofs.text = textInput.value.trim();
+
+      } else if (proofType === 'ss') {
+        const fileInput = document.getElementById('proofSS');
+        if (!fileInput || fileInput.files.length === 0) {
+          throw new Error("Please upload a screenshot.");
+        }
+        const file = fileInput.files[0];
+        const storagePath = `jobProofs/${currentJobInModal.id}/${currentUser.uid}/proof_ss_${Date.now()}_${file.name}`;
+        const proofStorageRef = storageRef(storage, storagePath);
+
+        await uploadBytes(proofStorageRef, file);
+        const downloadURL = await getDownloadURL(proofStorageRef);
+
+        proofs.screenshotURL = downloadURL;
+
+      } else if (proofType === 'both') {
+        const textInput = document.getElementById('proofText');
+        const fileInput = document.getElementById('proofSS');
+
+        if (!textInput || !textInput.value.trim()) {
+          throw new Error("Please enter proof text.");
+        }
+        if (!fileInput || fileInput.files.length === 0) {
+          throw new Error("Please upload a screenshot.");
+        }
+
+        proofs.text = textInput.value.trim();
+
+        const file = fileInput.files[0];
+        const storagePath = `jobProofs/${currentJobInModal.id}/${currentUser.uid}/proof_ss_${Date.now()}_${file.name}`;
+        const proofStorageRef = storageRef(storage, storagePath);
+
+        await uploadBytes(proofStorageRef, file);
+        const downloadURL = await getDownloadURL(proofStorageRef);
+
+        proofs.screenshotURL = downloadURL;
+
+      } else {
+        throw new Error("Unknown proof type.");
       }
 
       const submissionRef = doc(db, `jobs/${currentJobInModal.id}/submissions`, currentUser.uid);
@@ -420,7 +430,7 @@
       currentJobInModal.hasSubmitted = true;
       modalJobSubmissions.textContent = currentJobInModal.submissions;
 
-      applyFilters();
+      renderJobs(allJobs);
 
     } catch (error) {
       modalMessage.textContent = "Error submitting proof: " + error.message;
@@ -430,10 +440,6 @@
     }
   };
 </script>
-
-<footer>
-  <p>© 2025 Pagla Clickers</p>
-</footer>
 
 </body>
 </html>
