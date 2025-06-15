@@ -87,18 +87,18 @@
 </header>
 <div class="navbar">
   <a href="about.html">About</a>
-    <a href="notifications.html">Notifications</a>
-    <a href="profile.html">Profile</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="postjob.html">Post Job</a>
-    <a href="taskdetail.html">Tasks</a>
-    <a href="referel.html">Referral</a>
-    <a href="deposit.html">Deposit</a>
-    <a href="wallet.html">Wallet</a>
-    <a href="withdrawal.html">Withdraw Money</a>
-    <a href="terms.html">Terms</a>
-    <a href="faq.html">FAQ</a>
-    <a href="support.html">Support</a>
+  <a href="notifications.html">Notifications</a>
+  <a href="profile.html">Profile</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="postjob.html">Post Job</a>
+  <a href="taskdetail.html">Tasks</a>
+  <a href="referel.html">Referral</a>
+  <a href="deposit.html">Deposit</a>
+  <a href="wallet.html">Wallet</a>
+  <a href="withdrawal.html">Withdraw Money</a>
+  <a href="terms.html">Terms</a>
+  <a href="faq.html">FAQ</a>
+  <a href="support.html">Support</a>
 </div>
 
 <div class="container">
@@ -116,7 +116,10 @@
     </select>
 
     <label for="txnId">Transaction ID</label>
-    <input type="text" id="txnId" placeholder="Enter transaction/reference ID">
+    <input type="text" id="txnId" placeholder="Enter transaction/reference ID" required>
+
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone" placeholder="Enter your phone number" required>
 
     <div class="note">* Please ensure you send money before submitting this form.</div>
 
@@ -157,9 +160,11 @@
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
       const amount = parseFloat(document.getElementById('amount').value);
       const method = document.getElementById('method').value;
       const txnId = document.getElementById('txnId').value;
+      const phone = document.getElementById('phone').value;
 
       try {
         await addDoc(collection(db, "deposits"), {
@@ -168,6 +173,7 @@
           amount,
           method,
           txnId,
+          phone,
           status: "pending",
           createdAt: serverTimestamp()
         });
