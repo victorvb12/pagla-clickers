@@ -2,70 +2,104 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Pagla Clickers - Task Details</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #f9f9f9;
-    }
-    #tasksContainer > div {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-      background: #fff;
-      margin-bottom: 5px;
-      border-radius: 4px;
-    }
-  </style>
+  <title>Jobs List</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 </head>
 <body>
-  <h1>Available Jobs</h1>
-  <div id="tasksContainer">Loading tasks...</div>
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <h1>Jobs List</h1>
+  <div id="jobs-container">Loading jobs...</div>
 
   <script>
-    // Your Firebase config — REPLACE with your actual config
+    // Your Firebase config here
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
       projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      // rest of config...
     };
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-
-    // Initialize Firestore
     const db = firebase.firestore();
+    const auth = firebase.auth();
 
-    const tasksContainer = document.getElementById("tasksContainer");
+    // Wait for auth state to ensure user is logged in
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        console.log('Logged in as:', user.uid);
+        loadJobs();
+      } else {
+        document.getElementById('jobs-container').innerText = "Please log in to see jobs.";
+      }
+    });
 
-    // Fetch jobs collection once (no real-time update)
-    db.collection("jobs").get()
-      .then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          tasksContainer.innerHTML = "<p>No jobs found.</p>";
-          return;
-        }
+    function loadJobs() {
+      const jobsRef = db.collection('jobs');
+      jobsRef.get()
+        .then(snapshot => {
+          const container = document.getElementById('jobs-container');
+          container.innerHTML = ''; // clear loading text
 
-        tasksContainer.innerHTML = ""; // Clear loading text
+          if (snapshot.empty) {
+            container.innerText = "No jobs found.";
+            return;
+          }
 
-        querySnapshot.forEach((doc) => {
-          const job = doc.data();
-          const div = document.createElement("div");
-          div.textContent = `Title: ${job.title || "No title"} | Proof Type: ${job.proofType || "N/A"}`;
-          tasksContainer.appendChild(div);
+          snapshot.forEach(doc => {
+            const job = doc.data();
+
+            // Example: show job title, description, reward, and proofs array
+            const jobDiv = document.createElement('div');
+            jobDiv.style.border = "1px solid #ccc";
+            jobDiv.style.margin = "10px";
+            jobDiv.style.padding = "10px";
+
+            // Proofs summary - unique proof types only
+            const uniqueProofs = [...new Set(job.proofs)];
+
+            jobDiv.innerHTML = `
+              <h3>${job.title}</h3>
+              <p><strong>Description:</strong> ${job.description}</p>
+              <p><strong>Reward:</strong> ${job.reward} points</p>
+              <p><strong>Proof types required:</strong> ${uniqueProofs.join(", ")}</p>
+              <button onclick="showSubmissionForm('${doc.id}', ${JSON.stringify(uniqueProofs)})">Submit Work</button>
+            `;
+
+            container.appendChild(jobDiv);
+          });
+        })
+        .catch(error => {
+          console.error("Error loading jobs:", error);
+          document.getElementById('jobs-container').innerText = "Error loading jobs.";
         });
-      })
-      .catch((error) => {
-        console.error("Error loading jobs:", error);
-        tasksContainer.innerHTML = "<p>Error loading jobs.</p>";
+    }
+
+    // Example: submission form depending on proof types
+    function showSubmissionForm(jobId, proofTypes) {
+      let formHtml = `<h3>Submit Work for Job ${jobId}</h3><form id="submissionForm">`;
+
+      // Show form fields depending on proofTypes array
+      if (proofTypes.includes('text')) {
+        formHtml += `<label>Text Proof:<br><textarea name="textProof" required></textarea></label><br>`;
+      }
+      if (proofTypes.includes('screenshot')) {
+        formHtml += `<label>Screenshot Proof:<br><input type="file" name="screenshotProof" accept="image/*" required></label><br>`;
+      }
+
+      formHtml += `<button type="submit">Submit</button></form>`;
+
+      // Display form in a modal or replace container for demo purpose
+      const container = document.getElementById('jobs-container');
+      container.innerHTML = formHtml;
+
+      document.getElementById('submissionForm').addEventListener('submit', e => {
+        e.preventDefault();
+        alert('Submission logic here');
+        // You can handle uploading text proof, screenshot, etc.
       });
+    }
   </script>
 </body>
 </html>
