@@ -1,119 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Pagla Clickers - Task Detail</title>
+  <meta charset="UTF-8">
+  <title>Task Details - Pagla Clickers</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
-    #jobsContainer { max-width: 700px; margin: 20px auto; }
-    .job { background: white; margin-bottom: 15px; padding: 10px 15px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px #ddd; }
-    .job-title { font-weight: bold; font-size: 18px; }
-    .badge { padding: 2px 8px; border-radius: 12px; font-size: 12px; color: white; margin-left: 8px; }
-    .badge-own { background: #6c757d; }
-    .badge-completed { background: #28a745; }
-    .badge-available { background: #dc3545; }
-    .job-stats { font-size: 14px; color: #555; }
-    a.viewDetailsLink { cursor: pointer; color: #007bff; text-decoration: none; }
-    a.viewDetailsLink:hover { text-decoration: underline; }
-    #jobModal {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-    #jobModal > div {
-      background: white;
-      max-width: 600px;
-      width: 90%;
-      border-radius: 6px;
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef;
       padding: 20px;
-      position: relative;
     }
-    #closeModal {
-      position: absolute;
-      right: 15px; top: 10px;
-      font-size: 25px;
+    .job {
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+    }
+    .job-title {
+      font-size: 18px;
       font-weight: bold;
-      cursor: pointer;
-      color: #333;
     }
-    label { display: block; margin-top: 10px; font-weight: bold; }
-    textarea { width: 100%; height: 100px; margin-top: 5px; resize: vertical; }
-    input[type="file"] { margin-top: 5px; }
-    #submitProofBtn {
-      margin-top: 15px;
+    .viewBtn {
       background: #007bff;
       color: white;
-      padding: 8px 15px;
+      padding: 6px 12px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 16px;
     }
-    #submitProofBtn:disabled {
-      background: #a0c6ff;
-      cursor: not-allowed;
-    }
-    #submissionStatus {
-      margin-top: 10px;
-      font-weight: bold;
-      color: green;
+    .modal {
       display: none;
+      position: fixed;
+      z-index: 99;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      align-items: center;
+      justify-content: center;
     }
-    #modalMessage {
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+    }
+    .proof-input {
+      margin-bottom: 10px;
+    }
+    input[type="file"], input[type="text"] {
+      width: 100%;
+      padding: 8px;
+    }
+    button {
+      padding: 10px;
       margin-top: 10px;
-      color: red;
-      font-weight: bold;
+      background: green;
+      color: white;
+      border: none;
+      border-radius: 4px;
     }
+    .status { margin-top: 10px; color: darkgreen; }
   </style>
 </head>
 <body>
 
+<h2>Available Jobs</h2>
 <div id="jobsContainer"></div>
 
-<div id="jobModal">
-  <div>
-    <span id="closeModal">&times;</span>
-    <h2 id="modalJobTitle"></h2>
-    <p id="modalJobDesc"></p>
-    <p><strong>Reward:</strong> $<span id="modalJobReward"></span></p>
-    <p><strong>Slots:</strong> <span id="modalJobSlots"></span></p>
-    <p><strong>Submissions:</strong> <span id="modalJobSubmissions"></span></p>
-
-    <div id="submissionSection">
-      <form id="proofForm">
-        <div id="proofInput"></div>
-        <button type="button" id="submitProofBtn">Submit</button>
-      </form>
-    </div>
-
-    <div id="submissionStatus"></div>
-    <div id="modalMessage"></div>
+<!-- Modal -->
+<div class="modal" id="jobModal">
+  <div class="modal-content">
+    <h3 id="jobTitle"></h3>
+    <p id="jobDetails"></p>
+    <form id="proofForm"></form>
+    <button id="submitBtn">Submit Proof</button>
+    <div class="status" id="submitStatus"></div>
+    <button onclick="closeModal()">Close</button>
   </div>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import {
-    getFirestore,
-    collection,
-    getDocs,
-    doc,
-    getDoc,
-    setDoc
-  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-  import {
-    getAuth,
-    onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-  import {
-    getStorage,
-    ref as storageRef,
-    uploadBytes,
-    getDownloadURL
-  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
+  import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -121,323 +91,142 @@
     projectId: "pagla-b1c17",
     storageBucket: "pagla-b1c17.appspot.com",
     messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:4b441210b15cfebf008ecf",
-    measurementId: "G-2Z08RL7X9H"
+    appId: "1:192578902502:web:4b441210b15cfebf008ecf"
   };
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
-  const storage = getStorage(app);
+
+  const jobsContainer = document.getElementById("jobsContainer");
+  const jobModal = document.getElementById("jobModal");
+  const jobTitle = document.getElementById("jobTitle");
+  const jobDetails = document.getElementById("jobDetails");
+  const proofForm = document.getElementById("proofForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const submitStatus = document.getElementById("submitStatus");
 
   let currentUser = null;
-  let allJobs = [];
-
-  const jobsContainer = document.getElementById('jobsContainer');
-  const jobModal = document.getElementById('jobModal');
-  const closeModalBtn = document.getElementById('closeModal');
-  const modalJobTitle = document.getElementById('modalJobTitle');
-  const modalJobDesc = document.getElementById('modalJobDesc');
-  const modalJobReward = document.getElementById('modalJobReward');
-  const modalJobSlots = document.getElementById('modalJobSlots');
-  const modalJobSubmissions = document.getElementById('modalJobSubmissions');
-  const submissionSection = document.getElementById('submissionSection');
-  const proofInput = document.getElementById('proofInput');
-  const submitProofBtn = document.getElementById('submitProofBtn');
-  const submissionStatus = document.getElementById('submissionStatus');
-  const modalMessage = document.getElementById('modalMessage');
-
-  let currentJobInModal = null;
+  let currentJob = null;
+  let jobList = [];
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = user;
       await loadJobs();
-      renderJobs(allJobs);
     } else {
-      jobsContainer.innerHTML = "<p>Please log in to see and submit tasks.</p>";
+      jobsContainer.innerHTML = "<p>Please log in to view jobs.</p>";
     }
   });
 
   async function loadJobs() {
-    const jobsSnapshot = await getDocs(collection(db, "jobs"));
-    const jobsTemp = [];
-
-    for (const docSnap of jobsSnapshot.docs) {
-      const jobData = docSnap.data();
-
-      const submissionDoc = await getDoc(doc(db, "jobs", docSnap.id, "submissions", currentUser.uid));
-      const hasSubmitted = submissionDoc.exists();
-
-      jobsTemp.push({
-        id: docSnap.id,
-        title: jobData.title || "No title",
-        category: jobData.category || "",
-        reward: Number(jobData.reward) || 0,
-        totalSlots: Number(jobData.slots) || 0,
-        submissions: Number(jobData.submissions) || 0,
-        ownerId: jobData.ownerId || "",
-        hasSubmitted: hasSubmitted,
-        isOwnJob: (jobData.ownerId === currentUser.uid),
-        proofType: jobData.proofType || "text" // default to text if missing
-      });
-    }
-
-    allJobs = jobsTemp;
+    const jobSnap = await getDocs(collection(db, "jobs"));
+    jobSnap.forEach(docSnap => {
+      const data = docSnap.data();
+      jobList.push({ id: docSnap.id, ...data });
+    });
+    renderJobs();
   }
 
-  function renderJobs(jobs) {
+  function renderJobs() {
     jobsContainer.innerHTML = "";
-
-    if (jobs.length === 0) {
-      jobsContainer.innerHTML = "<p>No tasks available.</p>";
-      return;
-    }
-
-    jobs.forEach((job, index) => {
-      const isOwnJob = job.isOwnJob;
-      const isCompleted = (job.submissions >= job.totalSlots);
-      let badgeText = "";
-      let badgeClass = "";
-
-      if (isOwnJob) {
-        badgeText = "👑 Your Job";
-        badgeClass = "badge-own";
-      } else if (isCompleted) {
-        badgeText = "✅ Completed";
-        badgeClass = "badge-completed";
-      } else {
-        badgeText = "🔥 Available";
-        badgeClass = "badge-available";
-      }
-
-      const jobEl = document.createElement('div');
-      jobEl.classList.add('job');
-
-      jobEl.innerHTML = `
-        <div>
-          <div class="job-title" title="${job.title}">${job.title} <span class="badge ${badgeClass}">${badgeText}</span></div>
-          <div>Reward: $${job.reward.toFixed(2)} | Slots: ${job.submissions}/${job.totalSlots}</div>
-        </div>
-        <div>
-          <a href="#" class="viewDetailsLink" data-job-index="${index}">View Details</a>
-        </div>
+    jobList.forEach(job => {
+      const div = document.createElement("div");
+      div.className = "job";
+      div.innerHTML = `
+        <div class="job-title">${job.title}</div>
+        <p>Reward: $${job.reward}</p>
+        <p>Category: ${job.category}</p>
+        <button class="viewBtn" onclick="openModal('${job.id}')">View & Submit</button>
       `;
-
-      jobsContainer.appendChild(jobEl);
-    });
-
-    document.querySelectorAll('.viewDetailsLink').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const index = e.target.getAttribute('data-job-index');
-        openJobModal(allJobs[index]);
-      });
+      jobsContainer.appendChild(div);
     });
   }
 
-  closeModalBtn.onclick = () => {
-    closeJobModal();
-  };
+  window.openModal = async (jobId) => {
+    currentJob = jobList.find(j => j.id === jobId);
+    if (!currentJob) return;
 
-  window.onclick = (event) => {
-    if (event.target === jobModal) {
-      closeJobModal();
-    }
-  };
-
-  function clearProofInputs() {
-    proofInput.innerHTML = '';
-  }
-
-  function openJobModal(job) {
-    currentJobInModal = job;
-
-    modalJobTitle.textContent = job.title;
-    modalJobDesc.textContent = `Category: ${job.category.charAt(0).toUpperCase() + job.category.slice(1)}`;
-    modalJobReward.textContent = job.reward.toFixed(2);
-    modalJobSlots.textContent = job.totalSlots;
-    modalJobSubmissions.textContent = job.submissions;
-
-    submissionStatus.style.display = 'none';
-    modalMessage.textContent = '';
-    submitProofBtn.style.display = 'inline-block';
-    submitProofBtn.disabled = false;
-    submitProofBtn.textContent = "Submit";
-
-    clearProofInputs();
-
-    if (!job.hasSubmitted && !job.isOwnJob && job.submissions < job.totalSlots) {
-      // Show inputs based on proofType
-      submissionSection.style.display = 'block';
-
-      if (job.proofType === 'text') {
-        const label = document.createElement('label');
-        label.htmlFor = 'proofText';
-        label.textContent = 'Enter Proof Text:';
-        proofInput.appendChild(label);
-
-        const textarea = document.createElement('textarea');
-        textarea.id = 'proofText';
-        textarea.placeholder = 'Enter proof text here...';
-        proofInput.appendChild(textarea);
-
-      } else if (job.proofType === 'ss') {
-        const label = document.createElement('label');
-        label.htmlFor = 'proofSS';
-        label.textContent = 'Upload Screenshot Proof:';
-        proofInput.appendChild(label);
-
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = 'image/*';
-        fileInput.id = 'proofSS';
-        proofInput.appendChild(fileInput);
-
-      } else if (job.proofType === 'both') {
-        // Text area first
-        const labelText = document.createElement('label');
-        labelText.htmlFor = 'proofText';
-        labelText.textContent = 'Enter Proof Text:';
-        proofInput.appendChild(labelText);
-
-        const textarea = document.createElement('textarea');
-        textarea.id = 'proofText';
-        textarea.placeholder = 'Enter proof text here...';
-        proofInput.appendChild(textarea);
-
-        // File input second
-        const labelSS = document.createElement('label');
-        labelSS.htmlFor = 'proofSS';
-        labelSS.textContent = 'Upload Screenshot Proof:';
-        proofInput.appendChild(labelSS);
-
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = 'image/*';
-        fileInput.id = 'proofSS';
-        proofInput.appendChild(fileInput);
-      } else {
-        // fallback: text input
-        const label = document.createElement('label');
-        label.htmlFor = 'proofText';
-        label.textContent = 'Enter Proof Text:';
-        proofInput.appendChild(label);
-
-        const textarea = document.createElement('textarea');
-        textarea.id = 'proofText';
-        textarea.placeholder = 'Enter proof text here...';
-        proofInput.appendChild(textarea);
-      }
-
+    const alreadySubmitted = await getDoc(doc(db, `jobs/${jobId}/submissions/${currentUser.uid}`));
+    if (alreadySubmitted.exists()) {
+      jobTitle.textContent = "Already Submitted";
+      jobDetails.textContent = "You have already submitted proof for this job.";
+      proofForm.innerHTML = "";
+      submitBtn.style.display = "none";
     } else {
-      submissionSection.style.display = 'none';
+      jobTitle.textContent = currentJob.title;
+      jobDetails.textContent = `Submit the following proofs:`;
 
-      if (job.isOwnJob) {
-        modalMessage.textContent = "You cannot submit proof to your own job.";
-      } else if (job.hasSubmitted) {
-        modalMessage.textContent = "You have already submitted proof for this job.";
-      } else if (job.submissions >= job.totalSlots) {
-        modalMessage.textContent = "This job has already been completed.";
+      proofForm.innerHTML = "";
+      const proofs = (currentJob.proofType || "").split(',').map(p => p.trim()).filter(Boolean);
+      proofs.forEach((type, index) => {
+        const label = document.createElement("label");
+        label.textContent = `Proof ${index + 1} (${type})`;
+
+        let input;
+        if (type === "text") {
+          input = document.createElement("input");
+          input.type = "text";
+          input.required = true;
+        } else if (type === "screenshot") {
+          input = document.createElement("input");
+          input.type = "file";
+          input.accept = "image/*";
+          input.required = true;
+        }
+
+        input.name = `proof${index + 1}`;
+        input.className = "proof-input";
+
+        proofForm.appendChild(label);
+        proofForm.appendChild(input);
+      });
+
+      submitBtn.style.display = "block";
+    }
+
+    submitStatus.textContent = "";
+    jobModal.style.display = "flex";
+  };
+
+  submitBtn.onclick = async () => {
+    const data = {};
+    const inputs = proofForm.querySelectorAll("input");
+
+    for (const input of inputs) {
+      if (input.type === "text") {
+        if (!input.value.trim()) {
+          submitStatus.textContent = "Please fill all text fields.";
+          return;
+        }
+        data[input.name] = input.value.trim();
+      } else if (input.type === "file") {
+        if (!input.files[0]) {
+          submitStatus.textContent = "Please select all screenshots.";
+          return;
+        }
+        data[input.name] = "screenshot_uploaded_placeholder"; // actual upload needed
       }
     }
-
-    jobModal.style.display = 'flex';
-  }
-
-  function closeJobModal() {
-    jobModal.style.display = 'none';
-    currentJobInModal = null;
-  }
-
-  submitProofBtn.onclick = async () => {
-    modalMessage.textContent = "";
-
-    if (!currentJobInModal || !currentJobInModal.proofType) {
-      modalMessage.textContent = "Invalid job proof requirements.";
-      return;
-    }
-
-    submitProofBtn.disabled = true;
-    submitProofBtn.textContent = "Submitting...";
 
     try {
-      const proofType = currentJobInModal.proofType;
-      const proofs = {};
-
-      if (proofType === 'text') {
-        const textInput = document.getElementById('proofText');
-        if (!textInput || !textInput.value.trim()) {
-          throw new Error("Please enter proof text.");
-        }
-        proofs.text = textInput.value.trim();
-
-      } else if (proofType === 'ss') {
-        const fileInput = document.getElementById('proofSS');
-        if (!fileInput || fileInput.files.length === 0) {
-          throw new Error("Please upload a screenshot.");
-        }
-        const file = fileInput.files[0];
-        const storagePath = `jobProofs/${currentJobInModal.id}/${currentUser.uid}/proof_ss_${Date.now()}_${file.name}`;
-        const proofStorageRef = storageRef(storage, storagePath);
-
-        await uploadBytes(proofStorageRef, file);
-        const downloadURL = await getDownloadURL(proofStorageRef);
-
-        proofs.screenshotURL = downloadURL;
-
-      } else if (proofType === 'both') {
-        const textInput = document.getElementById('proofText');
-        const fileInput = document.getElementById('proofSS');
-
-        if (!textInput || !textInput.value.trim()) {
-          throw new Error("Please enter proof text.");
-        }
-        if (!fileInput || fileInput.files.length === 0) {
-          throw new Error("Please upload a screenshot.");
-        }
-
-        proofs.text = textInput.value.trim();
-
-        const file = fileInput.files[0];
-        const storagePath = `jobProofs/${currentJobInModal.id}/${currentUser.uid}/proof_ss_${Date.now()}_${file.name}`;
-        const proofStorageRef = storageRef(storage, storagePath);
-
-        await uploadBytes(proofStorageRef, file);
-        const downloadURL = await getDownloadURL(proofStorageRef);
-
-        proofs.screenshotURL = downloadURL;
-
-      } else {
-        throw new Error("Unknown proof type.");
-      }
-
-      const submissionRef = doc(db, `jobs/${currentJobInModal.id}/submissions`, currentUser.uid);
-
-      await setDoc(submissionRef, {
-        proofs,
-        timestamp: new Date(),
+      await setDoc(doc(db, `jobs/${currentJob.id}/submissions/${currentUser.uid}`), {
         userId: currentUser.uid,
-        userEmail: currentUser.email
+        userEmail: currentUser.email,
+        timestamp: new Date(),
+        proofs: data
       });
 
-      submissionStatus.style.display = 'block';
-      submissionStatus.textContent = "Submitted successfully!";
-      submitProofBtn.style.display = 'none';
-      proofInput.style.display = 'none';
-
-      currentJobInModal.submissions += 1;
-      currentJobInModal.hasSubmitted = true;
-      modalJobSubmissions.textContent = currentJobInModal.submissions;
-
-      renderJobs(allJobs);
-
-    } catch (error) {
-      modalMessage.textContent = "Error submitting proof: " + error.message;
-    } finally {
-      submitProofBtn.disabled = false;
-      submitProofBtn.textContent = "Submit";
+      submitStatus.textContent = "✅ Submission successful!";
+      submitBtn.style.display = "none";
+    } catch (err) {
+      submitStatus.textContent = "❌ Submission failed: " + err.message;
     }
+  };
+
+  window.closeModal = () => {
+    jobModal.style.display = "none";
+    currentJob = null;
   };
 </script>
 
