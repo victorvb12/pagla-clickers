@@ -4,118 +4,88 @@
   <meta charset="UTF-8">
   <title>Post Job - Pagla Clickers</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f5f8fa;
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
     }
 
     header {
       background-color: #007bff;
       color: white;
-      padding: 20px;
+      padding: 15px;
       text-align: center;
-      font-size: 24px;
+      font-size: 20px;
       font-weight: bold;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     nav {
-      background: #ffffff;
-      padding: 12px 0;
+      background: #f8f9fa;
+      padding: 10px;
       text-align: center;
-      border-bottom: 1px solid #e3e3e3;
+      border-bottom: 1px solid #ddd;
     }
 
     nav a {
-      margin: 0 15px;
+      margin: 0 10px;
       text-decoration: none;
       color: #007bff;
-      font-weight: 600;
-      transition: color 0.2s;
-    }
-
-    nav a:hover {
-      color: #0056b3;
+      font-weight: bold;
     }
 
     .container {
-      max-width: 600px;
-      margin: 40px auto;
-      background: #ffffff;
-      padding: 30px;
+      max-width: 500px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
       border-radius: 10px;
-      box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
     }
 
     h2 {
       text-align: center;
-      color: #343a40;
-      margin-bottom: 25px;
+      color: #333;
+      margin-bottom: 20px;
     }
 
     label {
       display: block;
-      margin-top: 16px;
-      font-weight: 600;
-      color: #333;
+      margin-top: 12px;
+      font-weight: bold;
     }
 
-    input, select, button {
+    input, select, textarea, button {
       width: 100%;
-      padding: 12px;
-      margin-top: 8px;
-      border-radius: 6px;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 5px;
       border: 1px solid #ccc;
       font-size: 16px;
-      transition: border 0.2s;
     }
 
-    input:focus, select:focus {
-      border-color: #007bff;
-      outline: none;
+    textarea {
+      resize: vertical;
+      min-height: 100px;
     }
 
     button {
       background-color: #007bff;
       color: white;
       border: none;
-      margin-top: 25px;
+      margin-top: 20px;
       font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    button:hover {
-      background-color: #0056b3;
     }
 
     button:disabled {
-      background: #adb5bd;
-      cursor: not-allowed;
+      background: #ccc;
     }
 
     .status {
-      margin-top: 20px;
+      margin-top: 15px;
       text-align: center;
-      font-weight: 600;
-      color: #28a745;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        margin: 20px;
-        padding: 20px;
-      }
-
-      nav a {
-        display: inline-block;
-        margin: 8px 5px;
-      }
+      font-weight: bold;
+      color: #333;
     }
   </style>
 </head>
@@ -134,6 +104,10 @@
   <h2>Post a Job</h2>
   <input type="text" id="title" placeholder="Job Title" required>
   <input type="text" id="category" placeholder="Category" required>
+
+  <label for="description">Job Description</label>
+  <textarea id="description" placeholder="Enter job description..." required></textarea>
+
   <input type="number" id="reward" placeholder="Reward ($)" required>
   <input type="number" id="slots" placeholder="Number of Slots" required>
 
@@ -205,6 +179,7 @@
   postJobBtn.onclick = async () => {
     const title = document.getElementById('title').value.trim();
     const category = document.getElementById('category').value.trim();
+    const description = document.getElementById('description').value.trim();
     const reward = parseFloat(document.getElementById('reward').value.trim());
     const slots = parseInt(document.getElementById('slots').value.trim());
 
@@ -213,8 +188,7 @@
     const proof3 = document.getElementById('proof3').value;
     const proof4 = document.getElementById('proof4').value;
 
-    if (!title || !category || isNaN(reward) || isNaN(slots)) {
-      statusDiv.style.color = "#dc3545";
+    if (!title || !category || !description || isNaN(reward) || isNaN(slots)) {
       statusDiv.textContent = "Please fill all job fields.";
       return;
     }
@@ -225,6 +199,7 @@
       await addDoc(collection(db, "jobs"), {
         title,
         category,
+        description,
         reward,
         slots,
         submissions: 0,
@@ -232,11 +207,9 @@
         proofType: proofString,
         createdAt: new Date()
       });
-      statusDiv.style.color = "#28a745";
       statusDiv.textContent = "✅ Job posted successfully!";
     } catch (error) {
       console.error("Error posting job:", error);
-      statusDiv.style.color = "#dc3545";
       statusDiv.textContent = "❌ Failed to post job.";
     }
   };
