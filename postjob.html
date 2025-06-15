@@ -89,19 +89,10 @@
 <header>Pagla Clickers</header>
 
 <nav>
-    <a href="about.html">About</a>
-    <a href="notifications.html">Notifications</a>
-    <a href="profile.html">Profile</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="postjob.html">Post Job</a>
-    <a href="taskdetail.html">Tasks</a>
-    <a href="referel.html">Referral</a>
-    <a href="deposit.html">Deposit</a>
-    <a href="wallet.html">Wallet</a>
-    <a href="withdrawal.html">Withdraw Money</a>
-    <a href="terms.html">Terms</a>
-    <a href="faq.html">FAQ</a>
-    <a href="support.html">Support</a>
+  <a href="index.html">Home</a>
+  <a href="profile.html">Profile</a>
+  <a href="postjob.html">Post Job</a>
+  <a href="taskdetail.html">Tasks</a>
 </nav>
 
 <div class="container">
@@ -183,4 +174,35 @@
     const slots = parseInt(document.getElementById('slots').value.trim());
 
     const proof1 = document.getElementById('proof1').value;
-    const proof2 = document.getElementById('proof2').
+    const proof2 = document.getElementById('proof2').value;
+    const proof3 = document.getElementById('proof3').value;
+    const proof4 = document.getElementById('proof4').value;
+
+    if (!title || !category || isNaN(reward) || isNaN(slots)) {
+      statusDiv.textContent = "Please fill all job fields.";
+      return;
+    }
+
+    const proofString = [proof1, proof2, proof3, proof4].filter(Boolean).join(',');
+
+    try {
+      await addDoc(collection(db, "jobs"), {
+        title,
+        category,
+        reward,
+        slots,
+        submissions: 0,
+        ownerId: currentUser.uid,
+        proofType: proofString,
+        createdAt: new Date()
+      });
+      statusDiv.textContent = "✅ Job posted successfully!";
+    } catch (error) {
+      console.error("Error posting job:", error);
+      statusDiv.textContent = "❌ Failed to post job.";
+    }
+  };
+</script>
+
+</body>
+</html>
