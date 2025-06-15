@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pagla Clickers - Notifications</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #f5faff, #e0f0ff);
+      margin: 0;
+      padding: 0;
+    }
+
+    header, footer {
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+    }
+
+    .navbar {
+      background-color: #005bb5;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 10px 0;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    .notification {
+      border-left: 5px solid #007bff;
+      background: #f9f9f9;
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 6px;
+    }
+
+    .notification h4 {
+      margin: 0;
+      color: #007bff;
+    }
+
+    .notification p {
+      margin: 5px 0 0;
+      color: #333;
+    }
+
+    .timestamp {
+      font-size: 12px;
+      color: #777;
+      margin-top: 5px;
+    }
+
+    .empty-message {
+      text-align: center;
+      color: #888;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Pagla Clickers</h1>
+</header>
+<div class="navbar">
+  <a href="about.html">About</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="refer.html">Referral</a>
+  <a href="postjob.html">Post Job</a>
+  <a href="profile.html">Profile</a>
+  <a href="wallet.html">Wallet</a>
+  <a href="faq.html">FAQ</a>
+  <a href="tasks.html">Tasks</a>
+  <a href="terms.html">Terms</a>
+  <a href="withdraw.html">Withdraw Money</a>
+</div>
+
+<div class="container">
+  <h2>Your Notifications</h2>
+  <div id="notificationsContainer">
+    <p class="empty-message">Loading notifications...</p>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 Pagla Clickers</p>
+</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getFirestore, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+    authDomain: "pagla-b1c17.firebaseapp.com",
+    projectId: "pagla-b1c17",
+    storageBucket: "pagla-b1c17.appspot.com",
+    messagingSenderId: "192578902502",
+    appId: "1:192578902502:web:1595070cdac289170f5e27"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const container = document.getElementById("notificationsContainer");
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      alert("Please login to view notifications.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const q = query(
+      collection(db, "notifications"),
+      where("userId", "in", [user.uid, "all"]),
+      orderBy("createdAt", "desc")
+    );
+
+    const snapshot = await getDocs(q);
+    container.innerHTML = "";
+
+    if (snapshot.empty) {
+      container.innerHTML = `<p class="empty-message">No notifications found.</p>`;
+      return;
+    }
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const time = data.createdAt?.toDate?.().toLocaleString() || "Unknown time";
+
+      const div = document.createElement("div");
+      div.className = "notification";
+      div.innerHTML = `
+        <h4>${data.title || "Notification"}</h4>
+        <p>${data.message || ""}</p>
+        <div class="timestamp">${time}</div>
+      `;
+      container.appendChild(div);
+    });
+  });
+</script>
+
+</body>
+</html>

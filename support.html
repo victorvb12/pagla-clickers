@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pagla Clickers - Support</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4faff;
+      margin: 0;
+      padding: 0;
+    }
+
+    header, footer {
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+    }
+
+    .navbar {
+      background-color: #005bb5;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 10px 0;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #007bff;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .info {
+      font-size: 14px;
+      color: #333;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Pagla Clickers</h1>
+  <div class="navbar">
+    <a href="about.html">About</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="refer.html">Referral</a>
+    <a href="postjob.html">Post Job</a>
+    <a href="profile.html">Profile</a>
+    <a href="wallet.html">Wallet</a>
+    <a href="faq.html">FAQ</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="terms.html">Terms</a>
+    <a href="withdraw.html">Withdraw</a>
+    <a href="support.html">Support</a>
+  </div>
+</header>
+
+<div class="container">
+  <h2>Contact Support</h2>
+  <form id="supportForm">
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="email" id="email" placeholder="Your Email" required>
+    <textarea id="message" rows="5" placeholder="Type your message here..." required></textarea>
+    <input type="file" id="attachment" accept="image/*,.pdf,.doc,.docx">
+    <button type="submit">Send Message</button>
+  </form>
+
+  <div class="info">
+    <p><strong>Note:</strong> We usually respond within 24 hours. Please check your spam/junk folder as well.</p>
+    <p>You can also reach us at: <strong>support@paglaclickers.com</strong></p>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 Pagla Clickers</p>
+</footer>
+
+<!-- Optional Firebase Upload Logic -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+    authDomain: "pagla-b1c17.firebaseapp.com",
+    projectId: "pagla-b1c17",
+    storageBucket: "pagla-b1c17.appspot.com",
+    messagingSenderId: "192578902502",
+    appId: "1:192578902502:web:1595070cdac289170f5e27",
+    measurementId: "G-M9Y7SBBEXM"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  document.getElementById('supportForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+    const fileInput = document.getElementById('attachment');
+    const file = fileInput.files[0];
+
+    let fileURL = null;
+
+    if (file) {
+      const fileRef = ref(storage, 'support_attachments/' + Date.now() + '_' + file.name);
+      await uploadBytes(fileRef, file);
+      fileURL = await getDownloadURL(fileRef);
+    }
+
+    await addDoc(collection(db, "supportMessages"), {
+      name,
+      email,
+      message,
+      attachmentURL: fileURL || "",
+      createdAt: new Date()
+    });
+
+    alert("Your message has been sent successfully!");
+    document.getElementById('supportForm').reset();
+  });
+</script>
+
+</body>
+</html>

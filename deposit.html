@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pagla Clickers - Deposit</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #f5faff, #e0f0ff);
+      margin: 0;
+      padding: 0;
+    }
+
+    header, footer {
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 15px;
+    }
+
+    .navbar {
+      background-color: #005bb5;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 10px 0;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #777;
+      margin-top: -10px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Pagla Clickers</h1>
+</header>
+<div class="navbar">
+  <a href="about.html">About</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="refer.html">Referral</a>
+  <a href="postjob.html">Post Job</a>
+  <a href="profile.html">Profile</a>
+  <a href="wallet.html">Wallet</a>
+  <a href="faq.html">FAQ</a>
+  <a href="tasks.html">Tasks</a>
+  <a href="terms.html">Terms</a>
+  <a href="withdraw.html">Withdraw Money</a>
+</div>
+
+<div class="container">
+  <h2>Deposit Funds</h2>
+  <form id="depositForm">
+    <label for="amount">Amount (৳)</label>
+    <input type="number" id="amount" required placeholder="Enter deposit amount">
+
+    <label for="method">Payment Method</label>
+    <select id="method" required>
+      <option value="">-- Select Payment Method --</option>
+      <option value="bkash">bKash</option>
+      <option value="nagad">Nagad</option>
+      <option value="rocket">Rocket</option>
+    </select>
+
+    <label for="txnId">Transaction ID</label>
+    <input type="text" id="txnId" placeholder="Enter transaction/reference ID">
+
+    <div class="note">* Please ensure you send money before submitting this form.</div>
+
+    <button type="submit">Submit Deposit Request</button>
+  </form>
+</div>
+
+<footer>
+  <p>&copy; 2025 Pagla Clickers</p>
+</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+    authDomain: "pagla-b1c17.firebaseapp.com",
+    projectId: "pagla-b1c17",
+    storageBucket: "pagla-b1c17.appspot.com",
+    messagingSenderId: "192578902502",
+    appId: "1:192578902502:web:1595070cdac289170f5e27"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const form = document.getElementById('depositForm');
+
+  onAuthStateChanged(auth, user => {
+    if (!user) {
+      alert("Please login to access this page.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('amount').value);
+      const method = document.getElementById('method').value;
+      const txnId = document.getElementById('txnId').value;
+
+      try {
+        await addDoc(collection(db, "deposits"), {
+          userId: user.uid,
+          email: user.email,
+          amount,
+          method,
+          txnId,
+          status: "pending",
+          createdAt: serverTimestamp()
+        });
+        alert("Deposit request submitted. Please wait for admin approval.");
+        form.reset();
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
