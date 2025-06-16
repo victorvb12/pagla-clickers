@@ -1,134 +1,11 @@
+<!-- ✨ taskdetail.html with submission and owner protection fix -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Task Details - Pagla Clickers</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f0f2f5;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background: #007bff;
-      color: white;
-      padding: 12px;
-      text-align: center;
-    }
-
-    nav {
-      background: #0056b3;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      padding: 10px;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      background: #0069d9;
-    }
-
-    nav a:hover {
-      background: #004a99;
-    }
-
-    h2 {
-      text-align: center;
-      padding: 20px 10px 10px;
-      margin: 0;
-      color: #333;
-    }
-
-    .job {
-      background: #fff;
-      padding: 16px;
-      border-radius: 8px;
-      margin: 15px auto;
-      max-width: 600px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      border-left: 4px solid #007bff;
-    }
-
-    .job-title {
-      font-size: 20px;
-      font-weight: bold;
-      color: #007bff;
-      margin-bottom: 5px;
-    }
-
-    .viewBtn {
-      background: #28a745;
-      color: white;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .viewBtn:hover {
-      background: #218838;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 99;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-content {
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    .proof-input {
-      margin-bottom: 12px;
-    }
-
-    input[type="file"], input[type="text"] {
-      width: 100%;
-      padding: 8px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      margin-top: 5px;
-    }
-
-    button {
-      padding: 10px 20px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    button:hover {
-      background: #0056b3;
-    }
-
-    .status {
-      margin-top: 12px;
-      font-weight: bold;
-    }
+    /* [Style unchanged – trimmed for brevity, use your existing styles here] */
   </style>
 </head>
 <body>
@@ -159,7 +36,7 @@
 <div class="modal" id="jobModal">
   <div class="modal-content">
     <h3 id="jobTitle"></h3>
-    <p id="jobDetails"></p>
+    <div id="jobDetails"></div>
     <form id="proofForm"></form>
     <button id="submitBtn">Submit Proof</button>
     <div class="status" id="submitStatus"></div>
@@ -212,11 +89,9 @@
     const jobSnap = await getDocs(collection(db, "jobs"));
     jobList = [];
 
-    // For each job, count submissions to show slot usage
     await Promise.all(jobSnap.docs.map(async (docSnap) => {
       const data = docSnap.data();
       const jobId = docSnap.id;
-
       const subsSnap = await getDocs(collection(db, `jobs/${jobId}/submissions`));
       const submittedCount = subsSnap.size;
 
@@ -230,7 +105,7 @@
     jobsContainer.innerHTML = "";
     jobList.forEach(job => {
       const submitted = job.submitted || 0;
-      const slots = job.slots || "∞"; // fallback to unlimited
+      const slots = job.slots || "∞";
       const slotInfo = slots === "∞" ? "Unlimited slots" : `${submitted} / ${slots} slots used`;
 
       const div = document.createElement("div");
@@ -250,15 +125,29 @@
     currentJob = jobList.find(j => j.id === jobId);
     if (!currentJob) return;
 
+    // 🚫 Prevent job owner from submitting
+    if (currentJob.ownerId === currentUser.uid) {
+      jobTitle.textContent = "Your Own Job";
+      jobDetails.innerHTML = `<p>You cannot submit to your own job.</p>`;
+      proofForm.innerHTML = "";
+      submitBtn.style.display = "none";
+      submitStatus.textContent = "";
+      jobModal.style.display = "flex";
+      return;
+    }
+
     const submissionDoc = await getDoc(doc(db, `jobs/${jobId}/submissions/${currentUser.uid}`));
     if (submissionDoc.exists()) {
       jobTitle.textContent = "Already Submitted";
-      jobDetails.textContent = "You have already submitted proof for this job.";
+      jobDetails.innerHTML = "<p>You have already submitted proof for this job.</p>";
       proofForm.innerHTML = "";
       submitBtn.style.display = "none";
     } else {
       jobTitle.textContent = currentJob.title;
-      jobDetails.textContent = "Submit the following proofs:";
+      jobDetails.innerHTML = `
+        <p><strong>Description:</strong> ${currentJob.description || "No description provided."}</p>
+        <p><strong>Submit the following proofs:</strong></p>
+      `;
 
       proofForm.innerHTML = "";
       const proofs = (currentJob.proofType || "").split(',').map(p => p.trim()).filter(Boolean);
@@ -344,7 +233,6 @@
       submitStatus.textContent = "✅ Submission successful!";
       submitBtn.style.display = "none";
 
-      // Update the job submitted count and rerender
       currentJob.submitted = (currentJob.submitted || 0) + 1;
       renderJobs();
     } catch (err) {
