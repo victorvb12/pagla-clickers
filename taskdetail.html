@@ -77,6 +77,11 @@
       background: #218838;
     }
 
+    .viewBtn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
     .modal {
       display: none;
       position: fixed;
@@ -213,7 +218,7 @@
     jobList = [];
     jobSnap.forEach(docSnap => {
       const data = docSnap.data();
-      jobList.push({ id: docSnap.id, ...data });
+      jobList.push({ id: docSnap.id, ...data, submitted: (data.submitted || 0) });
     });
     renderJobs();
   }
@@ -221,13 +226,15 @@
   function renderJobs() {
     jobsContainer.innerHTML = "";
     jobList.forEach(job => {
+      const isFull = job.slots && job.submitted >= job.slots;
       const div = document.createElement("div");
       div.className = "job";
       div.innerHTML = `
         <div class="job-title">${job.title}</div>
         <p>Reward: $${job.reward}</p>
         <p>Category: ${job.category}</p>
-        <button class="viewBtn" onclick="openModal('${job.id}')">View & Submit</button>
+        ${isFull ? '<p style="color:red;font-weight:bold;">No slots remaining</p>' : ''}
+        <button class="viewBtn" onclick="openModal('${job.id}')" ${isFull ? 'disabled' : ''}>View & Submit</button>
       `;
       jobsContainer.appendChild(div);
     });
@@ -245,7 +252,7 @@
       submitBtn.style.display = "none";
     } else {
       jobTitle.textContent = currentJob.title;
-      jobDetails.textContent = "Submit the following proofs:";
+      jobDetails.textContent = currentJob.description || "Submit the following proofs:";
 
       proofForm.innerHTML = "";
       const proofs = (currentJob.proofType || "").split(',').map(p => p.trim()).filter(Boolean);
