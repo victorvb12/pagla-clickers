@@ -77,11 +77,6 @@
       background: #218838;
     }
 
-    .viewBtn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-
     .modal {
       display: none;
       position: fixed;
@@ -216,25 +211,36 @@
   async function loadJobs() {
     const jobSnap = await getDocs(collection(db, "jobs"));
     jobList = [];
-    jobSnap.forEach(docSnap => {
+
+    // For each job, count submissions to show slot usage
+    await Promise.all(jobSnap.docs.map(async (docSnap) => {
       const data = docSnap.data();
-      jobList.push({ id: docSnap.id, ...data, submitted: (data.submitted || 0) });
-    });
+      const jobId = docSnap.id;
+
+      const subsSnap = await getDocs(collection(db, `jobs/${jobId}/submissions`));
+      const submittedCount = subsSnap.size;
+
+      jobList.push({ id: jobId, ...data, submitted: submittedCount });
+    }));
+
     renderJobs();
   }
 
   function renderJobs() {
     jobsContainer.innerHTML = "";
     jobList.forEach(job => {
-      const isFull = job.slots && job.submitted >= job.slots;
+      const submitted = job.submitted || 0;
+      const slots = job.slots || "∞"; // fallback to unlimited
+      const slotInfo = slots === "∞" ? "Unlimited slots" : `${submitted} / ${slots} slots used`;
+
       const div = document.createElement("div");
       div.className = "job";
       div.innerHTML = `
         <div class="job-title">${job.title}</div>
         <p>Reward: $${job.reward}</p>
         <p>Category: ${job.category}</p>
-        ${isFull ? '<p style="color:red;font-weight:bold;">No slots remaining</p>' : ''}
-        <button class="viewBtn" onclick="openModal('${job.id}')" ${isFull ? 'disabled' : ''}>View & Submit</button>
+        <p>Slots: ${slotInfo}</p>
+        <button class="viewBtn" onclick="openModal('${job.id}')">View & Submit</button>
       `;
       jobsContainer.appendChild(div);
     });
@@ -252,7 +258,7 @@
       submitBtn.style.display = "none";
     } else {
       jobTitle.textContent = currentJob.title;
-      jobDetails.textContent = currentJob.description || "Submit the following proofs:";
+      jobDetails.textContent = "Submit the following proofs:";
 
       proofForm.innerHTML = "";
       const proofs = (currentJob.proofType || "").split(',').map(p => p.trim()).filter(Boolean);
@@ -337,6 +343,10 @@
       submitStatus.style.color = "green";
       submitStatus.textContent = "✅ Submission successful!";
       submitBtn.style.display = "none";
+
+      // Update the job submitted count and rerender
+      currentJob.submitted = (currentJob.submitted || 0) + 1;
+      renderJobs();
     } catch (err) {
       submitStatus.style.color = "red";
       submitStatus.textContent = "❌ Submission failed: " + err.message;
