@@ -4,117 +4,95 @@
   <meta charset="UTF-8" />
   <title>Task Detail - Pagla Clickers</title>
   <style>
-    /* Nav bar styling - matching your site's common style */
     body {
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px 0 40px 0;
+      background: #f4f8fc;
       margin: 0;
+      padding: 0;
     }
-    nav {
-      background-color: #007bff;
+
+    header, footer {
+      background: #007bff;
       color: white;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      font-weight: bold;
-      font-size: 16px;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+      text-align: center;
+      padding: 15px;
     }
+
+    nav {
+      background: #0056b3;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 10px;
+      flex-wrap: wrap;
+    }
+
     nav a {
       color: white;
       text-decoration: none;
-      padding: 6px 12px;
-      border-radius: 4px;
-      transition: background-color 0.3s ease;
-    }
-    nav a:hover {
-      background-color: #0056b3;
-    }
-
-    /* Page content styling */
-    h2 {
-      margin-left: 20px;
-    }
-
-    .job {
-      background: #fff;
-      padding: 15px;
-      margin: 15px 20px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .job-title {
-      font-size: 18px;
       font-weight: bold;
-      margin-bottom: 5px;
     }
-    button {
-      background: #28a745;
-      color: white;
-      border: none;
-      padding: 7px 15px;
-      border-radius: 3px;
-      cursor: pointer;
+
+    nav a:hover {
+      text-decoration: underline;
     }
-    button:disabled {
-      background: #ccc;
-    }
-    #jobModal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-    }
-    #jobModalContent {
-      background: white;
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
       padding: 20px;
-      width: 90%;
-      max-width: 500px;
-      border-radius: 8px;
-      position: relative;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    .proof-input {
+
+    table {
       width: 100%;
-      margin-bottom: 10px;
+      border-collapse: collapse;
+      margin-top: 20px;
     }
-    .closeBtn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .logout-btn {
       background: #dc3545;
       color: white;
+      padding: 10px 15px;
       border: none;
-      padding: 5px 10px;
-      border-radius: 3px;
+      border-radius: 5px;
       cursor: pointer;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
+ <header>
+  <h1>Pagla Clickers Jobs</h1>
   <nav>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="taskdetail.html">Jobs</a>
+    <a href="about.html">About</a>
+    <a href="notifications.html">Notifications</a>
     <a href="profile.html">Profile</a>
-    <a href="referel.html">Refer & Earn</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="postjob.html">Post Job</a>
+    <a href="taskdetail.html">Tasks</a>
+    <a href="referel.html">Referral</a>
     <a href="deposit.html">Deposit</a>
     <a href="wallet.html">Wallet</a>
-    <a href="withdrawal.html">Withdraw</a>
-    <a href="support.html">Support</a>
-    <a href="faq.html">FAQ</a>
+    <a href="withdrawal.html">Withdraw Money</a>
     <a href="terms.html">Terms</a>
-    <a href="notifications.html">Notifications</a>
-    <a href="#" onclick="logout()">Logout</a>
+    <a href="faq.html">FAQ</a>
+    <a href="support.html">Support</a>
   </nav>
+</header>
 
   <h2>Available Jobs</h2>
   <div id="jobsContainer">Loading...</div>
