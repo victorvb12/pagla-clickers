@@ -112,7 +112,15 @@
 <div class="container">
   <h2>Post a Job</h2>
   <input type="text" id="title" placeholder="Job Title" required>
-  <input type="text" id="category" placeholder="Category" required>
+
+  <label for="category">Category</label>
+  <select id="category" required>
+    <option value="">Select Category</option>
+    <option value="Facebook">Facebook</option>
+    <option value="YouTube">YouTube</option>
+    <option value="Telegram">Telegram</option>
+    <option value="Application">Application</option>
+  </select>
 
   <label for="description">Job Description</label>
   <textarea id="description" placeholder="Enter job description..." required></textarea>
