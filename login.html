@@ -40,18 +40,14 @@
       color: #003366;
       text-align: center;
     }
-    input[type="email"],
-    input[type="password"] {
+    input[type="tel"],
+    input[type="text"] {
       width: 100%;
       padding: 10px 12px;
       margin-bottom: 1rem;
       border: 1px solid #ccc;
       border-radius: 5px;
       font-size: 1rem;
-    }
-    input:focus {
-      border-color: #003366;
-      outline: none;
     }
     button {
       width: 100%;
@@ -95,16 +91,17 @@
 
 <main>
   <form id="loginForm">
-    <h2>Login to Your Account</h2>
-    <div id="message" class="message"></div>
+    <h2>Login with Phone</h2>
+    <div class="message" id="message"></div>
 
-    <input type="email" id="email" placeholder="Email Address" required />
-    <input type="password" id="password" placeholder="Password" required />
+    <input type="tel" id="phone" placeholder="Phone (+880...)" required />
+    <div id="recaptcha-container"></div>
+    <button type="button" id="sendOtpBtn">Send OTP</button>
 
-    <button type="submit">Login</button>
+    <input type="text" id="otp" placeholder="Enter OTP" style="display:none;" />
+    <button type="button" id="verifyOtpBtn" style="display:none;">Verify & Login</button>
 
     <div class="extra-links">
-      <a href="#" id="forgotPasswordLink">Forgot Password?</a> |
       <a href="register.html">Register</a>
     </div>
   </form>
@@ -116,12 +113,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
-  import {
-    getAuth,
-    signInWithEmailAndPassword,
-    sendPasswordResetEmail
-  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -134,41 +126,55 @@
   };
 
   const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
   const auth = getAuth(app);
 
-  const form = document.getElementById('loginForm');
-  const messageDiv = document.getElementById('message');
-  const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+  let confirmationResult;
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    messageDiv.textContent = '';
+  const phoneInput = document.getElementById("phone");
+  const otpInput = document.getElementById("otp");
+  const sendOtpBtn = document.getElementById("sendOtpBtn");
+  const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+  const messageDiv = document.getElementById("message");
 
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
+  const recaptcha = new RecaptchaVerifier("recaptcha-container", {
+    size: "normal",
+    callback: () => console.log("Recaptcha solved"),
+  }, auth);
+
+  sendOtpBtn.addEventListener("click", async () => {
+    const phoneNumber = phoneInput.value.trim();
+    messageDiv.textContent = "";
+
+    if (!phoneNumber.startsWith("+880")) {
+      messageDiv.textContent = "Phone must start with +880 (BD format)";
+      return;
+    }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert('Login successful! Welcome back.');
-      form.reset();
-      window.location.href = 'dashboard.html';
+      confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, recaptcha);
+      alert("OTP sent!");
+      otpInput.style.display = "block";
+      verifyOtpBtn.style.display = "block";
     } catch (error) {
-      messageDiv.textContent = 'Login failed: ' + error.message;
+      messageDiv.textContent = "Failed to send OTP: " + error.message;
     }
   });
 
-  forgotPasswordLink.addEventListener('click', async (e) => {
-    e.preventDefault();
-    const email = prompt("Enter your email to reset password:");
+  verifyOtpBtn.addEventListener("click", async () => {
+    const code = otpInput.value.trim();
+    messageDiv.textContent = "";
 
-    if (email) {
-      try {
-        await sendPasswordResetEmail(auth, email);
-        alert('Password reset email sent. Please check your inbox.');
-      } catch (error) {
-        alert('Failed to send reset email: ' + error.message);
-      }
+    if (!code) {
+      messageDiv.textContent = "Please enter the OTP";
+      return;
+    }
+
+    try {
+      await confirmationResult.confirm(code);
+      alert("Login successful!");
+      window.location.href = "dashboard.html";
+    } catch (error) {
+      messageDiv.textContent = "OTP verification failed: " + error.message;
     }
   });
 </script>
