@@ -25,8 +25,7 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     input[type="text"],
-    input[type="email"],
-    input[type="password"],
+    input[type="tel"],
     button {
       width: 100%;
       padding: 10px;
@@ -69,16 +68,19 @@
   </header>
 
   <div class="container">
-    <h2>Register</h2>
+    <h2>Register with Phone</h2>
     <form id="registerForm">
-      <input type="text" id="username" placeholder="Username" required>
-      <input type="email" id="email" placeholder="Email" required>
-      <input type="password" id="password" placeholder="Password" required>
+      <input type="text" id="username" placeholder="Full Name" required>
+      <input type="tel" id="phone" placeholder="Phone Number (+880...)" required>
+      <div id="recaptcha-container"></div>
+      <button type="button" id="sendCodeBtn">Send OTP</button>
+
+      <input type="text" id="otp" placeholder="Enter OTP" style="display:none;" required>
       <label class="agree">
         <input type="checkbox" required>
         I agree to the <a href="terms.html" target="_blank">Terms and Conditions</a>
       </label>
-      <button type="submit">Register</button>
+      <button type="button" id="verifyOtpBtn" style="display:none;">Verify & Register</button>
     </form>
     <p class="note">Already have an account? <a href="login.html">Login</a></p>
   </div>
@@ -87,20 +89,20 @@
     <p>&copy; 2025 Pagla Clickers</p>
   </footer>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase SDKs -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
     import {
       getFirestore,
       doc,
       setDoc,
       getDocs,
-      updateDoc,
-      increment,
       collection,
       query,
-      where
+      where,
+      updateDoc,
+      increment
     } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -117,29 +119,56 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    let confirmationResult;
+
     function generateReferralCode(uid) {
       return uid.substring(0, 6).toUpperCase();
     }
 
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
+    const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+      size: 'normal',
+      callback: () => {
+        console.log('Recaptcha solved');
+      }
+    }, auth);
 
-      const username = document.getElementById('username').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
+    document.getElementById('sendCodeBtn').addEventListener('click', async () => {
+      const phone = document.getElementById('phone').value.trim();
+
+      if (!phone.startsWith('+880')) {
+        alert('Please enter a valid Bangladeshi phone number with +880');
+        return;
+      }
 
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+        confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
+        alert("OTP sent to your phone");
+        document.getElementById('otp').style.display = 'block';
+        document.getElementById('verifyOtpBtn').style.display = 'block';
+      } catch (error) {
+        alert("Error sending OTP: " + error.message);
+      }
+    });
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const refCode = urlParams.get('ref');
+    document.getElementById('verifyOtpBtn').addEventListener('click', async () => {
+      const otp = document.getElementById('otp').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const urlParams = new URLSearchParams(window.location.search);
+      const refCode = urlParams.get('ref');
+
+      if (!otp || !username) {
+        alert("Please complete all fields");
+        return;
+      }
+
+      try {
+        const result = await confirmationResult.confirm(otp);
+        const user = result.user;
 
         const referralCode = generateReferralCode(user.uid);
-
         const userData = {
-          name: username, // Save username here
-          email: email,
+          name: username,
+          phone: user.phoneNumber,
           referralCode: referralCode,
           referralCount: 0,
           referredBy: refCode || null,
@@ -149,7 +178,7 @@
 
         await setDoc(doc(db, "users", user.uid), userData);
 
-        // Handle referrer reward
+        // Update referrer
         if (refCode) {
           const q = query(collection(db, "users"), where("referralCode", "==", refCode));
           const querySnapshot = await getDocs(q);
@@ -158,6 +187,7 @@
             const referrerDoc = querySnapshot.docs[0].ref;
             await updateDoc(referrerDoc, {
               referralCount: increment(1)
+              // Optionally add: balance: increment(10)
             });
           }
         }
@@ -165,7 +195,7 @@
         alert("Registration successful!");
         window.location.href = "dashboard.html";
       } catch (error) {
-        alert("Registration failed: " + error.message);
+        alert("OTP verification failed: " + error.message);
       }
     });
   </script>
