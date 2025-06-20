@@ -25,7 +25,7 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    input, button {
+    input, select, button {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
@@ -63,8 +63,22 @@
 <div class="container">
   <h2>Register with Phone</h2>
   <div class="message" id="message"></div>
+
   <input type="text" id="username" placeholder="Username" required />
-  <input type="tel" id="phone" placeholder="Phone (+880...)" required />
+
+  <select id="countryCode">
+    <option value="+880" selected>🇧🇩 +880 (BD)</option>
+    <option value="+91">🇮🇳 +91 (IN)</option>
+    <option value="+92">🇵🇰 +92 (PK)</option>
+    <option value="+1">🇺🇸 +1 (US)</option>
+    <!-- Add more country codes if needed -->
+  </select>
+
+  <input type="tel" id="phone" placeholder="Phone number without country code" required />
+
+  <input type="password" id="password" placeholder="Password (min 6 characters)" required />
+  <input type="password" id="retypePassword" placeholder="Retype Password" required />
+
   <input type="text" id="refCode" placeholder="Referral Code (Optional)" />
 
   <div id="recaptcha-container"></div>
@@ -114,8 +128,11 @@
 
   let confirmationResult;
 
-  const phoneInput = document.getElementById("phone");
   const usernameInput = document.getElementById("username");
+  const phoneInput = document.getElementById("phone");
+  const countryCodeSelect = document.getElementById("countryCode");
+  const passwordInput = document.getElementById("password");
+  const retypePasswordInput = document.getElementById("retypePassword");
   const refCodeInput = document.getElementById("refCode");
   const messageDiv = document.getElementById("message");
   const sendOtpBtn = document.getElementById("sendOtpBtn");
@@ -130,15 +147,17 @@
 
   sendOtpBtn.addEventListener("click", async () => {
     const phone = phoneInput.value.trim();
+    const fullPhone = countryCodeSelect.value + phone;
+
     messageDiv.textContent = "";
 
-    if (!phone.startsWith("+880")) {
-      messageDiv.textContent = "Phone number must start with +880";
+    if (phone.length < 7 || !/^\d+$/.test(phone)) {
+      messageDiv.textContent = "Enter a valid phone number.";
       return;
     }
 
     try {
-      confirmationResult = await signInWithPhoneNumber(auth, phone, recaptcha);
+      confirmationResult = await signInWithPhoneNumber(auth, fullPhone, recaptcha);
       alert("OTP sent to your phone!");
       otpSection.style.display = "block";
     } catch (error) {
@@ -147,17 +166,28 @@
   });
 
   verifyOtpBtn.addEventListener("click", async () => {
-    const code = otpInput.value.trim();
     const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
+    const retypePassword = retypePasswordInput.value.trim();
     const referredBy = refCodeInput.value.trim() || null;
 
-    if (!code || !username) {
-      messageDiv.textContent = "Please enter username and OTP.";
+    if (!username || !password || !retypePassword || !otpInput.value.trim()) {
+      messageDiv.textContent = "All fields are required.";
+      return;
+    }
+
+    if (password.length < 6) {
+      messageDiv.textContent = "Password must be at least 6 characters.";
+      return;
+    }
+
+    if (password !== retypePassword) {
+      messageDiv.textContent = "Passwords do not match.";
       return;
     }
 
     try {
-      const result = await confirmationResult.confirm(code);
+      const result = await confirmationResult.confirm(otpInput.value.trim());
       const user = result.user;
 
       const referralCode = user.uid.substring(0, 6).toUpperCase();
@@ -166,6 +196,7 @@
         name: username,
         phone: user.phoneNumber,
         email: null,
+        password: password, // Note: In production, never store passwords like this. Hash or use Auth provider.
         referralCode,
         referralCount: 0,
         referredBy,
