@@ -71,14 +71,11 @@
     <option value="+91">🇮🇳 +91 (IN)</option>
     <option value="+92">🇵🇰 +92 (PK)</option>
     <option value="+1">🇺🇸 +1 (US)</option>
-    <!-- Add more country codes if needed -->
   </select>
 
   <input type="tel" id="phone" placeholder="Phone number without country code" required />
-
   <input type="password" id="password" placeholder="Password (min 6 characters)" required />
   <input type="password" id="retypePassword" placeholder="Retype Password" required />
-
   <input type="text" id="refCode" placeholder="Referral Code (Optional)" />
 
   <div id="recaptcha-container"></div>
@@ -112,116 +109,119 @@
     increment
   } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
-    authDomain: "pagla-b1c17.firebaseapp.com",
-    projectId: "pagla-b1c17",
-    storageBucket: "pagla-b1c17.appspot.com",
-    messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:1595070cdac289170f5e27",
-    measurementId: "G-M9Y7SBBEXM"
-  };
+  document.addEventListener("DOMContentLoaded", () => {
+    const firebaseConfig = {
+      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+      authDomain: "pagla-b1c17.firebaseapp.com",
+      projectId: "pagla-b1c17",
+      storageBucket: "pagla-b1c17.appspot.com",
+      messagingSenderId: "192578902502",
+      appId: "1:192578902502:web:1595070cdac289170f5e27",
+      measurementId: "G-M9Y7SBBEXM"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  let confirmationResult;
+    let confirmationResult;
 
-  const usernameInput = document.getElementById("username");
-  const phoneInput = document.getElementById("phone");
-  const countryCodeSelect = document.getElementById("countryCode");
-  const passwordInput = document.getElementById("password");
-  const retypePasswordInput = document.getElementById("retypePassword");
-  const refCodeInput = document.getElementById("refCode");
-  const messageDiv = document.getElementById("message");
-  const sendOtpBtn = document.getElementById("sendOtpBtn");
-  const otpSection = document.getElementById("otpSection");
-  const otpInput = document.getElementById("otp");
-  const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+    const usernameInput = document.getElementById("username");
+    const phoneInput = document.getElementById("phone");
+    const countryCodeSelect = document.getElementById("countryCode");
+    const passwordInput = document.getElementById("password");
+    const retypePasswordInput = document.getElementById("retypePassword");
+    const refCodeInput = document.getElementById("refCode");
+    const messageDiv = document.getElementById("message");
+    const sendOtpBtn = document.getElementById("sendOtpBtn");
+    const otpSection = document.getElementById("otpSection");
+    const otpInput = document.getElementById("otp");
+    const verifyOtpBtn = document.getElementById("verifyOtpBtn");
 
-  const recaptcha = new RecaptchaVerifier("recaptcha-container", {
-    size: "normal",
-    callback: () => console.log("Recaptcha solved"),
-  }, auth);
+    const recaptcha = new RecaptchaVerifier("recaptcha-container", {
+      size: "invisible", // Invisible reCAPTCHA
+      callback: () => console.log("reCAPTCHA solved"),
+      "expired-callback": () => {
+        console.warn("reCAPTCHA expired");
+      }
+    }, auth);
 
-  sendOtpBtn.addEventListener("click", async () => {
-    const phone = phoneInput.value.trim();
-    const fullPhone = countryCodeSelect.value + phone;
+    sendOtpBtn.addEventListener("click", async () => {
+      const phone = phoneInput.value.trim();
+      const fullPhone = countryCodeSelect.value + phone;
+      messageDiv.textContent = "";
 
-    messageDiv.textContent = "";
-
-    if (phone.length < 7 || !/^\d+$/.test(phone)) {
-      messageDiv.textContent = "Enter a valid phone number.";
-      return;
-    }
-
-    try {
-      confirmationResult = await signInWithPhoneNumber(auth, fullPhone, recaptcha);
-      alert("OTP sent to your phone!");
-      otpSection.style.display = "block";
-    } catch (error) {
-      messageDiv.textContent = "Failed to send OTP: " + error.message;
-    }
-  });
-
-  verifyOtpBtn.addEventListener("click", async () => {
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value.trim();
-    const retypePassword = retypePasswordInput.value.trim();
-    const referredBy = refCodeInput.value.trim() || null;
-
-    if (!username || !password || !retypePassword || !otpInput.value.trim()) {
-      messageDiv.textContent = "All fields are required.";
-      return;
-    }
-
-    if (password.length < 6) {
-      messageDiv.textContent = "Password must be at least 6 characters.";
-      return;
-    }
-
-    if (password !== retypePassword) {
-      messageDiv.textContent = "Passwords do not match.";
-      return;
-    }
-
-    try {
-      const result = await confirmationResult.confirm(otpInput.value.trim());
-      const user = result.user;
-
-      const referralCode = user.uid.substring(0, 6).toUpperCase();
-
-      const userData = {
-        name: username,
-        phone: user.phoneNumber,
-        email: null,
-        password: password, // Note: In production, never store passwords like this. Hash or use Auth provider.
-        referralCode,
-        referralCount: 0,
-        referredBy,
-        balance: 0,
-        createdAt: new Date().toISOString()
-      };
-
-      await setDoc(doc(db, "users", user.uid), userData);
-
-      if (referredBy) {
-        const q = query(collection(db, "users"), where("referralCode", "==", referredBy));
-        const snap = await getDocs(q);
-        if (!snap.empty) {
-          const refDoc = snap.docs[0].ref;
-          await updateDoc(refDoc, {
-            referralCount: increment(1)
-          });
-        }
+      if (!phone.match(/^\d{6,15}$/)) {
+        messageDiv.textContent = "Enter a valid phone number without country code.";
+        return;
       }
 
-      alert("Registration successful!");
-      window.location.href = "dashboard.html";
-    } catch (error) {
-      messageDiv.textContent = "OTP verification failed: " + error.message;
-    }
+      try {
+        await recaptcha.render(); // Render invisible reCAPTCHA before sending
+        confirmationResult = await signInWithPhoneNumber(auth, fullPhone, recaptcha);
+        alert("OTP sent to your phone!");
+        otpSection.style.display = "block";
+      } catch (error) {
+        messageDiv.textContent = "Failed to send OTP: " + error.message;
+      }
+    });
+
+    verifyOtpBtn.addEventListener("click", async () => {
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value.trim();
+      const retypePassword = retypePasswordInput.value.trim();
+      const referredBy = refCodeInput.value.trim() || null;
+      const code = otpInput.value.trim();
+
+      if (!username || !password || !retypePassword || !code) {
+        messageDiv.textContent = "All fields are required.";
+        return;
+      }
+
+      if (password.length < 6) {
+        messageDiv.textContent = "Password must be at least 6 characters.";
+        return;
+      }
+
+      if (password !== retypePassword) {
+        messageDiv.textContent = "Passwords do not match.";
+        return;
+      }
+
+      try {
+        const result = await confirmationResult.confirm(code);
+        const user = result.user;
+        const referralCode = user.uid.substring(0, 6).toUpperCase();
+
+        const userData = {
+          name: username,
+          phone: user.phoneNumber,
+          email: null,
+          password: password, // WARNING: Don't store plain passwords in production!
+          referralCode,
+          referralCount: 0,
+          referredBy,
+          balance: 0,
+          createdAt: new Date().toISOString()
+        };
+
+        await setDoc(doc(db, "users", user.uid), userData);
+
+        if (referredBy) {
+          const q = query(collection(db, "users"), where("referralCode", "==", referredBy));
+          const snap = await getDocs(q);
+          if (!snap.empty) {
+            const refDoc = snap.docs[0].ref;
+            await updateDoc(refDoc, { referralCount: increment(1) });
+          }
+        }
+
+        alert("Registration successful!");
+        window.location.href = "dashboard.html";
+      } catch (error) {
+        messageDiv.textContent = "OTP verification failed: " + error.message;
+      }
+    });
   });
 </script>
 </body>
