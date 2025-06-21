@@ -118,18 +118,18 @@
     <h1>Pagla Clickers Profile</h1>
     <div class="navbar">
       <a href="about.html">About</a>
-    <a href="notifications.html">Notifications</a>
-    <a href="profile.html">Profile</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="postjob.html">Post Job</a>
-    <a href="taskdetail.html">Tasks</a>
-    <a href="referel.html">Referral</a>
-    <a href="deposit.html">Deposit</a>
-    <a href="wallet.html">Wallet</a>
-    <a href="withdrawal.html">Withdraw Money</a>
-    <a href="terms.html">Terms</a>
-    <a href="faq.html">FAQ</a>
-    <a href="support.html">Support</a>
+      <a href="notifications.html">Notifications</a>
+      <a href="profile.html">Profile</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="postjob.html">Post Job</a>
+      <a href="taskdetail.html">Tasks</a>
+      <a href="referel.html">Referral</a>
+      <a href="deposit.html">Deposit</a>
+      <a href="wallet.html">Wallet</a>
+      <a href="withdrawal.html">Withdraw Money</a>
+      <a href="terms.html">Terms</a>
+      <a href="faq.html">FAQ</a>
+      <a href="support.html">Support</a>
     </div>
   </header>
 
@@ -207,7 +207,7 @@
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
           const data = userSnap.data();
-          nameInput.value = data.name || "";
+          nameInput.value = data.username || "";  // Changed from name to username
           phoneInput.value = data.phone || "";
           emailInput.value = user.email;
           pointsInput.value = data.points || 0;
@@ -239,7 +239,7 @@
       try {
         const userRef = doc(db, "users", currentUser.uid);
         await updateDoc(userRef, {
-          name: newName,
+          username: newName,  // Save as username
           phone: newPhone
         });
         alert("Profile updated.");
