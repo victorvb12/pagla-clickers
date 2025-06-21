@@ -1,86 +1,143 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTP Test - Firebase</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pagla Clickers - Phone OTP</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 400px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #recaptcha-container {
+      margin: 15px 0;
+    }
+    .hidden {
+      display: none;
+    }
+    .status {
+      color: red;
+      font-size: 14px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-  <h2>OTP Login Test</h2>
 
-  <input type="text" id="phoneNumber" placeholder="+8801XXXXXXXXX" /><br><br>
+<div class="container">
+  <h2>Register with Phone</h2>
 
-  <div id="recaptcha-container"></div><br>
+  <input type="tel" id="phoneNumber" placeholder="Phone (+8801XXXXXXXXX)" />
+  <div id="recaptcha-container"></div>
+  <button id="sendOtpBtn">Send OTP</button>
 
-  <button id="sendOtpBtn">Send OTP</button><br><br>
-
-  <div id="otpSection" style="display:none;">
+  <div id="otpSection" class="hidden">
     <input type="text" id="otpCode" placeholder="Enter OTP" />
-    <button id="verifyBtn">Verify OTP</button>
+    <button id="verifyOtpBtn">Verify OTP</button>
   </div>
 
-  <p id="message" style="color:red;"></p>
+  <p id="status" class="status"></p>
+</div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
-      authDomain: "pagla-b1c17.firebaseapp.com",
-      projectId: "pagla-b1c17",
-      storageBucket: "pagla-b1c17.appspot.com",
-      messagingSenderId: "192578902502",
-      appId: "1:192578902502:web:1595070cdac289170f5e27"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+    authDomain: "pagla-b1c17.firebaseapp.com",
+    projectId: "pagla-b1c17",
+    storageBucket: "pagla-b1c17.appspot.com",
+    messagingSenderId: "192578902502",
+    appId: "1:192578902502:web:1595070cdac289170f5e27"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-    let confirmationResult;
+  let confirmationResult;
 
-    const phoneInput = document.getElementById("phoneNumber");
-    const sendOtpBtn = document.getElementById("sendOtpBtn");
-    const verifyBtn = document.getElementById("verifyBtn");
-    const otpSection = document.getElementById("otpSection");
-    const otpCode = document.getElementById("otpCode");
-    const message = document.getElementById("message");
+  const phoneInput = document.getElementById("phoneNumber");
+  const sendOtpBtn = document.getElementById("sendOtpBtn");
+  const otpSection = document.getElementById("otpSection");
+  const otpCode = document.getElementById("otpCode");
+  const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+  const status = document.getElementById("status");
 
-    const recaptcha = new RecaptchaVerifier("recaptcha-container", {
-      size: "normal",
-      callback: () => console.log("reCAPTCHA verified")
-    }, auth);
+  // 🔐 Visible reCAPTCHA
+  const recaptcha = new RecaptchaVerifier("recaptcha-container", {
+    size: "normal", // visible checkbox
+    callback: () => console.log("reCAPTCHA verified"),
+    'expired-callback': () => {
+      console.warn("reCAPTCHA expired");
+      status.textContent = "reCAPTCHA expired. Refresh the page.";
+    }
+  }, auth);
 
-    sendOtpBtn.addEventListener("click", async () => {
-      const phone = phoneInput.value.trim();
-      message.textContent = "";
+  sendOtpBtn.addEventListener("click", async () => {
+    const phone = phoneInput.value.trim();
+    status.textContent = "";
 
-      if (!phone.startsWith("+880") || phone.length < 13) {
-        message.textContent = "Invalid phone number. Use +8801XXXXXXXXX";
-        return;
-      }
+    if (!phone.startsWith("+880") || phone.length < 13) {
+      status.textContent = "Use a valid BD phone number: +8801XXXXXXXXX";
+      return;
+    }
 
-      try {
-        await recaptcha.render(); // 🟢 must render
-        confirmationResult = await signInWithPhoneNumber(auth, phone, recaptcha);
-        otpSection.style.display = "block";
-        alert("OTP sent!");
-      } catch (error) {
-        console.error(error);
-        message.textContent = "Failed to send OTP: " + error.message;
-      }
-    });
+    try {
+      await recaptcha.render(); // render if not already
+      confirmationResult = await signInWithPhoneNumber(auth, phone, recaptcha);
+      alert("OTP sent!");
+      otpSection.classList.remove("hidden");
+    } catch (error) {
+      console.error(error);
+      status.textContent = "Error sending OTP: " + error.message;
+    }
+  });
 
-    verifyBtn.addEventListener("click", async () => {
-      const code = otpCode.value.trim();
-      try {
-        const result = await confirmationResult.confirm(code);
-        message.style.color = "green";
-        message.textContent = "Phone verified! User ID: " + result.user.uid;
-      } catch (error) {
-        message.textContent = "Verification failed: " + error.message;
-      }
-    });
-  </script>
+  verifyOtpBtn.addEventListener("click", async () => {
+    const code = otpCode.value.trim();
+    if (!code) {
+      status.textContent = "Please enter the OTP.";
+      return;
+    }
+
+    try {
+      const result = await confirmationResult.confirm(code);
+      const user = result.user;
+      status.style.color = "green";
+      status.textContent = "Phone verified! UID: " + user.uid;
+      // You can now redirect or save user info in Firestore
+    } catch (error) {
+      console.error(error);
+      status.textContent = "OTP verification failed: " + error.message;
+    }
+  });
+</script>
 </body>
 </html>
