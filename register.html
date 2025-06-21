@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -18,6 +18,17 @@
       align-items: center;
       padding: 15px;
       color: #333;
+      position: relative;
+    }
+    h1.title {
+      position: absolute;
+      top: 20px;
+      text-align: center;
+      width: 100%;
+      font-size: 28px;
+      color: white;
+      font-weight: bold;
+      margin: 0;
     }
     .container {
       background: #fff;
@@ -26,6 +37,7 @@
       box-shadow: 0 12px 24px rgba(0,0,0,0.15);
       max-width: 420px;
       width: 100%;
+      margin-top: 80px;
     }
     h2 {
       margin-bottom: 25px;
@@ -100,12 +112,12 @@
       text-decoration: underline;
     }
 
-    /* Responsive */
     @media (max-width: 480px) {
       .container {
         padding: 25px 20px;
         max-width: 100%;
         margin: 0 10px;
+        margin-top: 80px;
       }
       .phone-group {
         flex-direction: column;
@@ -119,31 +131,35 @@
 </head>
 <body>
 
+  <h1 class="title">Pagla Clickers</h1>
+
   <div class="container" role="main" aria-label="Register Form">
-    <h2>Register</h2>
+    <h2>Create Account</h2>
 
     <label for="username">Username</label>
-    <input type="text" id="username" placeholder="Choose your username" autocomplete="off" aria-describedby="usernameHelp" />
+    <input type="text" id="username" placeholder="Choose your username" autocomplete="off" />
 
     <label for="email">Email</label>
-    <input type="email" id="email" placeholder="Your email address" autocomplete="off" aria-describedby="emailHelp" />
+    <input type="email" id="email" placeholder="Your email address" autocomplete="off" />
 
     <label for="phoneCountry">Country Code</label>
     <select id="phoneCountry" aria-label="Country Code">
-      <option value="+1">🇺🇸 +1</option>
-      <option value="+44">🇬🇧 +44</option>
-      <option value="+91">🇮🇳 +91</option>
-      <option value="+880" selected>🇧🇩 +880</option>
-      <option value="+61">🇦🇺 +61</option>
-      <option value="+81">🇯🇵 +81</option>
-      <option value="+49">🇩🇪 +49</option>
-      <option value="+33">🇫🇷 +33</option>
-      <option value="+7">🇷🇺 +7</option>
-      <!-- Add more countries as needed -->
+      <option value="+1">US +1</option>
+      <option value="+44">GB +44</option>
+      <option value="+91">IN +91</option>
+      <option value="+880" selected>BD +880</option>
+      <option value="+61">AU +61</option>
+      <option value="+81">JP +81</option>
+      <option value="+49">DE +49</option>
+      <option value="+33">FR +33</option>
+      <option value="+7">RU +7</option>
     </select>
 
     <label for="phone">Phone Number</label>
-    <input type="tel" id="phone" placeholder="e.g. 1954391181" autocomplete="off" aria-describedby="phoneHelp" />
+    <input type="tel" id="phone" placeholder="e.g. 1912345678" autocomplete="off" />
+
+    <label for="referralCode">Referral Code (optional)</label>
+    <input type="text" id="referralCode" placeholder="Enter referral code if any" autocomplete="off" />
 
     <label for="password">Password</label>
     <input type="password" id="password" placeholder="Create password" autocomplete="off" />
@@ -151,7 +167,7 @@
     <label for="confirmPassword">Confirm Password</label>
     <input type="password" id="confirmPassword" placeholder="Confirm password" autocomplete="off" />
 
-    <button id="registerBtn" aria-live="polite">Register</button>
+    <button id="registerBtn">Register</button>
 
     <p class="message" id="message" role="alert" aria-live="assertive"></p>
 
@@ -180,27 +196,25 @@
     const emailInput = document.getElementById("email");
     const phoneCountrySelect = document.getElementById("phoneCountry");
     const phoneInput = document.getElementById("phone");
+    const referralInput = document.getElementById("referralCode");
     const passwordInput = document.getElementById("password");
     const confirmPasswordInput = document.getElementById("confirmPassword");
     const registerBtn = document.getElementById("registerBtn");
     const message = document.getElementById("message");
 
-    // Helper validation functions
     function validateEmail(email) {
-      // Simple regex email validation
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
     function validatePhone(phone) {
-      // Only digits, length 6-15
       return /^\d{6,15}$/.test(phone);
     }
 
     async function usernameExists(username) {
       if (!username) return false;
       const q = query(collection(db, "users"), where("username", "==", username));
-      const querySnapshot = await getDocs(q);
-      return !querySnapshot.empty;
+      const snapshot = await getDocs(q);
+      return !snapshot.empty;
     }
 
     registerBtn.addEventListener("click", async () => {
@@ -210,6 +224,7 @@
       const email = emailInput.value.trim();
       const countryCode = phoneCountrySelect.value;
       const phoneNumber = phoneInput.value.trim();
+      const referredBy = referralInput.value.trim() || null;
       const password = passwordInput.value;
       const confirmPassword = confirmPasswordInput.value;
 
@@ -229,31 +244,16 @@
         return;
       }
 
-      if (!email) {
-        message.textContent = "Please enter your email.";
+      if (!email || !validateEmail(email)) {
+        message.textContent = "Please enter a valid email.";
         emailInput.focus();
-        registerBtn.disabled = false;
-        registerBtn.textContent = "Register";
-        return;
-      }
-      if (!validateEmail(email)) {
-        message.textContent = "Please enter a valid email address.";
-        emailInput.focus();
-        registerBtn.disabled = false;
-        registerBtn.textContent = "Register";
-        return;
-      }
-
-      if (!phoneNumber) {
-        message.textContent = "Please enter your phone number.";
-        phoneInput.focus();
         registerBtn.disabled = false;
         registerBtn.textContent = "Register";
         return;
       }
 
       if (!validatePhone(phoneNumber)) {
-        message.textContent = "Phone number must be digits only, 6 to 15 characters.";
+        message.textContent = "Phone must be 6–15 digits.";
         phoneInput.focus();
         registerBtn.disabled = false;
         registerBtn.textContent = "Register";
@@ -278,18 +278,19 @@
 
       try {
         registerBtn.textContent = "Registering...";
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCred.user;
+        const referralCode = user.uid.substring(0, 6).toUpperCase();
 
         await setDoc(doc(db, "users", user.uid), {
-          username: username,
-          email: email,
+          username,
+          email,
           phone: countryCode + phoneNumber,
-          createdAt: new Date().toISOString(),
-          referralCode: user.uid.substring(0, 6).toUpperCase(),
+          referredBy,
+          referralCode,
           referralCount: 0,
           balance: 0,
-          referredBy: null
+          createdAt: new Date().toISOString()
         });
 
         message.classList.add("success");
