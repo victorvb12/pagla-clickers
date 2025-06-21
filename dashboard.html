@@ -154,18 +154,17 @@
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      // Show user info
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
         const data = userDoc.data();
-        userName.innerText = data.name || "User";
+        userName.innerText = data.username || "User";  // ✅ Show actual username
         userBalance.innerText = "৳" + (data.balance || 0);
       } else {
         userName.innerText = "User";
         userBalance.innerText = "৳0";
       }
 
-      // Get user's submitted tasks
+      // Load user's submitted tasks
       const submissionsSnap = await getDocs(collection(db, "submissions"));
       const userSubs = [];
       submissionsSnap.forEach(doc => {
