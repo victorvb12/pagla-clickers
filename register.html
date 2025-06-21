@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pagla Clickers - Register</title>
   <style>
-    /* Reset and base */
     * {
       box-sizing: border-box;
     }
@@ -17,7 +16,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 15px;
       color: #333;
     }
     .container {
@@ -42,7 +41,7 @@
     input, select {
       width: 100%;
       padding: 12px 15px;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
       border-radius: 8px;
       border: 1.8px solid #b39ddb;
       font-size: 16px;
@@ -72,6 +71,7 @@
       cursor: pointer;
       box-shadow: 0 6px 12px rgba(126, 87, 194, 0.5);
       transition: background 0.3s ease;
+      margin-top: 8px;
     }
     button:hover {
       background: #5e35b1;
@@ -80,7 +80,7 @@
       text-align: center;
       font-size: 14px;
       margin-top: 10px;
-      min-height: 20px;
+      min-height: 22px;
       color: #d32f2f;
     }
     .message.success {
@@ -99,18 +99,34 @@
     p.bottom-text a:hover {
       text-decoration: underline;
     }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .container {
+        padding: 25px 20px;
+        max-width: 100%;
+        margin: 0 10px;
+      }
+      .phone-group {
+        flex-direction: column;
+      }
+      .phone-group select {
+        max-width: 100%;
+        margin-bottom: 12px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <div class="container">
+  <div class="container" role="main" aria-label="Register Form">
     <h2>Register</h2>
 
     <label for="username">Username</label>
-    <input type="text" id="username" placeholder="Choose your username" autocomplete="off" />
+    <input type="text" id="username" placeholder="Choose your username" autocomplete="off" aria-describedby="usernameHelp" />
 
     <label for="email">Email</label>
-    <input type="email" id="email" placeholder="Your email address" autocomplete="off" />
+    <input type="email" id="email" placeholder="Your email address" autocomplete="off" aria-describedby="emailHelp" />
 
     <label for="phoneCountry">Country Code</label>
     <select id="phoneCountry" aria-label="Country Code">
@@ -127,7 +143,7 @@
     </select>
 
     <label for="phone">Phone Number</label>
-    <input type="tel" id="phone" placeholder="e.g. 1954391181" autocomplete="off" />
+    <input type="tel" id="phone" placeholder="e.g. 1954391181" autocomplete="off" aria-describedby="phoneHelp" />
 
     <label for="password">Password</label>
     <input type="password" id="password" placeholder="Create password" autocomplete="off" />
@@ -135,9 +151,9 @@
     <label for="confirmPassword">Confirm Password</label>
     <input type="password" id="confirmPassword" placeholder="Confirm password" autocomplete="off" />
 
-    <button id="registerBtn">Register</button>
+    <button id="registerBtn" aria-live="polite">Register</button>
 
-    <p class="message" id="message"></p>
+    <p class="message" id="message" role="alert" aria-live="assertive"></p>
 
     <p class="bottom-text">Already have an account? <a href="login.html">Login here</a></p>
   </div>
@@ -169,6 +185,17 @@
     const registerBtn = document.getElementById("registerBtn");
     const message = document.getElementById("message");
 
+    // Helper validation functions
+    function validateEmail(email) {
+      // Simple regex email validation
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function validatePhone(phone) {
+      // Only digits, length 6-15
+      return /^\d{6,15}$/.test(phone);
+    }
+
     async function usernameExists(username) {
       if (!username) return false;
       const q = query(collection(db, "users"), where("username", "==", username));
@@ -188,52 +215,78 @@
 
       if (!username) {
         message.textContent = "Please enter a username.";
+        usernameInput.focus();
         return;
       }
 
+      registerBtn.disabled = true;
+      registerBtn.textContent = "Checking username...";
       if (await usernameExists(username)) {
-        message.textContent = "Username already exists, choose another.";
+        message.textContent = "Username already exists, please choose another.";
+        registerBtn.disabled = false;
+        registerBtn.textContent = "Register";
+        usernameInput.focus();
         return;
       }
 
       if (!email) {
         message.textContent = "Please enter your email.";
+        emailInput.focus();
+        registerBtn.disabled = false;
+        registerBtn.textContent = "Register";
+        return;
+      }
+      if (!validateEmail(email)) {
+        message.textContent = "Please enter a valid email address.";
+        emailInput.focus();
+        registerBtn.disabled = false;
+        registerBtn.textContent = "Register";
         return;
       }
 
       if (!phoneNumber) {
         message.textContent = "Please enter your phone number.";
+        phoneInput.focus();
+        registerBtn.disabled = false;
+        registerBtn.textContent = "Register";
         return;
       }
 
-      // Simple phone number validation (digits only)
-      if (!/^\d{6,15}$/.test(phoneNumber)) {
-        message.textContent = "Enter a valid phone number (6-15 digits).";
+      if (!validatePhone(phoneNumber)) {
+        message.textContent = "Phone number must be digits only, 6 to 15 characters.";
+        phoneInput.focus();
+        registerBtn.disabled = false;
+        registerBtn.textContent = "Register";
         return;
       }
 
       if (password.length < 6) {
         message.textContent = "Password must be at least 6 characters.";
+        passwordInput.focus();
+        registerBtn.disabled = false;
+        registerBtn.textContent = "Register";
         return;
       }
 
       if (password !== confirmPassword) {
         message.textContent = "Passwords do not match.";
+        confirmPasswordInput.focus();
+        registerBtn.disabled = false;
+        registerBtn.textContent = "Register";
         return;
       }
 
       try {
-        // Register user with Firebase Auth
+        registerBtn.textContent = "Registering...";
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Save extra info to Firestore
         await setDoc(doc(db, "users", user.uid), {
           username: username,
           email: email,
           phone: countryCode + phoneNumber,
           createdAt: new Date().toISOString(),
-          referralCode: user.uid.substring(0,6).toUpperCase(),
+          referralCode: user.uid.substring(0, 6).toUpperCase(),
           referralCount: 0,
           balance: 0,
           referredBy: null
@@ -245,8 +298,10 @@
           window.location.href = "dashboard.html";
         }, 2000);
       } catch (error) {
-        console.error(error);
         message.textContent = "Error: " + error.message;
+      } finally {
+        registerBtn.disabled = false;
+        registerBtn.textContent = "Register";
       }
     });
   </script>
