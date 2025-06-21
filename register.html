@@ -52,6 +52,9 @@
     #otpSection {
       display: none;
     }
+    #recaptcha-container {
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -73,7 +76,7 @@
     <option value="+1">🇺🇸 +1 (US)</option>
   </select>
 
-  <input type="tel" id="phone" placeholder="Phone number without country code" required />
+  <input type="tel" id="phone" placeholder="Phone number (without country code)" required />
   <input type="password" id="password" placeholder="Password (min 6 characters)" required />
   <input type="password" id="retypePassword" placeholder="Retype Password" required />
   <input type="text" id="refCode" placeholder="Referral Code (Optional)" />
@@ -93,7 +96,6 @@
   <p>&copy; 2025 Pagla Clickers</p>
 </footer>
 
-<!-- Firebase scripts -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
   import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
@@ -138,9 +140,12 @@
     const otpInput = document.getElementById("otp");
     const verifyOtpBtn = document.getElementById("verifyOtpBtn");
 
+    // Create invisible reCAPTCHA
     const recaptcha = new RecaptchaVerifier("recaptcha-container", {
-      size: "invisible", // Invisible reCAPTCHA
-      callback: () => console.log("reCAPTCHA solved"),
+      size: "invisible",
+      callback: (response) => {
+        console.log("reCAPTCHA verified");
+      },
       "expired-callback": () => {
         console.warn("reCAPTCHA expired");
       }
@@ -157,11 +162,14 @@
       }
 
       try {
-        await recaptcha.render(); // Render invisible reCAPTCHA before sending
+        await recaptcha.render();
+        await recaptcha.verify();
+
         confirmationResult = await signInWithPhoneNumber(auth, fullPhone, recaptcha);
         alert("OTP sent to your phone!");
         otpSection.style.display = "block";
       } catch (error) {
+        console.error("OTP Error:", error);
         messageDiv.textContent = "Failed to send OTP: " + error.message;
       }
     });
@@ -197,7 +205,7 @@
           name: username,
           phone: user.phoneNumber,
           email: null,
-          password: password, // WARNING: Don't store plain passwords in production!
+          password: password, // ⚠️ For demo only. Do not store plain passwords in real projects.
           referralCode,
           referralCount: 0,
           referredBy,
@@ -219,6 +227,7 @@
         alert("Registration successful!");
         window.location.href = "dashboard.html";
       } catch (error) {
+        console.error("Verification Error:", error);
         messageDiv.textContent = "OTP verification failed: " + error.message;
       }
     });
