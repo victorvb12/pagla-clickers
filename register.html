@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pagla Clickers - Phone OTP</title>
+  <title>Pagla Clickers - Register</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f0f8ff;
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
     }
     .container {
       max-width: 400px;
@@ -23,8 +22,8 @@
       width: 100%;
       padding: 10px;
       margin: 10px 0;
-      border: 1px solid #ccc;
       border-radius: 5px;
+      border: 1px solid #ccc;
     }
     button {
       background: #007bff;
@@ -35,39 +34,34 @@
     button:hover {
       background: #0056b3;
     }
-    #recaptcha-container {
-      margin: 15px 0;
-    }
-    .hidden {
-      display: none;
-    }
-    .status {
-      color: red;
-      font-size: 14px;
+    .message {
       text-align: center;
+      font-size: 14px;
+      color: red;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h2>Register with Phone</h2>
+  <h2>Register</h2>
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Password" />
+  <input type="password" id="confirmPassword" placeholder="Confirm Password" />
+  <button id="registerBtn">Register</button>
 
-  <input type="tel" id="phoneNumber" placeholder="Phone (+8801XXXXXXXXX)" />
-  <div id="recaptcha-container"></div>
-  <button id="sendOtpBtn">Send OTP</button>
+  <p class="message" id="message"></p>
 
-  <div id="otpSection" class="hidden">
-    <input type="text" id="otpCode" placeholder="Enter OTP" />
-    <button id="verifyOtpBtn">Verify OTP</button>
-  </div>
-
-  <p id="status" class="status"></p>
+  <p>Already have an account? <a href="login.html">Login here</a></p>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -81,63 +75,44 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  let confirmationResult;
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const confirmPasswordInput = document.getElementById("confirmPassword");
+  const registerBtn = document.getElementById("registerBtn");
+  const message = document.getElementById("message");
 
-  const phoneInput = document.getElementById("phoneNumber");
-  const sendOtpBtn = document.getElementById("sendOtpBtn");
-  const otpSection = document.getElementById("otpSection");
-  const otpCode = document.getElementById("otpCode");
-  const verifyOtpBtn = document.getElementById("verifyOtpBtn");
-  const status = document.getElementById("status");
+  registerBtn.addEventListener("click", async () => {
+    message.textContent = "";
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
 
-  // 🔐 Visible reCAPTCHA
-  const recaptcha = new RecaptchaVerifier("recaptcha-container", {
-    size: "normal", // visible checkbox
-    callback: () => console.log("reCAPTCHA verified"),
-    'expired-callback': () => {
-      console.warn("reCAPTCHA expired");
-      status.textContent = "reCAPTCHA expired. Refresh the page.";
+    if (!email) {
+      message.textContent = "Please enter your email.";
+      return;
     }
-  }, auth);
-
-  sendOtpBtn.addEventListener("click", async () => {
-    const phone = phoneInput.value.trim();
-    status.textContent = "";
-
-    if (!phone.startsWith("+880") || phone.length < 13) {
-      status.textContent = "Use a valid BD phone number: +8801XXXXXXXXX";
+    if (password.length < 6) {
+      message.textContent = "Password must be at least 6 characters.";
+      return;
+    }
+    if (password !== confirmPassword) {
+      message.textContent = "Passwords do not match.";
       return;
     }
 
     try {
-      await recaptcha.render(); // render if not already
-      confirmationResult = await signInWithPhoneNumber(auth, phone, recaptcha);
-      alert("OTP sent!");
-      otpSection.classList.remove("hidden");
+      await createUserWithEmailAndPassword(auth, email, password);
+      message.style.color = "green";
+      message.textContent = "Registration successful! Redirecting...";
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 2000);
     } catch (error) {
-      console.error(error);
-      status.textContent = "Error sending OTP: " + error.message;
-    }
-  });
-
-  verifyOtpBtn.addEventListener("click", async () => {
-    const code = otpCode.value.trim();
-    if (!code) {
-      status.textContent = "Please enter the OTP.";
-      return;
-    }
-
-    try {
-      const result = await confirmationResult.confirm(code);
-      const user = result.user;
-      status.style.color = "green";
-      status.textContent = "Phone verified! UID: " + user.uid;
-      // You can now redirect or save user info in Firestore
-    } catch (error) {
-      console.error(error);
-      status.textContent = "OTP verification failed: " + error.message;
+      message.style.color = "red";
+      message.textContent = "Error: " + error.message;
     }
   });
 </script>
+
 </body>
 </html>
