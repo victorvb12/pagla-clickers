@@ -163,9 +163,7 @@
     const rememberMe = rememberMeCheckbox.checked;
 
     try {
-      // Set persistence based on Remember Me checkbox
       await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
-
       await signInWithEmailAndPassword(auth, email, password);
       message.classList.add("success");
       message.textContent = "Login successful! Redirecting...";
@@ -173,14 +171,20 @@
         window.location.href = "dashboard.html";
       }, 1500);
     } catch (error) {
+      if (error.code === 'auth/user-not-found') {
+        message.textContent = "User not found. Please register first.";
+      } else if (error.code === 'auth/wrong-password') {
+        message.textContent = "Incorrect password.";
+      } else {
+        message.textContent = "Error: " + error.message;
+      }
       message.classList.remove("success");
-      message.textContent = "Error: " + error.message;
     }
   });
 
   resetLink.addEventListener("click", async (e) => {
     e.preventDefault();
-    const email = prompt("Enter your email for password reset:");
+    const email = prompt("Enter your email to reset password:");
     if (!email) return;
 
     try {
