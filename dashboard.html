@@ -6,47 +6,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
       background: #f4f8fc;
-      margin: 0;
-      padding: 0;
     }
 
+    /* Topbar */
     header {
       background: #007bff;
       color: white;
       text-align: center;
-      padding: 15px;
+      padding: 25px 0;
+      font-size: 26px;
+      font-weight: bold;
       position: relative;
     }
 
+    /* Navbar */
     nav {
-      background: #0056b3;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 15px;
-      padding: 10px;
+      background: #005bb5;
     }
 
     nav ul {
-      list-style: none;
-      display: flex;
-      gap: 15px;
       margin: 0;
       padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    nav ul li {
+      margin: 10px 15px;
     }
 
     nav ul li a {
       color: white;
       text-decoration: none;
       font-weight: bold;
+      font-size: 16px;
     }
 
     nav ul li a:hover {
       text-decoration: underline;
     }
 
+    /* Blue strip below nav */
+    .blue-strip-below-nav {
+      background-color: #007bff;
+      height: 10px;
+      width: 100%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* Responsive */
     .hamburger {
       display: none;
       font-size: 24px;
@@ -55,18 +68,18 @@
       color: white;
       cursor: pointer;
       position: absolute;
+      top: 20px;
       right: 15px;
-      top: 15px;
     }
 
     @media (max-width: 768px) {
       nav ul {
         display: none;
         flex-direction: column;
-        background: #0056b3;
         width: 100%;
+        background-color: #005bb5;
         position: absolute;
-        top: 55px;
+        top: 60px;
         left: 0;
         z-index: 999;
       }
@@ -78,12 +91,16 @@
       .hamburger {
         display: block;
       }
+
+      header {
+        position: relative;
+      }
     }
 
     .container {
       max-width: 800px;
       margin: 30px auto;
-      padding: 20px;
+      padding: 25px;
       background: white;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -128,26 +145,30 @@
 <body>
 
   <header>
-    <h1>Pagla Clickers Dashboard</h1>
+    Pagla Clickers Dashboard
     <button class="hamburger" onclick="toggleMenu()">☰</button>
-    <nav>
-      <ul id="navList">
-        <li><a href="about.html">About</a></li>
-        <li><a href="notifications.html">Notifications</a></li>
-        <li><a href="profile.html">Profile</a></li>
-        <li><a href="dashboard.html">Dashboard</a></li>
-        <li><a href="postjob.html">Post Job</a></li>
-        <li><a href="taskdetail.html">Tasks</a></li>
-        <li><a href="referel.html">Referral</a></li>
-        <li><a href="deposit.html">Deposit</a></li>
-        <li><a href="wallet.html">Wallet</a></li>
-        <li><a href="withdrawal.html">Withdraw Money</a></li>
-        <li><a href="terms.html">Terms</a></li>
-        <li><a href="faq.html">FAQ</a></li>
-        <li><a href="support.html">Support</a></li>
-      </ul>
-    </nav>
   </header>
+
+  <nav>
+    <ul id="navList">
+      <li><a href="about.html">About</a></li>
+      <li><a href="notifications.html">Notifications</a></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="postjob.html">Post Job</a></li>
+      <li><a href="taskdetail.html">Tasks</a></li>
+      <li><a href="referel.html">Referral</a></li>
+      <li><a href="deposit.html">Deposit</a></li>
+      <li><a href="wallet.html">Wallet</a></li>
+      <li><a href="withdrawal.html">Withdraw Money</a></li>
+      <li><a href="terms.html">Terms</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="support.html">Support</a></li>
+    </ul>
+  </nav>
+
+  <!-- Light blue strip below navbar -->
+  <div class="blue-strip-below-nav"></div>
 
   <div class="container">
     <h2>Welcome, <span id="userName">Loading...</span></h2>
@@ -176,8 +197,7 @@
 
   <script>
     function toggleMenu() {
-      const navList = document.getElementById('navList');
-      navList.classList.toggle('active');
+      document.getElementById('navList').classList.toggle('active');
     }
   </script>
 
@@ -261,6 +281,5 @@
       }
     });
   </script>
-
 </body>
 </html>
