@@ -5,46 +5,26 @@
   <title>Task Detail - Pagla Clickers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    /* Reset and base */
+    /* Reset & base */
     body {
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px 0 40px 0;
+      background: #f4f8fc;
       margin: 0;
+      padding: 0 0 40px 0;
+      user-select: none;
     }
 
-    /* Header */
+    /* Topbar */
     header {
-      background-color: #1976d2;
+      background-color: #007bff;
       color: white;
-      padding: 15px;
       text-align: center;
+      padding: 15px 0;
+      font-weight: bold;
+      font-size: 24px;
       position: relative;
-    }
-
-    /* Hamburger */
-    #menuToggle {
-      display: none;
-    }
-
-    .menu-icon {
-      display: none;
-      cursor: pointer;
-      position: absolute;
-      top: 18px;
-      left: 15px;
-      width: 25px;
-      height: 22px;
-      flex-direction: column;
-      justify-content: space-between;
-      z-index: 2;
-    }
-
-    .menu-icon span {
-      display: block;
-      height: 3px;
-      background: white;
-      border-radius: 2px;
+      user-select: none;
+      z-index: 1002;
     }
 
     /* Navbar */
@@ -54,7 +34,8 @@
       justify-content: center;
       flex-wrap: wrap;
       padding: 10px 0;
-      transition: max-height 0.3s ease;
+      position: relative;
+      z-index: 1001;
     }
 
     nav.navbar a {
@@ -64,45 +45,114 @@
       font-weight: bold;
       font-size: 14px;
       padding: 8px 0;
+      user-select: none;
+      white-space: nowrap;
+      transition: background-color 0.3s ease;
     }
 
     nav.navbar a:hover {
-      text-decoration: underline;
       background-color: #004080;
       border-radius: 4px;
       padding: 8px 12px;
+      text-decoration: none;
     }
 
-    /* Page content */
+    /* Blue strip below navbar */
+    .blue-strip {
+      background-color: #007bff;
+      height: 10px;
+      width: 100%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      user-select: none;
+    }
+
+    /* Hamburger menu */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      cursor: pointer;
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 25px;
+      height: 20px;
+      gap: 5px;
+      z-index: 1003;
+      user-select: none;
+    }
+
+    .hamburger div {
+      background: white;
+      height: 3px;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    /* Mobile nav open */
+    nav.navbar.open {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    nav.navbar.open a {
+      margin: 10px 0;
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 10px 0;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* Page heading */
     h2 {
       margin-left: 20px;
-      color: #1976d2;
+      color: #007bff;
+      user-select: none;
     }
 
+    /* Job card */
     .job {
-      background: #fff;
-      padding: 15px;
+      background: white;
+      padding: 15px 20px;
       margin: 15px 20px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      user-select: text;
     }
+
     .job-title {
       font-size: 18px;
       font-weight: bold;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
+      user-select: text;
     }
+
+    p {
+      margin: 5px 0;
+      user-select: text;
+    }
+
+    /* Buttons */
     button {
-      background: #28a745;
+      background: #007bff;
       color: white;
       border: none;
-      padding: 7px 15px;
-      border-radius: 3px;
+      padding: 8px 18px;
+      border-radius: 6px;
       cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
       transition: background-color 0.3s ease;
+      user-select: none;
     }
+
     button:hover:not(:disabled) {
-      background: #218838;
+      background: #005bb5;
     }
+
     button:disabled {
       background: #ccc;
       cursor: not-allowed;
@@ -117,317 +167,358 @@
       align-items: center;
       justify-content: center;
       z-index: 2000;
+      user-select: none;
     }
+
     #jobModalContent {
       background: white;
-      padding: 20px;
+      padding: 25px;
       width: 90%;
-      max-width: 500px;
-      border-radius: 8px;
+      max-width: 520px;
+      border-radius: 12px;
       position: relative;
       box-sizing: border-box;
+      user-select: text;
     }
+
+    label {
+      display: block;
+      margin: 10px 0 4px 0;
+      font-weight: 600;
+      user-select: text;
+    }
+
     .proof-input {
       width: 100%;
-      margin-bottom: 10px;
-      padding: 8px;
-      border-radius: 5px;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 8px;
       border: 1px solid #ccc;
       font-size: 14px;
       box-sizing: border-box;
+      user-select: text;
     }
+
     .closeBtn {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 12px;
+      right: 12px;
       background: #dc3545;
       color: white;
       border: none;
-      padding: 5px 10px;
-      border-radius: 3px;
+      padding: 6px 14px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
+      user-select: none;
+      transition: background-color 0.3s ease;
     }
 
-    /* Responsive hamburger menu for small screens */
+    .closeBtn:hover {
+      background: #b02a37;
+    }
+
+    #submitStatus {
+      margin-top: 10px;
+      font-weight: 600;
+      min-height: 1.5em;
+      user-select: none;
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
-      .menu-icon {
-        display: flex;
-      }
-
       nav.navbar {
-        flex-direction: column;
-        max-height: 0;
-        overflow: hidden;
-      }
-
-      #menuToggle:checked + .menu-icon + nav.navbar {
-        max-height: 600px; /* enough height for all nav links */
+        justify-content: flex-start;
       }
 
       nav.navbar a {
-        margin: 10px 0;
+        display: none;
+      }
+
+      nav.navbar.open a {
+        display: block;
+      }
+
+      .hamburger {
+        display: flex;
       }
     }
   </style>
 </head>
 <body>
-  <header>
-    <input type="checkbox" id="menuToggle" />
-    <label for="menuToggle" class="menu-icon" aria-label="Toggle navigation menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </label>
-    <h1>Pagla Clickers Jobs</h1>
-  </header>
 
-  <nav class="navbar">
-    <a href="about.html">About</a>
-    <a href="notifications.html">Notifications</a>
-    <a href="profile.html">Profile</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="postjob.html">Post Job</a>
-    <a href="taskdetail.html">Tasks</a>
-    <a href="referel.html">Referral</a>
-    <a href="deposit.html">Deposit</a>
-    <a href="wallet.html">Wallet</a>
-    <a href="withdrawal.html">Withdraw Money</a>
-    <a href="terms.html">Terms</a>
-    <a href="faq.html">FAQ</a>
-    <a href="support.html">Support</a>
-  </nav>
+<header>Pagla Clickers Jobs</header>
 
-  <h2>Available Jobs</h2>
-  <div id="jobsContainer">Loading...</div>
+<nav class="navbar" id="navbar">
+  <a href="about.html">About</a>
+  <a href="notifications.html">Notifications</a>
+  <a href="profile.html">Profile</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="postjob.html">Post Job</a>
+  <a href="taskdetail.html">Tasks</a>
+  <a href="referel.html">Referral</a>
+  <a href="deposit.html">Deposit</a>
+  <a href="wallet.html">Wallet</a>
+  <a href="withdrawal.html">Withdraw Money</a>
+  <a href="terms.html">Terms</a>
+  <a href="faq.html">FAQ</a>
+  <a href="support.html">Support</a>
 
-  <!-- Modal -->
-  <div id="jobModal">
-    <div id="jobModalContent">
-      <button class="closeBtn" onclick="closeModal()">X</button>
-      <h3 id="jobTitle"></h3>
-      <div id="jobDetails"></div>
-      <form id="proofForm"></form>
-      <button id="submitBtn" style="display: none;">Submit Proof</button>
-      <p id="submitStatus"></p>
-    </div>
+  <div class="hamburger" id="hamburger" aria-label="Toggle navigation menu" role="button" tabindex="0">
+    <div></div>
+    <div></div>
+    <div></div>
   </div>
+</nav>
 
-  <!-- Firebase & Script -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-    import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
+<div class="blue-strip"></div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
-      authDomain: "pagla-b1c17.firebaseapp.com",
-      projectId: "pagla-b1c17",
-      storageBucket: "pagla-b1c17.appspot.com",
-      messagingSenderId: "192578902502",
-      appId: "1:192578902502:web:4b441210b15cfebf008ecf"
-    };
+<h2>Available Jobs</h2>
+<div id="jobsContainer">Loading...</div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    const storage = getStorage(app);
+<!-- Modal -->
+<div id="jobModal" role="dialog" aria-modal="true" aria-labelledby="jobTitle">
+  <div id="jobModalContent">
+    <button class="closeBtn" onclick="closeModal()" aria-label="Close modal">X</button>
+    <h3 id="jobTitle"></h3>
+    <div id="jobDetails"></div>
+    <form id="proofForm"></form>
+    <button id="submitBtn" style="display: none;">Submit Proof</button>
+    <p id="submitStatus"></p>
+  </div>
+</div>
 
-    const jobsContainer = document.getElementById("jobsContainer");
-    const jobModal = document.getElementById("jobModal");
-    const jobTitle = document.getElementById("jobTitle");
-    const jobDetails = document.getElementById("jobDetails");
-    const proofForm = document.getElementById("proofForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const submitStatus = document.getElementById("submitStatus");
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
 
-    let currentUser = null;
-    let currentJob = null;
-    let jobList = [];
+  const firebaseConfig = {
+    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+    authDomain: "pagla-b1c17.firebaseapp.com",
+    projectId: "pagla-b1c17",
+    storageBucket: "pagla-b1c17.appspot.com",
+    messagingSenderId: "192578902502",
+    appId: "1:192578902502:web:4b441210b15cfebf008ecf"
+  };
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        currentUser = user;
-        await loadJobs();
-      } else {
-        jobsContainer.innerHTML = "<p>Please log in to view jobs.</p>";
-      }
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const storage = getStorage(app);
+
+  const jobsContainer = document.getElementById("jobsContainer");
+  const jobModal = document.getElementById("jobModal");
+  const jobTitle = document.getElementById("jobTitle");
+  const jobDetails = document.getElementById("jobDetails");
+  const proofForm = document.getElementById("proofForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const submitStatus = document.getElementById("submitStatus");
+
+  let currentUser = null;
+  let currentJob = null;
+  let jobList = [];
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      currentUser = user;
+      await loadJobs();
+    } else {
+      jobsContainer.innerHTML = "<p style='padding:20px; text-align:center;'>Please log in to view jobs.</p>";
+    }
+  });
+
+  async function loadJobs() {
+    const jobSnap = await getDocs(collection(db, "jobs"));
+    jobList = [];
+
+    await Promise.all(jobSnap.docs.map(async (docSnap) => {
+      const data = docSnap.data();
+      const jobId = docSnap.id;
+
+      // Get submission count
+      const subsSnap = await getDocs(collection(db, `jobs/${jobId}/submissions`));
+      const submittedCount = subsSnap.size;
+
+      jobList.push({ id: jobId, ...data, submitted: submittedCount });
+    }));
+
+    renderJobs();
+  }
+
+  function renderJobs() {
+    jobsContainer.innerHTML = "";
+    jobList.forEach(job => {
+      const submitted = job.submitted || 0;
+      const slots = job.slots || "∞";
+      const slotInfo = slots === "∞" ? "Unlimited slots" : `${submitted} / ${slots} slots used`;
+
+      const isOwner = job.ownerId === currentUser?.uid;
+      const crown = isOwner ? " 👑 Your Job" : "";
+
+      const div = document.createElement("div");
+      div.className = "job";
+      div.innerHTML = `
+        <div class="job-title">${job.title}${crown}</div>
+        <p>Reward: $${job.reward}</p>
+        <p>Category: ${job.category}</p>
+        <p>Slots: ${slotInfo}</p>
+        <button class="viewBtn" aria-label="View and submit proof for ${job.title}" onclick="openModal('${job.id}')">View & Submit</button>
+      `;
+      jobsContainer.appendChild(div);
     });
+  }
 
-    async function loadJobs() {
-      const jobSnap = await getDocs(collection(db, "jobs"));
-      jobList = [];
+  window.openModal = async (jobId) => {
+    currentJob = jobList.find(j => j.id === jobId);
+    if (!currentJob) return;
 
-      await Promise.all(jobSnap.docs.map(async (docSnap) => {
-        const data = docSnap.data();
-        const jobId = docSnap.id;
-
-        const subsSnap = await getDocs(collection(db, `jobs/${jobId}/submissions`));
-        const submittedCount = subsSnap.size;
-
-        jobList.push({ id: jobId, ...data, submitted: submittedCount });
-      }));
-
-      renderJobs();
-    }
-
-    function renderJobs() {
-      jobsContainer.innerHTML = "";
-      jobList.forEach(job => {
-        const submitted = job.submitted || 0;
-        const slots = job.slots || "∞";
-        const slotInfo = slots === "∞" ? "Unlimited slots" : `${submitted} / ${slots} slots used`;
-
-        const isOwner = job.ownerId === currentUser?.uid;
-        const crown = isOwner ? " 👑 Your Job" : "";
-
-        const div = document.createElement("div");
-        div.className = "job";
-        div.innerHTML = `
-          <div class="job-title">${job.title}${crown}</div>
-          <p>Reward: $${job.reward}</p>
-          <p>Category: ${job.category}</p>
-          <p>Slots: ${slotInfo}</p>
-          <button class="viewBtn" onclick="openModal('${job.id}')">View & Submit</button>
-        `;
-        jobsContainer.appendChild(div);
-      });
-    }
-
-    window.openModal = async (jobId) => {
-      currentJob = jobList.find(j => j.id === jobId);
-      if (!currentJob) return;
-
-      if (currentJob.ownerId === currentUser.uid) {
-        jobTitle.textContent = "Your Own Job";
-        jobDetails.innerHTML = `
-          <p><strong>Description:</strong> ${currentJob.description || "No description available."}</p>
-          <p>You cannot submit to your own job.</p>
-        `;
-        proofForm.innerHTML = "";
-        submitBtn.style.display = "none";
-        submitStatus.textContent = "";
-        jobModal.style.display = "flex";
-        return;
-      }
-
-      const submissionDoc = await getDoc(doc(db, `jobs/${jobId}/submissions/${currentUser.uid}`));
-      if (submissionDoc.exists()) {
-        jobTitle.textContent = "Already Submitted";
-        jobDetails.innerHTML = `
-          <p><strong>Description:</strong> ${currentJob.description || "No description available."}</p>
-          <p>You have already submitted proof for this job.</p>
-        `;
-        proofForm.innerHTML = "";
-        submitBtn.style.display = "none";
-      } else {
-        jobTitle.textContent = currentJob.title;
-        jobDetails.innerHTML = `<p><strong>Description:</strong> ${currentJob.description || "No description available."}</p><p>Submit the following proofs:</p>`;
-
-        proofForm.innerHTML = "";
-        const proofs = (currentJob.proofType || "").split(',').map(p => p.trim()).filter(Boolean);
-        proofs.forEach((type, index) => {
-          const label = document.createElement("label");
-          label.textContent = `Proof ${index + 1} (${type})`;
-          const input = document.createElement("input");
-
-          if (type === "text") {
-            input.type = "text";
-          } else if (type === "screenshot") {
-            input.type = "file";
-            input.accept = "image/*";
-          }
-
-          input.name = `proof${index + 1}`;
-          input.required = true;
-          input.className = "proof-input";
-
-          proofForm.appendChild(label);
-          proofForm.appendChild(input);
-        });
-
-        submitBtn.style.display = "block";
-      }
-
+    if (currentJob.ownerId === currentUser.uid) {
+      jobTitle.textContent = "Your Own Job";
+      jobDetails.innerHTML = `
+        <p><strong>Description:</strong> ${currentJob.description || "No description available."}</p>
+        <p>You cannot submit to your own job.</p>
+      `;
+      proofForm.innerHTML = "";
+      submitBtn.style.display = "none";
       submitStatus.textContent = "";
       jobModal.style.display = "flex";
-    };
+      return;
+    }
 
-    submitBtn.onclick = async (e) => {
-      e.preventDefault();
+    const submissionDoc = await getDoc(doc(db, `jobs/${jobId}/submissions/${currentUser.uid}`));
+    if (submissionDoc.exists()) {
+      jobTitle.textContent = "Already Submitted";
+      jobDetails.innerHTML = `
+        <p><strong>Description:</strong> ${currentJob.description || "No description available."}</p>
+        <p>You have already submitted proof for this job.</p>
+      `;
+      proofForm.innerHTML = "";
+      submitBtn.style.display = "none";
+    } else {
+      jobTitle.textContent = currentJob.title;
+      jobDetails.innerHTML = `<p><strong>Description:</strong> ${currentJob.description || "No description available."}</p><p>Submit the following proofs:</p>`;
 
-      const inputs = proofForm.querySelectorAll("input");
-      const proofData = {};
-      submitStatus.style.color = "black";
-      submitStatus.textContent = "Uploading proofs... Please wait.";
+      proofForm.innerHTML = "";
+      // proofType is assumed to be a comma separated string like "text,screenshot"
+      const proofs = (currentJob.proofType || "").split(',').map(p => p.trim()).filter(Boolean);
+      proofs.forEach((type, index) => {
+        const label = document.createElement("label");
+        label.textContent = `Proof ${index + 1} (${type})`;
+        const input = document.createElement("input");
 
-      async function uploadFile(file, proofName) {
-        return new Promise((resolve, reject) => {
-          const fileName = `${currentUser.uid}_${currentJob.id}_${proofName}_${Date.now()}`;
-          const storageReference = storageRef(storage, `submissions/${fileName}`);
-          const uploadTask = uploadBytesResumable(storageReference, file);
-
-          uploadTask.on('state_changed',
-            () => {},
-            (error) => reject(error),
-            () => {
-              getDownloadURL(uploadTask.snapshot.ref).then(url => resolve(url));
-            }
-          );
-        });
-      }
-
-      try {
-        for (const input of inputs) {
-          if (input.type === "text") {
-            if (!input.value.trim()) {
-              submitStatus.style.color = "red";
-              submitStatus.textContent = "Please fill all text fields.";
-              return;
-            }
-            proofData[input.name] = input.value.trim();
-          } else if (input.type === "file") {
-            if (!input.files[0]) {
-              submitStatus.style.color = "red";
-              submitStatus.textContent = "Please select all screenshots.";
-              return;
-            }
-            const url = await uploadFile(input.files[0], input.name);
-            proofData[input.name] = url;
-          }
+        if (type === "text") {
+          input.type = "text";
+        } else if (type === "screenshot") {
+          input.type = "file";
+          input.accept = "image/*";
         }
 
-        await setDoc(doc(db, `jobs/${currentJob.id}/submissions/${currentUser.uid}`), {
-          userId: currentUser.uid,
-          userEmail: currentUser.email,
-          timestamp: new Date(),
-          proofs: proofData
-        });
+        input.name = `proof${index + 1}`;
+        input.required = true;
+        input.className = "proof-input";
 
-        submitStatus.style.color = "green";
-        submitStatus.textContent = "✅ Submission successful!";
-        submitBtn.style.display = "none";
-        currentJob.submitted = (currentJob.submitted || 0) + 1;
-        renderJobs();
-      } catch (err) {
-        submitStatus.style.color = "red";
-        submitStatus.textContent = "❌ Submission failed: " + err.message;
-      }
-    };
-
-    window.closeModal = () => {
-      jobModal.style.display = "none";
-      currentJob = null;
-      proofForm.innerHTML = "";
-      submitStatus.textContent = "";
-    };
-
-    window.logout = () => {
-      signOut(auth).then(() => {
-        window.location.href = "login.html";
+        proofForm.appendChild(label);
+        proofForm.appendChild(input);
       });
-    };
-  </script>
+
+      submitBtn.style.display = "block";
+    }
+
+    submitStatus.textContent = "";
+    jobModal.style.display = "flex";
+  };
+
+  submitBtn.onclick = async (e) => {
+    e.preventDefault();
+
+    const inputs = proofForm.querySelectorAll("input");
+    const proofData = {};
+    submitStatus.style.color = "black";
+    submitStatus.textContent = "Uploading proofs... Please wait.";
+
+    async function uploadFile(file, proofName) {
+      return new Promise((resolve, reject) => {
+        const fileName = `${currentUser.uid}_${currentJob.id}_${proofName}_${Date.now()}`;
+        const storageReference = storageRef(storage, `submissions/${fileName}`);
+        const uploadTask = uploadBytesResumable(storageReference, file);
+
+        uploadTask.on('state_changed',
+          () => {},
+          (error) => reject(error),
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then(url => resolve(url));
+          }
+        );
+      });
+    }
+
+    try {
+      for (const input of inputs) {
+        if (input.type === "text") {
+          if (!input.value.trim()) {
+            submitStatus.style.color = "red";
+            submitStatus.textContent = "Please fill all text fields.";
+            return;
+          }
+          proofData[input.name] = input.value.trim();
+        } else if (input.type === "file") {
+          if (!input.files[0]) {
+            submitStatus.style.color = "red";
+            submitStatus.textContent = "Please select all screenshots.";
+            return;
+          }
+          const url = await uploadFile(input.files[0], input.name);
+          proofData[input.name] = url;
+        }
+      }
+
+      await setDoc(doc(db, `jobs/${currentJob.id}/submissions/${currentUser.uid}`), {
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        timestamp: new Date(),
+        proofs: proofData
+      });
+
+      submitStatus.style.color = "green";
+      submitStatus.textContent = "✅ Submission successful!";
+      submitBtn.style.display = "none";
+      currentJob.submitted = (currentJob.submitted || 0) + 1;
+      renderJobs();
+    } catch (err) {
+      submitStatus.style.color = "red";
+      submitStatus.textContent = "❌ Submission failed: " + err.message;
+    }
+  };
+
+  window.closeModal = () => {
+    jobModal.style.display = "none";
+    currentJob = null;
+    proofForm.innerHTML = "";
+    submitStatus.textContent = "";
+  };
+
+  // Hamburger toggle for mobile
+  const navbar = document.getElementById("navbar");
+  const hamburger = document.createElement("div");
+  hamburger.className = "hamburger";
+  hamburger.setAttribute("aria-label", "Toggle navigation menu");
+  hamburger.setAttribute("role", "button");
+  hamburger.setAttribute("tabindex", "0");
+  hamburger.innerHTML = "<div></div><div></div><div></div>";
+  navbar.appendChild(hamburger);
+
+  hamburger.addEventListener("click", () => {
+    navbar.classList.toggle("open");
+  });
+  hamburger.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      navbar.classList.toggle("open");
+    }
+  });
+</script>
+
 </body>
 </html>
