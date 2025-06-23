@@ -10,6 +10,7 @@
       font-family: Arial, sans-serif;
       background: linear-gradient(to bottom right, #f5faff, #e0f0ff);
     }
+    /* Topbar */
     header {
       background: #007bff;
       color: white;
@@ -27,6 +28,7 @@
       flex-wrap: wrap;
       padding: 10px 0;
       position: relative;
+      z-index: 1000;
     }
     .navbar a {
       color: white;
@@ -39,7 +41,13 @@
     .navbar a:hover {
       text-decoration: underline;
     }
-
+    /* Light blue strip below navbar */
+    .blue-strip-below-nav {
+      background-color: #007bff;
+      height: 10px;
+      width: 100%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
     /* Hamburger menu for mobile */
     .hamburger {
       display: none;
@@ -69,7 +77,6 @@
     .navbar.open a {
       margin: 10px 0;
     }
-
     /* Container */
     .container {
       max-width: 700px;
@@ -79,34 +86,29 @@
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-
     h2 {
       color: #007bff;
       text-align: center;
       margin-bottom: 30px;
       user-select: none;
     }
-
     .profile-info {
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
-
     .info-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
     }
-
     .info-label {
       font-weight: bold;
       color: #333;
       flex: 1 1 150px;
       user-select: none;
     }
-
     input {
       flex: 2 1 300px;
       padding: 8px;
@@ -115,7 +117,6 @@
       border: 1px solid #ccc;
       transition: border-color 0.3s ease;
     }
-
     input[readonly] {
       background-color: #f0f0f0;
       border-color: #ddd;
@@ -126,13 +127,11 @@
       outline: none;
       background: white;
     }
-
     .buttons {
       text-align: center;
       margin-top: 25px;
       user-select: none;
     }
-
     .buttons button {
       margin: 0 10px;
       background-color: #007bff;
@@ -144,11 +143,9 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-
     .buttons button:hover {
       background-color: #005bb5;
     }
-
     footer {
       background: #007bff;
       color: white;
@@ -157,7 +154,6 @@
       margin-top: 40px;
       user-select: none;
     }
-
     /* Responsive */
     @media (max-width: 768px) {
       .navbar {
@@ -213,6 +209,8 @@
     <div></div>
   </div>
 </nav>
+
+<div class="blue-strip-below-nav"></div>
 
 <div class="container">
   <h2>User Profile</h2>
