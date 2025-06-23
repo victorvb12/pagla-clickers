@@ -2,58 +2,97 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Refer & Earn - Pagla Clickers</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
       margin: 0;
-      padding: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #f5faff, #e0f0ff);
     }
-
     header {
-      background-color: #1976d2;
+      background: #007bff;
       color: white;
-      padding: 15px;
       text-align: center;
+      padding: 15px 0;
+      font-weight: bold;
+      font-size: 24px;
+      user-select: none;
     }
-
+    /* Navbar */
     .navbar {
       background-color: #005bb5;
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
       padding: 10px 0;
+      position: relative;
     }
-
     .navbar a {
       color: white;
       text-decoration: none;
       margin: 0 15px;
       font-weight: bold;
       font-size: 14px;
+      white-space: nowrap;
     }
-
     .navbar a:hover {
       text-decoration: underline;
     }
-
+    /* Hamburger menu for mobile */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      cursor: pointer;
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 25px;
+      height: 20px;
+      gap: 5px;
+      z-index: 1001;
+    }
+    .hamburger div {
+      background: white;
+      height: 3px;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    /* Mobile nav open */
+    .navbar.open {
+      flex-direction: column;
+      align-items: center;
+    }
+    .navbar.open a {
+      margin: 10px 0;
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 10px 0;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    /* Container */
     .container {
       max-width: 700px;
-      margin: 30px auto;
       background: white;
+      margin: 30px auto;
       padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
       text-align: center;
+      user-select: none;
     }
-
     h2 {
-      color: #1976d2;
+      color: #007bff;
       margin-bottom: 10px;
     }
-
+    p {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: #333;
+    }
     .ref-box {
       background: #e3f2fd;
       padding: 15px;
@@ -65,168 +104,210 @@
       gap: 10px;
       margin-bottom: 20px;
     }
-
     input[type="text"] {
       padding: 10px;
-      border-radius: 5px;
+      border-radius: 6px;
       border: 1px solid #ccc;
       width: 60%;
       max-width: 400px;
+      font-size: 16px;
+      user-select: all;
     }
-
     button {
-      background-color: #1976d2;
+      background-color: #007bff;
       color: white;
       border: none;
-      padding: 10px 16px;
+      padding: 10px 18px;
       font-size: 14px;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
-
     button:hover {
-      background-color: #155a9c;
+      background-color: #005bb5;
     }
-
     .copied-msg {
       color: green;
       font-size: 13px;
       margin-top: 5px;
+      min-height: 18px;
     }
-
     .share-buttons {
       display: flex;
       justify-content: center;
       gap: 10px;
       margin-top: 20px;
+      user-select: none;
     }
-
     .share-buttons a {
       text-decoration: none;
-      background: #1976d2;
+      background: #007bff;
       color: white;
-      padding: 8px 14px;
-      border-radius: 5px;
+      padding: 8px 16px;
+      border-radius: 6px;
       font-size: 14px;
+      transition: background-color 0.3s ease;
     }
-
+    .share-buttons a:hover {
+      background-color: #005bb5;
+    }
     footer {
-      background-color: #1976d2;
+      background: #007bff;
       color: white;
-      padding: 15px;
+      padding: 15px 0;
       text-align: center;
       margin-top: 30px;
+      user-select: none;
+    }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar {
+        justify-content: flex-start;
+      }
+      .navbar a {
+        display: none;
+      }
+      .navbar.open a {
+        display: block;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .ref-box {
+        flex-direction: column;
+      }
+      input[type="text"] {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Pagla Clickers</h1>
-    <div class="navbar">
-     <a href="about.html">About</a>
-    <a href="notifications.html">Notifications</a>
-    <a href="profile.html">Profile</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="postjob.html">Post Job</a>
-    <a href="taskdetail.html">Tasks</a>
-    <a href="referel.html">Referral</a>
-    <a href="deposit.html">Deposit</a>
-    <a href="wallet.html">Wallet</a>
-    <a href="withdrawal.html">Withdraw Money</a>
-    <a href="terms.html">Terms</a>
-    <a href="faq.html">FAQ</a>
-    <a href="support.html">Support</a>
-    </div>
-  </header>
+<header>Pagla Clickers</header>
 
-  <div class="container">
-    <h2>Refer & Earn</h2>
-    <p>Invite your friends using the link below and earn <strong>10 points</strong> for each signup!</p>
+<nav class="navbar" id="navbar">
+  <a href="about.html">About</a>
+  <a href="notifications.html">Notifications</a>
+  <a href="profile.html">Profile</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="postjob.html">Post Job</a>
+  <a href="taskdetail.html">Tasks</a>
+  <a href="referel.html">Referral</a>
+  <a href="deposit.html">Deposit</a>
+  <a href="wallet.html">Wallet</a>
+  <a href="withdrawal.html">Withdraw Money</a>
+  <a href="terms.html">Terms</a>
+  <a href="faq.html">FAQ</a>
+  <a href="support.html">Support</a>
 
-    <div class="ref-box">
-      <input type="text" id="refLink" readonly />
-      <button onclick="copyLink()">Copy</button>
-    </div>
-    <div class="copied-msg" id="copiedMsg" style="display: none;">Copied to clipboard ✅</div>
-
-    <div class="share-buttons" id="shareButtons" style="display:none;">
-      <a id="waShare" target="_blank">WhatsApp</a>
-      <a id="fbShare" target="_blank">Facebook</a>
-    </div>
+  <div class="hamburger" id="hamburger" aria-label="Toggle navigation menu" role="button" tabindex="0">
+    <div></div>
+    <div></div>
+    <div></div>
   </div>
+</nav>
 
-  <footer>
-    <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
-  </footer>
+<div class="container">
+  <h2>Refer & Earn</h2>
+  <p>Invite your friends using the link below and earn <strong>10 points</strong> for each signup!</p>
 
-  <!-- Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  <div class="ref-box">
+    <input type="text" id="refLink" readonly />
+    <button onclick="copyLink()">Copy</button>
+  </div>
+  <div class="copied-msg" id="copiedMsg"></div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
-      authDomain: "pagla-b1c17.firebaseapp.com",
-      projectId: "pagla-b1c17",
-      storageBucket: "pagla-b1c17.appspot.com",
-      messagingSenderId: "192578902502",
-      appId: "1:192578902502:web:1595070cdac289170f5e27",
-      measurementId: "G-M9Y7SBBEXM"
-    };
+  <div class="share-buttons" id="shareButtons" style="display:none;">
+    <a id="waShare" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+    <a id="fbShare" target="_blank" rel="noopener noreferrer">Facebook</a>
+  </div>
+</div>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+<footer>
+  <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+</footer>
 
-    const refInput = document.getElementById("refLink");
-    const copiedMsg = document.getElementById("copiedMsg");
-    const shareButtons = document.getElementById("shareButtons");
-    const waShare = document.getElementById("waShare");
-    const fbShare = document.getElementById("fbShare");
-    const twShare = document.getElementById("twShare");
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
-    let referralURL = "";
+  const firebaseConfig = {
+    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+    authDomain: "pagla-b1c17.firebaseapp.com",
+    projectId: "pagla-b1c17",
+    storageBucket: "pagla-b1c17.appspot.com",
+    messagingSenderId: "192578902502",
+    appId: "1:192578902502:web:1595070cdac289170f5e27",
+    measurementId: "G-M9Y7SBBEXM"
+  };
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-          const data = userSnap.data();
-          const referralCode = data.referralCode;
-          if (referralCode) {
-            referralURL = `https://paglaclickers.com/register?ref=${referralCode}`;
-            refInput.value = referralURL;
-            setupShareLinks(referralURL);
-            shareButtons.style.display = "flex";
-          } else {
-            refInput.value = "No referral code found.";
-          }
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const refInput = document.getElementById("refLink");
+  const copiedMsg = document.getElementById("copiedMsg");
+  const shareButtons = document.getElementById("shareButtons");
+  const waShare = document.getElementById("waShare");
+  const fbShare = document.getElementById("fbShare");
+
+  let referralURL = "";
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        const referralCode = data.referralCode;
+        if (referralCode) {
+          referralURL = `https://paglaclickers.com/register?ref=${referralCode}`;
+          refInput.value = referralURL;
+          setupShareLinks(referralURL);
+          shareButtons.style.display = "flex";
         } else {
-          alert("User data not found.");
+          refInput.value = "No referral code found.";
         }
       } else {
-        window.location.href = "login.html";
+        alert("User data not found.");
       }
-    });
-
-    function copyLink() {
-      refInput.select();
-      refInput.setSelectionRange(0, 99999);
-      navigator.clipboard.writeText(refInput.value)
-        .then(() => {
-          copiedMsg.style.display = "block";
-          setTimeout(() => copiedMsg.style.display = "none", 2000);
-        })
-        .catch(() => alert("Copy failed."));
+    } else {
+      window.location.href = "login.html";
     }
+  });
 
-    function setupShareLinks(link) {
-      waShare.href = `https://wa.me/?text=Join Pagla Clickers and earn! Use my referral link: ${encodeURIComponent(link)}`;
-      fbShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
+  function copyLink() {
+    refInput.select();
+    refInput.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(refInput.value)
+      .then(() => {
+        copiedMsg.textContent = "Copied to clipboard ✅";
+        setTimeout(() => copiedMsg.textContent = "", 2000);
+      })
+      .catch(() => alert("Copy failed."));
+  }
+
+  function setupShareLinks(link) {
+    waShare.href = `https://wa.me/?text=Join Pagla Clickers and earn! Use my referral link: ${encodeURIComponent(link)}`;
+    fbShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
+  }
+
+  // Hamburger toggle
+  const navbar = document.getElementById("navbar");
+  const hamburger = document.getElementById("hamburger");
+  hamburger.addEventListener("click", () => {
+    navbar.classList.toggle("open");
+  });
+  hamburger.addEventListener("keydown", e => {
+    if(e.key === "Enter" || e.key === " "){
+      e.preventDefault();
+      navbar.classList.toggle("open");
     }
-  </script>
+  });
+</script>
+
 </body>
 </html>
