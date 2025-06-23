@@ -12,29 +12,71 @@
       padding: 0;
     }
 
-    header, footer {
+    header {
       background: #007bff;
       color: white;
       text-align: center;
       padding: 15px;
+      position: relative;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      position: absolute;
+      right: 15px;
+      top: 15px;
     }
 
     nav {
-      background: #0056b3;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      padding: 10px;
+      background-color: #0056b3;
     }
 
-    nav a {
+    nav ul {
+      display: flex;
+      flex-wrap: wrap;
+      list-style: none;
+      justify-content: center;
+      padding: 10px;
+      margin: 0;
+      gap: 15px;
+    }
+
+    nav ul li a {
       color: white;
       text-decoration: none;
       font-weight: bold;
+      font-size: 14px;
     }
 
-    nav a:hover {
+    nav ul li a:hover {
       text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+        flex-direction: column;
+        background-color: #0056b3;
+        width: 100%;
+        position: absolute;
+        top: 55px;
+        left: 0;
+        padding: 10px 0;
+        z-index: 999;
+      }
+
+      nav ul.active {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+      }
     }
 
     .container {
@@ -46,140 +88,102 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    .task {
-      padding: 15px;
-      border: 1px solid #ccc;
-      margin-bottom: 10px;
-      border-radius: 5px;
+    .faq-item {
+      margin-bottom: 20px;
     }
 
-    .logout-btn {
-      background: #dc3545;
+    .faq-question {
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 5px;
+    }
+
+    .faq-answer {
+      color: #333;
+    }
+
+    footer {
+      background: #007bff;
       color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 20px;
+      text-align: center;
+      padding: 15px;
     }
   </style>
-
-
 </head>
 <body>
 
+<header>
+  <h1>Pagla Clickers</h1>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</header>
 
-<style>
-  .topbar {
-    background-color: #003366;
-    padding: 0.75rem 1rem;
-  }
-  .topbar nav ul {
-    margin: 0; padding: 0; list-style: none;
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-  }
-  .topbar nav ul li a,
-  .topbar nav ul li button {
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.3rem 0.5rem;
-    border-radius: 3px;
-    transition: background-color 0.3s ease;
-  }
-  .topbar nav ul li a:hover,
-  .topbar nav ul li button:hover {
-    background-color: #00509e;
-  }
-  .topbar nav ul li button:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #00bfff;
-  }
-</style>
-
-
-<script type="module">
-  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-
-  const logoutBtn = document.getElementById('logoutBtn');
-  const auth = getAuth();
-
-  logoutBtn.addEventListener('click', () => {
-    signOut(auth).then(() => {
-      window.location.href = 'login.html';
-    }).catch((error) => {
-      alert('Error signing out: ' + error.message);
-    });
-  });
-</script>
-
-  <header>
-    <h1>Pagla Clickers</h1>
 <nav>
-  <a href="about.html">About</a>
-    <a href="notifications.html">Notifications</a>
-    <a href="profile.html">Profile</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="postjob.html">Post Job</a>
-    <a href="taskdetail.html">Tasks</a>
-    <a href="referel.html">Referral</a>
-    <a href="deposit.html">Deposit</a>
-    <a href="wallet.html">Wallet</a>
-    <a href="withdrawal.html">Withdraw Money</a>
-    <a href="terms.html">Terms</a>
-    <a href="faq.html">FAQ</a>
-    <a href="support.html">Support</a>
+  <ul id="navList">
+    <li><a href="about.html">About</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="postjob.html">Post Job</a></li>
+    <li><a href="taskdetail.html">Tasks</a></li>
+    <li><a href="referel.html">Referral</a></li>
+    <li><a href="deposit.html">Deposit</a></li>
+    <li><a href="wallet.html">Wallet</a></li>
+    <li><a href="withdrawal.html">Withdraw Money</a></li>
+    <li><a href="terms.html">Terms</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="support.html">Support</a></li>
+  </ul>
 </nav>
 
-  </header>
+<div class="container">
+  <h2>Frequently Asked Questions (FAQ)</h2>
 
-  <div class="container">
-    <h2>Frequently Asked Questions (FAQ)</h2>
-
-    <div class="faq-item">
-      <div class="faq-question">Q1: What is Pagla Clickers?</div>
-      <div class="faq-answer">Pagla Clickers is an online platform where you can earn rewards by completing small tasks like clicking, watching, referring, and more.</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-question">Q2: How do I register?</div>
-      <div class="faq-answer">Click on the "Register" button on the homepage and fill in your details. After signing up, you can log in and start earning.</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-question">Q3: Is registration free?</div>
-      <div class="faq-answer">Yes, registration is completely free. No payment is required to join.</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-question">Q4: How do I earn rewards?</div>
-      <div class="faq-answer">You can earn rewards by completing available tasks, referring friends, and staying active on the platform.</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-question">Q5: When will I get paid?</div>
-      <div class="faq-answer">Payouts are processed according to the schedule on the site, typically within 24–72 hours after your withdrawal request.</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-question">Q6: Can I use multiple accounts?</div>
-      <div class="faq-answer">No. Using multiple accounts is strictly prohibited and may result in permanent suspension.</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-question">Q7: Who can I contact for help?</div>
-      <div class="faq-answer">You can contact our support team at <strong>support@paglaclickers.com</strong> for any help or questions.</div>
-    </div>
+  <div class="faq-item">
+    <div class="faq-question">Q1: What is Pagla Clickers?</div>
+    <div class="faq-answer">Pagla Clickers is an online platform where you can earn rewards by completing small tasks like clicking, watching, referring, and more.</div>
   </div>
 
-  <footer>
-    <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
-  </footer>
+  <div class="faq-item">
+    <div class="faq-question">Q2: How do I register?</div>
+    <div class="faq-answer">Click on the "Register" button on the homepage and fill in your details. After signing up, you can log in and start earning.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">Q3: Is registration free?</div>
+    <div class="faq-answer">Yes, registration is completely free. No payment is required to join.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">Q4: How do I earn rewards?</div>
+    <div class="faq-answer">You can earn rewards by completing available tasks, referring friends, and staying active on the platform.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">Q5: When will I get paid?</div>
+    <div class="faq-answer">Payouts are processed according to the schedule on the site, typically within 24–72 hours after your withdrawal request.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">Q6: Can I use multiple accounts?</div>
+    <div class="faq-answer">No. Using multiple accounts is strictly prohibited and may result in permanent suspension.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">Q7: Who can I contact for help?</div>
+    <div class="faq-answer">You can contact our support team at <strong>support@paglaclickers.com</strong> for any help or questions.</div>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+</footer>
+
+<script>
+  function toggleMenu() {
+    const navList = document.getElementById("navList");
+    navList.classList.toggle("active");
+  }
+</script>
+
 </body>
 </html>
