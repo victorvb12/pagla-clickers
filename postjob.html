@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Post Job - Pagla Clickers</title>
   <style>
     body {
@@ -61,6 +62,7 @@
       border-radius: 5px;
       border: 1px solid #ccc;
       font-size: 16px;
+      box-sizing: border-box;
     }
 
     textarea {
@@ -79,6 +81,7 @@
 
     button:disabled {
       background: #ccc;
+      cursor: not-allowed;
     }
 
     .status {
@@ -86,6 +89,7 @@
       text-align: center;
       font-weight: bold;
       color: #333;
+      min-height: 1.5em;
     }
   </style>
 </head>
@@ -94,24 +98,24 @@
 <header>Pagla Clickers</header>
 
 <nav>
-    <a href="about.html">About</a>
-    <a href="notifications.html">Notifications</a>
-    <a href="profile.html">Profile</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="postjob.html">Post Job</a>
-    <a href="taskdetail.html">Tasks</a>
-    <a href="referel.html">Referral</a>
-    <a href="deposit.html">Deposit</a>
-    <a href="wallet.html">Wallet</a>
-    <a href="withdrawal.html">Withdraw Money</a>
-    <a href="terms.html">Terms</a>
-    <a href="faq.html">FAQ</a>
-    <a href="support.html">Support</a>
+  <a href="about.html">About</a>
+  <a href="notifications.html">Notifications</a>
+  <a href="profile.html">Profile</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="postjob.html">Post Job</a>
+  <a href="taskdetail.html">Tasks</a>
+  <a href="referel.html">Referral</a>
+  <a href="deposit.html">Deposit</a>
+  <a href="wallet.html">Wallet</a>
+  <a href="withdrawal.html">Withdraw Money</a>
+  <a href="terms.html">Terms</a>
+  <a href="faq.html">FAQ</a>
+  <a href="support.html">Support</a>
 </nav>
 
 <div class="container">
   <h2>Post a Job</h2>
-  <input type="text" id="title" placeholder="Job Title" required>
+  <input type="text" id="title" placeholder="Job Title" required />
 
   <label for="category">Category</label>
   <select id="category" required>
@@ -125,8 +129,8 @@
   <label for="description">Job Description</label>
   <textarea id="description" placeholder="Enter job description..." required></textarea>
 
-  <input type="number" id="reward" placeholder="Reward ($)" required>
-  <input type="number" id="slots" placeholder="Number of Slots" required>
+  <input type="number" id="reward" placeholder="Reward ($)" required min="0" step="0.01" />
+  <input type="number" id="slots" placeholder="Number of Slots" required min="1" />
 
   <label>Proof 1</label>
   <select id="proof1">
@@ -160,10 +164,9 @@
   <div class="status" id="status"></div>
 </div>
 
-<!-- Firebase Scripts -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
   const firebaseConfig = {
@@ -187,6 +190,7 @@
   onAuthStateChanged(auth, (user) => {
     if (user) {
       currentUser = user;
+      postJobBtn.disabled = false;
     } else {
       statusDiv.textContent = "Please login first.";
       postJobBtn.disabled = true;
@@ -194,6 +198,9 @@
   });
 
   postJobBtn.onclick = async () => {
+    statusDiv.textContent = "";
+    postJobBtn.disabled = true;
+
     const title = document.getElementById('title').value.trim();
     const category = document.getElementById('category').value.trim();
     const description = document.getElementById('description').value.trim();
@@ -205,12 +212,14 @@
     const proof3 = document.getElementById('proof3').value;
     const proof4 = document.getElementById('proof4').value;
 
-    if (!title || !category || !description || isNaN(reward) || isNaN(slots)) {
-      statusDiv.textContent = "Please fill all job fields.";
+    if (!title || !category || !description || isNaN(reward) || isNaN(slots) || reward < 0 || slots < 1) {
+      statusDiv.textContent = "Please fill all job fields correctly.";
+      postJobBtn.disabled = false;
       return;
     }
 
-    const proofString = [proof1, proof2, proof3, proof4].filter(Boolean).join(',');
+    // Create array of proof types filtering out empty
+    const proofTypes = [proof1, proof2, proof3, proof4].filter(pt => pt !== "");
 
     try {
       await addDoc(collection(db, "jobs"), {
@@ -221,14 +230,22 @@
         slots,
         submissions: 0,
         ownerId: currentUser.uid,
-        proofType: proofString,
-        createdAt: new Date()
+        proofType: proofTypes,
+        createdAt: serverTimestamp()
       });
       statusDiv.textContent = "✅ Job posted successfully!";
+      // Optionally clear form:
+      document.getElementById('title').value = "";
+      document.getElementById('category').value = "";
+      document.getElementById('description').value = "";
+      document.getElementById('reward').value = "";
+      document.getElementById('slots').value = "";
+      ['proof1','proof2','proof3','proof4'].forEach(id => document.getElementById(id).value = "");
     } catch (error) {
       console.error("Error posting job:", error);
       statusDiv.textContent = "❌ Failed to post job.";
     }
+    postJobBtn.disabled = false;
   };
 </script>
 
