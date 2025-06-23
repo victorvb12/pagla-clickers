@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Pagla Clickers - Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,30 +12,72 @@
       padding: 0;
     }
 
-    header, footer {
+    header {
       background: #007bff;
       color: white;
       text-align: center;
       padding: 15px;
+      position: relative;
     }
 
     nav {
       background: #0056b3;
       display: flex;
       justify-content: center;
-      gap: 20px;
-      padding: 10px;
       flex-wrap: wrap;
+      gap: 15px;
+      padding: 10px;
     }
 
-    nav a {
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li a {
       color: white;
       text-decoration: none;
       font-weight: bold;
     }
 
-    nav a:hover {
+    nav ul li a:hover {
       text-decoration: underline;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      position: absolute;
+      right: 15px;
+      top: 15px;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+        flex-direction: column;
+        background: #0056b3;
+        width: 100%;
+        position: absolute;
+        top: 55px;
+        left: 0;
+        z-index: 999;
+      }
+
+      nav ul.active {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+      }
     }
 
     .container {
@@ -72,135 +115,152 @@
       cursor: pointer;
       margin-top: 20px;
     }
+
+    footer {
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+    }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>Pagla Clickers Dashboard</h1>
-  <nav>
-    <a href="about.html">About</a>
-    <a href="notifications.html">Notifications</a>
-    <a href="profile.html">Profile</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="postjob.html">Post Job</a>
-    <a href="taskdetail.html">Tasks</a>
-    <a href="referel.html">Referral</a>
-    <a href="deposit.html">Deposit</a>
-    <a href="wallet.html">Wallet</a>
-    <a href="withdrawal.html">Withdraw Money</a>
-    <a href="terms.html">Terms</a>
-    <a href="faq.html">FAQ</a>
-    <a href="support.html">Support</a>
-  </nav>
-</header>
+  <header>
+    <h1>Pagla Clickers Dashboard</h1>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <nav>
+      <ul id="navList">
+        <li><a href="about.html">About</a></li>
+        <li><a href="notifications.html">Notifications</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="postjob.html">Post Job</a></li>
+        <li><a href="taskdetail.html">Tasks</a></li>
+        <li><a href="referel.html">Referral</a></li>
+        <li><a href="deposit.html">Deposit</a></li>
+        <li><a href="wallet.html">Wallet</a></li>
+        <li><a href="withdrawal.html">Withdraw Money</a></li>
+        <li><a href="terms.html">Terms</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="support.html">Support</a></li>
+      </ul>
+    </nav>
+  </header>
 
-<div class="container">
-  <h2>Welcome, <span id="userName">Loading...</span></h2>
-  <p>Your Balance: <strong id="userBalance">Loading...</strong></p>
+  <div class="container">
+    <h2>Welcome, <span id="userName">Loading...</span></h2>
+    <p>Your Balance: <strong id="userBalance">Loading...</strong></p>
 
-  <h3>Completed Tasks</h3>
-  <table id="completedTasksTable">
-    <thead>
-      <tr>
-        <th>Task Title</th>
-        <th>Status</th>
-        <th>Submitted At</th>
-      </tr>
-    </thead>
-    <tbody id="completedTasksBody">
-      <tr><td colspan="3">Loading completed tasks...</td></tr>
-    </tbody>
-  </table>
+    <h3>Completed Tasks</h3>
+    <table id="completedTasksTable">
+      <thead>
+        <tr>
+          <th>Task Title</th>
+          <th>Status</th>
+          <th>Submitted At</th>
+        </tr>
+      </thead>
+      <tbody id="completedTasksBody">
+        <tr><td colspan="3">Loading completed tasks...</td></tr>
+      </tbody>
+    </table>
 
-  <button class="logout-btn" id="logoutBtn">Logout</button>
-</div>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+  </div>
 
-<footer>
-  <p>&copy; 2025 Pagla Clickers</p>
-</footer>
+  <footer>
+    <p>&copy; 2025 Pagla Clickers</p>
+  </footer>
 
-<!-- Firebase SDK -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
-    authDomain: "pagla-b1c17.firebaseapp.com",
-    projectId: "pagla-b1c17",
-    storageBucket: "pagla-b1c17.appspot.com",
-    messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:1595070cdac289170f5e27"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  const userName = document.getElementById('userName');
-  const userBalance = document.getElementById('userBalance');
-  const completedTasksBody = document.getElementById('completedTasksBody');
-  const logoutBtn = document.getElementById('logoutBtn');
-
-  logoutBtn.addEventListener('click', () => {
-    signOut(auth).then(() => {
-      window.location.href = "login.html";
-    }).catch(error => {
-      alert("Error signing out: " + error.message);
-    });
-  });
-
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (userDoc.exists()) {
-        const data = userDoc.data();
-        userName.innerText = data.username || "User";  // ✅ Show actual username
-        userBalance.innerText = "৳" + (data.balance || 0);
-      } else {
-        userName.innerText = "User";
-        userBalance.innerText = "৳0";
-      }
-
-      // Load user's submitted tasks
-      const submissionsSnap = await getDocs(collection(db, "submissions"));
-      const userSubs = [];
-      submissionsSnap.forEach(doc => {
-        const data = doc.data();
-        if (data.userId === user.uid) {
-          userSubs.push({ ...data, id: doc.id });
-        }
-      });
-
-      completedTasksBody.innerHTML = "";
-      if (userSubs.length === 0) {
-        completedTasksBody.innerHTML = "<tr><td colspan='3'>No completed tasks found.</td></tr>";
-      } else {
-        for (const sub of userSubs) {
-          let title = "Loading...";
-          try {
-            const taskDoc = await getDoc(doc(db, "tasks", sub.taskId));
-            title = taskDoc.exists() ? taskDoc.data().title : "Unknown Task";
-          } catch {
-            title = "Error Loading Title";
-          }
-
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${title}</td>
-            <td>${sub.status || "Pending"}</td>
-            <td>${sub.submittedAt?.toDate().toLocaleString() || "N/A"}</td>
-          `;
-          completedTasksBody.appendChild(tr);
-        }
-      }
-    } else {
-      window.location.href = "login.html";
+  <script>
+    function toggleMenu() {
+      const navList = document.getElementById('navList');
+      navList.classList.toggle('active');
     }
-  });
-</script>
+  </script>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+      authDomain: "pagla-b1c17.firebaseapp.com",
+      projectId: "pagla-b1c17",
+      storageBucket: "pagla-b1c17.appspot.com",
+      messagingSenderId: "192578902502",
+      appId: "1:192578902502:web:1595070cdac289170f5e27"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const userName = document.getElementById('userName');
+    const userBalance = document.getElementById('userBalance');
+    const completedTasksBody = document.getElementById('completedTasksBody');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    logoutBtn.addEventListener('click', () => {
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      }).catch(error => {
+        alert("Error signing out: " + error.message);
+      });
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          userName.innerText = data.username || "User";
+          userBalance.innerText = "৳" + (data.balance || 0);
+        } else {
+          userName.innerText = "User";
+          userBalance.innerText = "৳0";
+        }
+
+        const submissionsSnap = await getDocs(collection(db, "submissions"));
+        const userSubs = [];
+        submissionsSnap.forEach(doc => {
+          const data = doc.data();
+          if (data.userId === user.uid) {
+            userSubs.push({ ...data, id: doc.id });
+          }
+        });
+
+        completedTasksBody.innerHTML = "";
+        if (userSubs.length === 0) {
+          completedTasksBody.innerHTML = "<tr><td colspan='3'>No completed tasks found.</td></tr>";
+        } else {
+          for (const sub of userSubs) {
+            let title = "Loading...";
+            try {
+              const taskDoc = await getDoc(doc(db, "tasks", sub.taskId));
+              title = taskDoc.exists() ? taskDoc.data().title : "Unknown Task";
+            } catch {
+              title = "Error Loading Title";
+            }
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${title}</td>
+              <td>${sub.status || "Pending"}</td>
+              <td>${sub.submittedAt?.toDate().toLocaleString() || "N/A"}</td>
+            `;
+            completedTasksBody.appendChild(tr);
+          }
+        }
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+  </script>
 
 </body>
 </html>
