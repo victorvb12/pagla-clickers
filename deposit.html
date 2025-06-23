@@ -7,17 +7,21 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, #f5faff, #e0f0ff);
+      background: #f4f8fc;
       margin: 0;
       padding: 0;
     }
 
     header {
-      background: #007bff;
+      background: #003366;
       color: white;
-      text-align: center;
-      padding: 15px;
+      padding: 1rem;
       position: relative;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
     }
 
     .hamburger {
@@ -28,48 +32,45 @@
       color: white;
       cursor: pointer;
       position: absolute;
-      right: 15px;
-      top: 15px;
+      right: 1rem;
+      top: 1rem;
     }
 
     nav {
-      background-color: #005bb5;
-      display: flex;
-      justify-content: center;
-      padding: 10px 0;
-      flex-wrap: wrap;
+      background-color: #003366;
     }
 
     nav ul {
       display: flex;
       list-style: none;
       margin: 0;
-      padding: 0;
-      gap: 15px;
+      padding: 0.5rem 1rem;
+      gap: 1.2rem;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     nav ul li a {
       color: white;
       text-decoration: none;
-      font-weight: bold;
-      font-size: 14px;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.3rem 0.5rem;
+      border-radius: 3px;
+      transition: background-color 0.3s ease;
     }
 
     nav ul li a:hover {
-      text-decoration: underline;
+      background-color: #00509e;
     }
 
     @media (max-width: 768px) {
       nav ul {
         display: none;
         flex-direction: column;
-        background: #005bb5;
+        background-color: #003366;
         width: 100%;
-        position: absolute;
-        top: 55px;
-        left: 0;
-        padding: 15px 0;
-        z-index: 1000;
+        padding: 1rem;
       }
 
       nav ul.active {
@@ -100,19 +101,21 @@
     }
 
     button {
-      background: #007bff;
+      background: #003366;
       color: white;
       font-weight: bold;
       cursor: pointer;
+      border: none;
     }
 
     button:hover {
-      background: #0056b3;
+      background: #002244;
     }
 
     h2 {
       text-align: center;
       margin-bottom: 25px;
+      color: #003366;
     }
 
     .note {
@@ -123,7 +126,7 @@
     }
 
     footer {
-      background: #007bff;
+      background: #003366;
       color: white;
       text-align: center;
       padding: 15px;
