@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Pagla Clickers - Deposit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,31 +12,73 @@
       padding: 0;
     }
 
-    header, footer {
+    header {
       background: #007bff;
       color: white;
       text-align: center;
       padding: 15px;
+      position: relative;
     }
 
-    .navbar {
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      position: absolute;
+      right: 15px;
+      top: 15px;
+    }
+
+    nav {
       background-color: #005bb5;
       display: flex;
       justify-content: center;
-      flex-wrap: wrap;
       padding: 10px 0;
+      flex-wrap: wrap;
     }
 
-    .navbar a {
+    nav ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: 15px;
+    }
+
+    nav ul li a {
       color: white;
       text-decoration: none;
-      margin: 0 15px;
       font-weight: bold;
       font-size: 14px;
     }
 
-    .navbar a:hover {
+    nav ul li a:hover {
       text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+        flex-direction: column;
+        background: #005bb5;
+        width: 100%;
+        position: absolute;
+        top: 55px;
+        left: 0;
+        padding: 15px 0;
+        z-index: 1000;
+      }
+
+      nav ul.active {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+      }
     }
 
     .container {
@@ -78,28 +121,40 @@
       margin-top: -10px;
       margin-bottom: 15px;
     }
+
+    footer {
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+    }
   </style>
 </head>
 <body>
 
 <header>
   <h1>Pagla Clickers</h1>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
 </header>
-<div class="navbar">
-  <a href="about.html">About</a>
-  <a href="notifications.html">Notifications</a>
-  <a href="profile.html">Profile</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="postjob.html">Post Job</a>
-  <a href="taskdetail.html">Tasks</a>
-  <a href="referel.html">Referral</a>
-  <a href="deposit.html">Deposit</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="withdrawal.html">Withdraw Money</a>
-  <a href="terms.html">Terms</a>
-  <a href="faq.html">FAQ</a>
-  <a href="support.html">Support</a>
-</div>
+
+<nav>
+  <ul id="navList">
+    <li><a href="about.html">About</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="postjob.html">Post Job</a></li>
+    <li><a href="taskdetail.html">Tasks</a></li>
+    <li><a href="referel.html">Referral</a></li>
+    <li><a href="deposit.html">Deposit</a></li>
+    <li><a href="wallet.html">Wallet</a></li>
+    <li><a href="withdrawal.html">Withdraw Money</a></li>
+    <li><a href="terms.html">Terms</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="support.html">Support</a></li>
+  </ul>
+</nav>
 
 <div class="container">
   <h2>Deposit Funds</h2>
@@ -130,6 +185,13 @@
 <footer>
   <p>&copy; 2025 Pagla Clickers</p>
 </footer>
+
+<script>
+  function toggleMenu() {
+    const navList = document.getElementById('navList');
+    navList.classList.toggle('active');
+  }
+</script>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
