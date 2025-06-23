@@ -2,56 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>User Profile - Pagla Clickers</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
       margin: 0;
-      padding: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #f5faff, #e0f0ff);
     }
-
     header {
-      background-color: #1976d2;
+      background: #007bff;
       color: white;
-      padding: 15px;
       text-align: center;
+      padding: 15px 0;
+      font-weight: bold;
+      font-size: 24px;
+      user-select: none;
     }
-
+    /* Navbar */
     .navbar {
       background-color: #005bb5;
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
       padding: 10px 0;
+      position: relative;
     }
-
     .navbar a {
       color: white;
       text-decoration: none;
       margin: 0 15px;
       font-weight: bold;
       font-size: 14px;
+      white-space: nowrap;
     }
-
     .navbar a:hover {
       text-decoration: underline;
     }
 
+    /* Hamburger menu for mobile */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      cursor: pointer;
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 25px;
+      height: 20px;
+      gap: 5px;
+      z-index: 1001;
+    }
+    .hamburger div {
+      background: white;
+      height: 3px;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    /* Mobile nav open */
+    .navbar.open {
+      flex-direction: column;
+      align-items: center;
+    }
+    .navbar.open a {
+      margin: 10px 0;
+    }
+
+    /* Container */
     .container {
       max-width: 700px;
-      margin: 30px auto;
       background: white;
+      margin: 30px auto;
       padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
 
     h2 {
-      color: #1976d2;
+      color: #007bff;
       text-align: center;
       margin-bottom: 30px;
+      user-select: none;
     }
 
     .profile-info {
@@ -64,203 +97,265 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .info-label {
       font-weight: bold;
       color: #333;
+      flex: 1 1 150px;
+      user-select: none;
     }
 
     input {
-      border: 1px solid #ccc;
+      flex: 2 1 300px;
       padding: 8px;
       font-size: 14px;
-      border-radius: 4px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      transition: border-color 0.3s ease;
     }
 
     input[readonly] {
-      background-color: #eee;
-      border: none;
+      background-color: #f0f0f0;
+      border-color: #ddd;
+      cursor: not-allowed;
+    }
+    input:not([readonly]):focus {
+      border-color: #007bff;
+      outline: none;
+      background: white;
     }
 
     .buttons {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 25px;
+      user-select: none;
     }
 
     .buttons button {
       margin: 0 10px;
-      background-color: #1976d2;
+      background-color: #007bff;
       color: white;
-      padding: 10px 20px;
+      padding: 10px 24px;
       font-size: 14px;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     .buttons button:hover {
-      background-color: #155a9c;
+      background-color: #005bb5;
     }
 
     footer {
-      background-color: #1976d2;
+      background: #007bff;
       color: white;
       text-align: center;
-      padding: 15px;
+      padding: 15px 0;
       margin-top: 40px;
+      user-select: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar {
+        justify-content: flex-start;
+      }
+      .navbar a {
+        display: none;
+        width: 100%;
+        text-align: center;
+        margin: 10px 0;
+        font-size: 16px;
+        padding: 10px 0;
+        border-top: 1px solid rgba(255,255,255,0.2);
+      }
+      .navbar.open a {
+        display: block;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .info-label, input {
+        flex: 1 1 100%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Pagla Clickers Profile</h1>
-    <div class="navbar">
-      <a href="about.html">About</a>
-      <a href="notifications.html">Notifications</a>
-      <a href="profile.html">Profile</a>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="postjob.html">Post Job</a>
-      <a href="taskdetail.html">Tasks</a>
-      <a href="referel.html">Referral</a>
-      <a href="deposit.html">Deposit</a>
-      <a href="wallet.html">Wallet</a>
-      <a href="withdrawal.html">Withdraw Money</a>
-      <a href="terms.html">Terms</a>
-      <a href="faq.html">FAQ</a>
-      <a href="support.html">Support</a>
+<header>Pagla Clickers</header>
+
+<nav class="navbar" id="navbar">
+  <a href="about.html">About</a>
+  <a href="notifications.html">Notifications</a>
+  <a href="profile.html">Profile</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="postjob.html">Post Job</a>
+  <a href="taskdetail.html">Tasks</a>
+  <a href="referel.html">Referral</a>
+  <a href="deposit.html">Deposit</a>
+  <a href="wallet.html">Wallet</a>
+  <a href="withdrawal.html">Withdraw Money</a>
+  <a href="terms.html">Terms</a>
+  <a href="faq.html">FAQ</a>
+  <a href="support.html">Support</a>
+
+  <div class="hamburger" id="hamburger" aria-label="Toggle navigation menu" role="button" tabindex="0">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</nav>
+
+<div class="container">
+  <h2>User Profile</h2>
+
+  <div class="profile-info">
+    <div class="info-item">
+      <span class="info-label">Name:</span>
+      <input type="text" id="user-name" readonly />
     </div>
-  </header>
-
-  <div class="container">
-    <h2>User Profile</h2>
-
-    <div class="profile-info">
-      <div class="info-item">
-        <span class="info-label">Name:</span>
-        <input type="text" id="user-name" readonly />
-      </div>
-      <div class="info-item">
-        <span class="info-label">Phone Number:</span>
-        <input type="text" id="user-phone" readonly />
-      </div>
-      <div class="info-item">
-        <span class="info-label">Email:</span>
-        <input type="text" id="user-email" readonly />
-      </div>
-      <div class="info-item">
-        <span class="info-label">Points:</span>
-        <input type="text" id="user-points" readonly />
-      </div>
-      <div class="info-item">
-        <span class="info-label">Referral Code:</span>
-        <input type="text" id="user-ref" readonly />
-      </div>
+    <div class="info-item">
+      <span class="info-label">Phone Number:</span>
+      <input type="text" id="user-phone" readonly />
     </div>
-
-    <div class="buttons">
-      <button id="editBtn" onclick="enableEdit()">Edit Profile</button>
-      <button id="saveBtn" onclick="saveProfile()" style="display:none;">Save</button>
-      <button onclick="resetPassword()">Reset Password</button>
+    <div class="info-item">
+      <span class="info-label">Email:</span>
+      <input type="text" id="user-email" readonly />
+    </div>
+    <div class="info-item">
+      <span class="info-label">Points:</span>
+      <input type="text" id="user-points" readonly />
+    </div>
+    <div class="info-item">
+      <span class="info-label">Referral Code:</span>
+      <input type="text" id="user-ref" readonly />
     </div>
   </div>
 
-  <footer>
-    <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
-  </footer>
+  <div class="buttons">
+    <button id="editBtn" onclick="enableEdit()">Edit Profile</button>
+    <button id="saveBtn" onclick="saveProfile()" style="display:none;">Save</button>
+    <button onclick="resetPassword()">Reset Password</button>
+  </div>
+</div>
 
-  <!-- Firebase Scripts -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+<footer>
+  <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+</footer>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
-      authDomain: "pagla-b1c17.firebaseapp.com",
-      projectId: "pagla-b1c17",
-      storageBucket: "pagla-b1c17.appspot.com",
-      messagingSenderId: "192578902502",
-      appId: "1:192578902502:web:1595070cdac289170f5e27",
-      measurementId: "G-M9Y7SBBEXM"
-    };
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  const firebaseConfig = {
+    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+    authDomain: "pagla-b1c17.firebaseapp.com",
+    projectId: "pagla-b1c17",
+    storageBucket: "pagla-b1c17.appspot.com",
+    messagingSenderId: "192578902502",
+    appId: "1:192578902502:web:1595070cdac289170f5e27",
+    measurementId: "G-M9Y7SBBEXM"
+  };
 
-    let currentUser;
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    const nameInput = document.getElementById("user-name");
-    const phoneInput = document.getElementById("user-phone");
-    const emailInput = document.getElementById("user-email");
-    const pointsInput = document.getElementById("user-points");
-    const refInput = document.getElementById("user-ref");
-    const saveBtn = document.getElementById("saveBtn");
-    const editBtn = document.getElementById("editBtn");
+  let currentUser;
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        currentUser = user;
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-          const data = userSnap.data();
-          nameInput.value = data.username || "";  // Changed from name to username
-          phoneInput.value = data.phone || "";
-          emailInput.value = user.email;
-          pointsInput.value = data.points || 0;
-          refInput.value = data.referralCode || "";
-        } else {
-          alert("User data not found.");
-        }
+  const nameInput = document.getElementById("user-name");
+  const phoneInput = document.getElementById("user-phone");
+  const emailInput = document.getElementById("user-email");
+  const pointsInput = document.getElementById("user-points");
+  const refInput = document.getElementById("user-ref");
+  const saveBtn = document.getElementById("saveBtn");
+  const editBtn = document.getElementById("editBtn");
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      currentUser = user;
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        nameInput.value = data.username || "";
+        phoneInput.value = data.phone || "";
+        emailInput.value = user.email;
+        pointsInput.value = data.points || 0;
+        refInput.value = data.referralCode || "";
       } else {
-        window.location.href = "login.html";
+        alert("User data not found.");
       }
-    });
+    } else {
+      window.location.href = "login.html";
+    }
+  });
 
-    window.enableEdit = () => {
-      nameInput.readOnly = false;
-      phoneInput.readOnly = false;
-      saveBtn.style.display = "inline-block";
-      editBtn.style.display = "none";
-    };
+  window.enableEdit = () => {
+    nameInput.readOnly = false;
+    phoneInput.readOnly = false;
+    nameInput.focus();
+    saveBtn.style.display = "inline-block";
+    editBtn.style.display = "none";
+  };
 
-    window.saveProfile = async () => {
-      const newName = nameInput.value.trim();
-      const newPhone = phoneInput.value.trim();
+  window.saveProfile = async () => {
+    const newName = nameInput.value.trim();
+    const newPhone = phoneInput.value.trim();
 
-      if (!newName || !newPhone) {
-        alert("Name and Phone cannot be empty.");
-        return;
-      }
+    if (!newName || !newPhone) {
+      alert("Name and Phone cannot be empty.");
+      return;
+    }
 
-      try {
-        const userRef = doc(db, "users", currentUser.uid);
-        await updateDoc(userRef, {
-          username: newName,  // Save as username
-          phone: newPhone
-        });
-        alert("Profile updated.");
-        nameInput.readOnly = true;
-        phoneInput.readOnly = true;
-        saveBtn.style.display = "none";
-        editBtn.style.display = "inline-block";
-      } catch (error) {
-        console.error("Error updating profile:", error);
-        alert("Failed to update profile.");
-      }
-    };
+    try {
+      const userRef = doc(db, "users", currentUser.uid);
+      await updateDoc(userRef, {
+        username: newName,
+        phone: newPhone
+      });
+      alert("Profile updated.");
+      nameInput.readOnly = true;
+      phoneInput.readOnly = true;
+      saveBtn.style.display = "none";
+      editBtn.style.display = "inline-block";
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile.");
+    }
+  };
 
-    window.resetPassword = () => {
-      sendPasswordResetEmail(auth, currentUser.email)
-        .then(() => alert("Password reset email sent."))
-        .catch((error) => {
-          console.error("Reset error:", error);
-          alert("Failed to send reset email.");
-        });
-    };
-  </script>
+  window.resetPassword = () => {
+    sendPasswordResetEmail(auth, currentUser.email)
+      .then(() => alert("Password reset email sent."))
+      .catch((error) => {
+        console.error("Reset error:", error);
+        alert("Failed to send reset email.");
+      });
+  };
+
+  // Hamburger toggle
+  const navbar = document.getElementById("navbar");
+  const hamburger = document.getElementById("hamburger");
+  hamburger.addEventListener("click", () => {
+    navbar.classList.toggle("open");
+  });
+  hamburger.addEventListener("keydown", e => {
+    if(e.key === "Enter" || e.key === " "){
+      e.preventDefault();
+      navbar.classList.toggle("open");
+    }
+  });
+</script>
+
 </body>
 </html>
