@@ -10,6 +10,7 @@
       font-family: Arial, sans-serif;
       background: linear-gradient(to bottom right, #f5faff, #e0f0ff);
     }
+    /* Topbar */
     header {
       background: #007bff;
       color: white;
@@ -27,6 +28,7 @@
       flex-wrap: wrap;
       padding: 10px 0;
       position: relative;
+      z-index: 1000;
     }
     .navbar a {
       color: white;
@@ -38,6 +40,14 @@
     }
     .navbar a:hover {
       text-decoration: underline;
+    }
+    /* Light blue strip below navbar */
+    .blue-strip-below-nav {
+      background-color: #007bff;
+      height: 10px;
+      width: 100%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
     }
     /* Hamburger menu for mobile */
     .hamburger {
@@ -77,7 +87,7 @@
     .container {
       max-width: 700px;
       background: white;
-      margin: 30px auto;
+      margin: 0 auto 40px auto;
       padding: 30px;
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
@@ -156,7 +166,7 @@
       color: white;
       padding: 15px 0;
       text-align: center;
-      margin-top: 30px;
+      margin-top: 0;
       user-select: none;
     }
     /* Responsive */
@@ -208,6 +218,8 @@
   </div>
 </nav>
 
+<div class="blue-strip-below-nav"></div>
+
 <div class="container">
   <h2>Refer & Earn</h2>
   <p>Invite your friends using the link below and earn <strong>10 points</strong> for each signup!</p>
@@ -219,8 +231,8 @@
   <div class="copied-msg" id="copiedMsg"></div>
 
   <div class="share-buttons" id="shareButtons" style="display:none;">
-    <a id="waShare" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-    <a id="fbShare" target="_blank" rel="noopener noreferrer">Facebook</a>
+    <a id="waShare" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp">WhatsApp</a>
+    <a id="fbShare" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">Facebook</a>
   </div>
 </div>
 
@@ -228,7 +240,6 @@
   <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
 </footer>
 
-<!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
