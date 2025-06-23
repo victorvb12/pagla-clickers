@@ -16,8 +16,45 @@
       background: #007bff;
       color: white;
       text-align: center;
-      padding: 15px;
+      padding: 25px 0;
+      font-size: 26px;
+      font-weight: bold;
       position: relative;
+    }
+
+    nav {
+      background: #005bb5;
+    }
+
+    nav ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    nav ul li {
+      margin: 10px 15px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+
+    .blue-strip-below-nav {
+      background-color: #007bff;
+      height: 10px;
+      width: 100%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
     .hamburger {
@@ -29,44 +66,18 @@
       cursor: pointer;
       position: absolute;
       right: 15px;
-      top: 15px;
-    }
-
-    nav {
-      background-color: #0056b3;
-    }
-
-    nav ul {
-      display: flex;
-      flex-wrap: wrap;
-      list-style: none;
-      justify-content: center;
-      padding: 10px;
-      margin: 0;
-      gap: 15px;
-    }
-
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    nav ul li a:hover {
-      text-decoration: underline;
+      top: 20px;
     }
 
     @media (max-width: 768px) {
       nav ul {
         display: none;
         flex-direction: column;
-        background-color: #0056b3;
+        background-color: #005bb5;
         width: 100%;
         position: absolute;
-        top: 55px;
+        top: 60px;
         left: 0;
-        padding: 10px 0;
         z-index: 999;
       }
 
@@ -77,6 +88,10 @@
       .hamburger {
         display: block;
       }
+
+      header {
+        position: relative;
+      }
     }
 
     .container {
@@ -86,6 +101,12 @@
       background: white;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #005bb5;
+      text-align: center;
+      margin-bottom: 30px;
     }
 
     .faq-item {
@@ -100,6 +121,7 @@
 
     .faq-answer {
       color: #333;
+      line-height: 1.6;
     }
 
     footer {
@@ -107,13 +129,14 @@
       color: white;
       text-align: center;
       padding: 15px;
+      margin-top: 40px;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Pagla Clickers</h1>
+  Pagla Clickers
   <button class="hamburger" onclick="toggleMenu()">☰</button>
 </header>
 
@@ -134,6 +157,8 @@
     <li><a href="support.html">Support</a></li>
   </ul>
 </nav>
+
+<div class="blue-strip-below-nav"></div>
 
 <div class="container">
   <h2>Frequently Asked Questions (FAQ)</h2>
