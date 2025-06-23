@@ -9,56 +9,130 @@
     margin: 0;
     font-family: Arial, sans-serif;
     background: #f4f8fc;
-  }
-  header {
-    background-color: #003366;
-    padding: 0.75rem 1rem;
-  }
-  header nav ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    color: #222;
     display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    min-height: 100vh;
   }
-  header nav ul li a,
-  header nav ul li button {
+
+  /* Topbar */
+  header {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+    font-weight: bold;
+    font-size: 22px;
+    position: relative;
+    user-select: none;
+    z-index: 1002;
+  }
+
+  /* Navbar */
+  nav.navbar {
+    background-color: #005bb5;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 10px 0;
+    position: relative;
+    z-index: 1001;
+  }
+
+  nav.navbar a, nav.navbar button {
     color: white;
     text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 0.3rem 0.5rem;
-    border-radius: 3px;
-    transition: background-color 0.3s ease;
+    margin: 0 15px;
+    font-weight: bold;
+    font-size: 14px;
     background: none;
     border: none;
     cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 4px;
+    user-select: none;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
   }
-  header nav ul li a:hover,
-  header nav ul li button:hover {
-    background-color: #00509e;
+
+  nav.navbar a:hover,
+  nav.navbar button:hover {
+    background-color: #004080;
   }
-  main {
-    max-width: 500px;
+
+  /* Blue strip below navbar */
+  .blue-strip {
+    background-color: #007bff;
+    height: 10px;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    user-select: none;
+  }
+
+  /* Hamburger menu */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 25px;
+    height: 20px;
+    gap: 5px;
+    z-index: 1003;
+    user-select: none;
+  }
+
+  .hamburger div {
     background: white;
-    margin: 30px auto 60px;
+    height: 3px;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  /* Mobile nav open */
+  nav.navbar.open {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  nav.navbar.open a, nav.navbar.open button {
+    margin: 10px 0;
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    border-top: 1px solid rgba(255,255,255,0.2);
+  }
+
+  main {
+    flex: 1;
+    max-width: 500px;
+    margin: auto;
     padding: 2rem 2.5rem;
+    background: white;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    user-select: text;
   }
+
   h2 {
-    color: #003366;
+    color: #007bff;
     text-align: center;
     margin-bottom: 1.5rem;
   }
+
   label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
     color: #333;
   }
+
   input[type="number"],
   input[type="text"],
   select {
@@ -70,9 +144,10 @@
     font-size: 1rem;
     box-sizing: border-box;
   }
+
   button[type="submit"] {
     width: 100%;
-    background: #003366;
+    background: #007bff;
     color: #fff;
     border: none;
     padding: 12px;
@@ -81,44 +156,83 @@
     cursor: pointer;
     transition: background-color 0.3s;
   }
+
   button[type="submit"]:hover {
-    background: #002244;
+    background: #0056b3;
   }
+
   .message {
     margin-bottom: 1rem;
     text-align: center;
     font-size: 0.95rem;
   }
+
   .success {
     color: green;
   }
+
   .error {
     color: red;
+  }
+
+  footer {
+    background: #007bff;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+    user-select: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav.navbar {
+      justify-content: flex-start;
+    }
+
+    nav.navbar a, nav.navbar button {
+      display: none;
+    }
+
+    nav.navbar.open a, nav.navbar.open button {
+      display: block;
+    }
+
+    .hamburger {
+      display: flex;
+    }
   }
 </style>
 </head>
 <body>
 
-<header>
-  <nav>
-    <ul>
-      <li><a href="about.html">About</a></li>
-      <li><a href="notifications.html">Notifications</a></li>
-      <li><a href="profile.html">Profile</a></li>
-      <li><a href="dashboard.html">Dashboard</a></li>
-      <li><a href="postjob.html">Post Job</a></li>
-      <li><a href="taskdetail.html">Tasks</a></li>
-      <li><a href="referel.html">Referral</a></li>
-      <li><a href="deposit.html">Deposit</a></li>
-      <li><a href="wallet.html">Wallet</a></li>
-      <li><a href="withdrawal.html">Withdraw Money</a></li>
-      <li><a href="terms.html">Terms</a></li>
-      <li><a href="faq.html">FAQ</a></li>
-      <li><a href="support.html">Support</a></li>
-      <li><button id="logoutBtn" title="Logout">Logout</button></li>
-    </ul>
-  </nav>
-</header>
+<header>Pagla Clickers Withdrawal</header>
+
+<nav class="navbar" id="navbar" role="navigation" aria-label="Primary navigation">
+  <a href="about.html">About</a>
+  <a href="notifications.html">Notifications</a>
+  <a href="profile.html">Profile</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="postjob.html">Post Job</a>
+  <a href="taskdetail.html">Tasks</a>
+  <a href="referel.html">Referral</a>
+  <a href="deposit.html">Deposit</a>
+  <a href="wallet.html">Wallet</a>
+  <a href="withdrawal.html" aria-current="page">Withdraw Money</a>
+  <a href="terms.html">Terms</a>
+  <a href="faq.html">FAQ</a>
+  <a href="support.html">Support</a>
+
+  <button id="logoutBtn" title="Logout">Logout</button>
+
+  <div class="hamburger" id="hamburger" aria-label="Toggle navigation menu" role="button" tabindex="0">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</nav>
+
+<div class="blue-strip"></div>
 
 <main>
   <h2>Request Withdrawal</h2>
@@ -142,7 +256,7 @@
   </form>
 </main>
 
-<footer style="text-align:center; padding:15px 0; background:#003366; color:white;">
+<footer>
   <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
 </footer>
 
@@ -238,6 +352,20 @@
     } catch (error) {
       messageDiv.textContent = "Error submitting request: " + error.message;
       messageDiv.classList.add('error');
+    }
+  });
+
+  // Hamburger toggle for mobile
+  const navbar = document.getElementById("navbar");
+  const hamburger = document.getElementById("hamburger");
+
+  hamburger.addEventListener("click", () => {
+    navbar.classList.toggle("open");
+  });
+  hamburger.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      navbar.classList.toggle("open");
     }
   });
 </script>
