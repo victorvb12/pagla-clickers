@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>About Us - Pagla Clickers</title>
-  
- <style>
+  <style>
     body {
       font-family: Arial, sans-serif;
       background: #f4f8fc;
@@ -13,29 +12,69 @@
       padding: 0;
     }
 
-    header, footer {
+    header {
       background: #007bff;
       color: white;
       text-align: center;
       padding: 15px;
+      position: relative;
     }
 
     nav {
       background: #0056b3;
       display: flex;
       justify-content: center;
-      gap: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
       padding: 10px;
     }
 
-    nav a {
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li a {
       color: white;
       text-decoration: none;
       font-weight: bold;
     }
 
-    nav a:hover {
+    nav ul li a:hover {
       text-decoration: underline;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      position: absolute;
+      right: 15px;
+      top: 15px;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+        flex-direction: column;
+        background: #0056b3;
+        width: 100%;
+        position: absolute;
+        top: 55px;
+        left: 0;
+      }
+      nav ul.active {
+        display: flex;
+      }
+      .hamburger {
+        display: block;
+      }
     }
 
     .container {
@@ -45,97 +84,40 @@
       background: white;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      line-height: 1.6;
     }
 
-    .task {
-      padding: 15px;
-      border: 1px solid #ccc;
-      margin-bottom: 10px;
-      border-radius: 5px;
-    }
-
-    .logout-btn {
-      background: #dc3545;
+    footer {
+      background: #007bff;
       color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 20px;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
     }
   </style>
-
-
 </head>
 <body>
 
-
-<style>
-  .topbar {
-    background-color: #003366;
-    padding: 0.75rem 1rem;
-  }
-  .topbar nav ul {
-    margin: 0; padding: 0; list-style: none;
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-  }
-  .topbar nav ul li a,
-  .topbar nav ul li button {
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.3rem 0.5rem;
-    border-radius: 3px;
-    transition: background-color 0.3s ease;
-  }
-  .topbar nav ul li a:hover,
-  .topbar nav ul li button:hover {
-    background-color: #00509e;
-  }
-  .topbar nav ul li button:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #00bfff;
-  }
-</style>
-
-<script type="module">
-  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-
-  const logoutBtn = document.getElementById('logoutBtn');
-  const auth = getAuth();
-
-  logoutBtn.addEventListener('click', () => {
-    signOut(auth).then(() => {
-      window.location.href = 'login.html';
-    }).catch((error) => {
-      alert('Error signing out: ' + error.message);
-    });
-  });
-</script>
-
   <header>
     <h1>Pagla Clickers</h1>
-<nav>
-  <a href="about.html">About</a>
-    <a href="notifications.html">Notifications</a>
-    <a href="profile.html">Profile</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="postjob.html">Post Job</a>
-    <a href="taskdetail.html">Tasks</a>
-    <a href="referel.html">Referral</a>
-    <a href="deposit.html">Deposit</a>
-    <a href="wallet.html">Wallet</a>
-    <a href="withdrawal.html">Withdraw Money</a>
-    <a href="terms.html">Terms</a>
-    <a href="faq.html">FAQ</a>
-    <a href="support.html">Support</a>
-</nav>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <nav>
+      <ul id="navList">
+        <li><a href="about.html">About</a></li>
+        <li><a href="notifications.html">Notifications</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="postjob.html">Post Job</a></li>
+        <li><a href="taskdetail.html">Tasks</a></li>
+        <li><a href="referel.html">Referral</a></li>
+        <li><a href="deposit.html">Deposit</a></li>
+        <li><a href="wallet.html">Wallet</a></li>
+        <li><a href="withdrawal.html">Withdraw Money</a></li>
+        <li><a href="terms.html">Terms</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="support.html">Support</a></li>
+      </ul>
+    </nav>
   </header>
 
   <div class="container">
@@ -152,5 +134,13 @@
   <footer>
     <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
   </footer>
+
+  <script>
+    function toggleMenu() {
+      const navList = document.getElementById('navList');
+      navList.classList.toggle('active');
+    }
+  </script>
+
 </body>
 </html>
