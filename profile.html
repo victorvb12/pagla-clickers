@@ -2,113 +2,147 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <title>Pagla Clickers - User Profile</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>User Profile - Pagla Clickers</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: linear-gradient(to bottom right, #f5faff, #e0f0ff);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
+
     /* Topbar */
     header {
-      background: #007bff;
+      background-color: #007bff;
       color: white;
+      padding: 25px 0;
       text-align: center;
-      padding: 15px 0;
       font-weight: bold;
-      font-size: 24px;
+      font-size: 26px;
       user-select: none;
-    }
-    /* Navbar */
-    .navbar {
-      background-color: #005bb5;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      padding: 10px 0;
       position: relative;
-      z-index: 1000;
+      z-index: 1002;
     }
-    .navbar a {
+
+    /* Navbar */
+    nav {
+      background: #005bb5;
+    }
+
+    nav ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 1001;
+    }
+
+    nav ul li {
+      margin: 0 12px;
+      padding: 8px 0;
+    }
+
+    nav ul li a {
       color: white;
       text-decoration: none;
-      margin: 0 15px;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 16px;
       white-space: nowrap;
+      user-select: none;
     }
-    .navbar a:hover {
+
+    nav ul li a:hover {
       text-decoration: underline;
     }
-    /* Light blue strip below navbar */
-    .blue-strip-below-nav {
+
+    /* Logout Button in Navbar */
+    nav ul li button#logoutBtn {
+      background: #dc3545;
+      color: white;
+      padding: 6px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: normal;
+      height: 36px;
+      white-space: nowrap;
+      transition: background-color 0.3s ease;
+    }
+
+    nav ul li button#logoutBtn:hover {
+      background: #b02a37;
+    }
+
+    /* Blue strip below navbar */
+    .blue-strip {
       background-color: #007bff;
       height: 10px;
       width: 100%;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
     }
-    /* Hamburger menu for mobile */
+
+    /* Hamburger */
     .hamburger {
       display: none;
-      flex-direction: column;
-      justify-content: center;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
       cursor: pointer;
       position: absolute;
+      top: 20px;
       right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 25px;
-      height: 20px;
-      gap: 5px;
-      z-index: 1001;
+      z-index: 1003;
     }
-    .hamburger div {
-      background: white;
-      height: 3px;
-      border-radius: 2px;
-      transition: all 0.3s ease;
-    }
-    /* Mobile nav open */
-    .navbar.open {
-      flex-direction: column;
-      align-items: center;
-    }
-    .navbar.open a {
-      margin: 10px 0;
-    }
+
     /* Container */
     .container {
+      flex: 1;
       max-width: 700px;
       background: white;
-      margin: 30px auto;
+      margin: 0 auto 40px;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
+
     h2 {
       color: #007bff;
       text-align: center;
       margin-bottom: 30px;
       user-select: none;
     }
+
     .profile-info {
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
+
     .info-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
     }
+
     .info-label {
       font-weight: bold;
       color: #333;
       flex: 1 1 150px;
       user-select: none;
     }
+
     input {
       flex: 2 1 300px;
       padding: 8px;
@@ -117,21 +151,25 @@
       border: 1px solid #ccc;
       transition: border-color 0.3s ease;
     }
+
     input[readonly] {
       background-color: #f0f0f0;
       border-color: #ddd;
       cursor: not-allowed;
     }
+
     input:not([readonly]):focus {
       border-color: #007bff;
       outline: none;
       background: white;
     }
+
     .buttons {
       text-align: center;
       margin-top: 25px;
       user-select: none;
     }
+
     .buttons button {
       margin: 0 10px;
       background-color: #007bff;
@@ -143,41 +181,59 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
+
     .buttons button:hover {
       background-color: #005bb5;
     }
+
     footer {
       background: #007bff;
       color: white;
       text-align: center;
       padding: 15px 0;
-      margin-top: 40px;
+      margin-top: auto;
       user-select: none;
     }
+
     /* Responsive */
     @media (max-width: 768px) {
-      .navbar {
-        justify-content: flex-start;
-      }
-      .navbar a {
+      nav ul {
         display: none;
+        flex-direction: column;
         width: 100%;
-        text-align: center;
-        margin: 10px 0;
-        font-size: 16px;
-        padding: 10px 0;
-        border-top: 1px solid rgba(255,255,255,0.2);
+        background-color: #005bb5;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        z-index: 999;
       }
-      .navbar.open a {
-        display: block;
-      }
-      .hamburger {
+
+      nav ul.active {
         display: flex;
       }
+
+      nav ul li {
+        margin: 12px 0;
+        padding: 8px 0;
+        text-align: center;
+      }
+
+      nav ul li button#logoutBtn {
+        width: 90%;
+        max-width: 300px;
+        margin: 10px auto;
+        height: 40px;
+      }
+
+      .hamburger {
+        display: block;
+      }
+
       .info-item {
         flex-direction: column;
         align-items: flex-start;
       }
+
       .info-label, input {
         flex: 1 1 100%;
       }
@@ -186,31 +242,31 @@
 </head>
 <body>
 
-<header>Pagla Clickers</header>
+<header>
+  Pagla Clickers
+  <button class="hamburger" aria-label="Toggle navigation menu" id="hamburgerBtn">☰</button>
+</header>
 
-<nav class="navbar" id="navbar">
-  <a href="about.html">About</a>
-  <a href="notifications.html">Notifications</a>
-  <a href="profile.html">Profile</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="postjob.html">Post Job</a>
-  <a href="taskdetail.html">Tasks</a>
-  <a href="referel.html">Referral</a>
-  <a href="deposit.html">Deposit</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="withdrawal.html">Withdraw Money</a>
-  <a href="terms.html">Terms</a>
-  <a href="faq.html">FAQ</a>
-  <a href="support.html">Support</a>
-
-  <div class="hamburger" id="hamburger" aria-label="Toggle navigation menu" role="button" tabindex="0">
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
+<nav>
+  <ul id="navList">
+    <li><a href="about.html">About</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="profile.html" aria-current="page">Profile</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="postjob.html">Post Job</a></li>
+    <li><a href="taskdetail.html">Tasks</a></li>
+    <li><a href="referel.html">Referral</a></li>
+    <li><a href="deposit.html">Deposit</a></li>
+    <li><a href="wallet.html">Wallet</a></li>
+    <li><a href="withdrawal.html">Withdraw Money</a></li>
+    <li><a href="terms.html">Terms</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="support.html">Support</a></li>
+    <li><button id="logoutBtn">Logout</button></li>
+  </ul>
 </nav>
 
-<div class="blue-strip-below-nav"></div>
+<div class="blue-strip"></div>
 
 <div class="container">
   <h2>User Profile</h2>
@@ -251,7 +307,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
   import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -277,6 +333,7 @@
   const refInput = document.getElementById("user-ref");
   const saveBtn = document.getElementById("saveBtn");
   const editBtn = document.getElementById("editBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
@@ -287,7 +344,7 @@
         const data = userSnap.data();
         nameInput.value = data.username || "";
         phoneInput.value = data.phone || "";
-        emailInput.value = user.email;
+        emailInput.value = user.email || "";
         pointsInput.value = data.points || 0;
         refInput.value = data.referralCode || "";
       } else {
@@ -341,16 +398,26 @@
       });
   };
 
-  // Hamburger toggle
-  const navbar = document.getElementById("navbar");
-  const hamburger = document.getElementById("hamburger");
-  hamburger.addEventListener("click", () => {
-    navbar.classList.toggle("open");
+  logoutBtn.addEventListener("click", () => {
+    signOut(auth)
+      .then(() => {
+        window.location.href = "login.html";
+      })
+      .catch((error) => {
+        alert("Error signing out: " + error.message);
+      });
   });
-  hamburger.addEventListener("keydown", e => {
-    if(e.key === "Enter" || e.key === " "){
+
+  // Hamburger toggle
+  const navList = document.getElementById("navList");
+  const hamburgerBtn = document.getElementById("hamburgerBtn");
+  hamburgerBtn.addEventListener("click", () => {
+    navList.classList.toggle("active");
+  });
+  hamburgerBtn.addEventListener("keydown", e => {
+    if(e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      navbar.classList.toggle("open");
+      navList.classList.toggle("active");
     }
   });
 </script>

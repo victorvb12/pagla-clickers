@@ -5,112 +5,106 @@
   <title>Task Detail - Pagla Clickers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    /* Reset & base */
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
       background: #f4f8fc;
-      margin: 0;
-      padding: 0 0 40px 0;
       user-select: none;
+      padding-bottom: 40px;
     }
 
     /* Topbar */
     header {
-      background-color: #007bff;
+      background: #007bff;
       color: white;
       text-align: center;
-      padding: 15px 0;
+      padding: 25px 0;
+      font-size: 26px;
       font-weight: bold;
-      font-size: 24px;
       position: relative;
-      user-select: none;
-      z-index: 1002;
     }
 
     /* Navbar */
-    nav.navbar {
-      background-color: #005bb5;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      padding: 10px 0;
+    nav {
+      background: #005bb5;
       position: relative;
-      z-index: 1001;
+      z-index: 1000;
     }
 
-    nav.navbar a {
+    nav ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    nav ul li {
+      margin: 10px 15px;
+    }
+
+    nav ul li a {
       color: white;
       text-decoration: none;
-      margin: 0 15px;
       font-weight: bold;
-      font-size: 14px;
-      padding: 8px 0;
-      user-select: none;
+      font-size: 16px;
       white-space: nowrap;
-      transition: background-color 0.3s ease;
     }
 
-    nav.navbar a:hover {
-      background-color: #004080;
-      border-radius: 4px;
-      padding: 8px 12px;
-      text-decoration: none;
+    nav ul li a:hover,
+    nav ul li a[aria-current="page"] {
+      text-decoration: underline;
+    }
+
+    nav ul li button#logoutBtn {
+      background: #dc3545;
+      color: white;
+      padding: 6px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: normal;
+      height: 36px;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+    }
+
+    nav ul li button#logoutBtn:hover {
+      background: #b02a37;
     }
 
     /* Blue strip below navbar */
-    .blue-strip {
+    .blue-strip-below-nav {
       background-color: #007bff;
       height: 10px;
       width: 100%;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       margin-bottom: 30px;
-      user-select: none;
     }
 
-    /* Hamburger menu */
+    /* Hamburger */
     .hamburger {
       display: none;
-      flex-direction: column;
-      justify-content: center;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
       cursor: pointer;
       position: absolute;
-      right: 15px;
       top: 50%;
+      right: 15px;
       transform: translateY(-50%);
-      width: 25px;
-      height: 20px;
-      gap: 5px;
-      z-index: 1003;
-      user-select: none;
+      z-index: 1100;
     }
 
-    .hamburger div {
-      background: white;
-      height: 3px;
-      border-radius: 2px;
-      transition: all 0.3s ease;
-    }
-
-    /* Mobile nav open */
-    nav.navbar.open {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    nav.navbar.open a {
-      margin: 10px 0;
-      display: block;
-      width: 100%;
-      text-align: center;
-      padding: 10px 0;
-      border-top: 1px solid rgba(255,255,255,0.2);
-    }
-
-    /* Page heading */
+    /* Job heading */
     h2 {
       margin-left: 20px;
       color: #007bff;
-      user-select: none;
     }
 
     /* Job card */
@@ -127,7 +121,6 @@
       font-size: 18px;
       font-weight: bold;
       margin-bottom: 8px;
-      user-select: text;
     }
 
     p {
@@ -135,7 +128,6 @@
       user-select: text;
     }
 
-    /* Buttons */
     button {
       background: #007bff;
       color: white;
@@ -146,7 +138,6 @@
       font-weight: bold;
       font-size: 14px;
       transition: background-color 0.3s ease;
-      user-select: none;
     }
 
     button:hover:not(:disabled) {
@@ -167,7 +158,6 @@
       align-items: center;
       justify-content: center;
       z-index: 2000;
-      user-select: none;
     }
 
     #jobModalContent {
@@ -178,14 +168,12 @@
       border-radius: 12px;
       position: relative;
       box-sizing: border-box;
-      user-select: text;
     }
 
     label {
       display: block;
       margin: 10px 0 4px 0;
       font-weight: 600;
-      user-select: text;
     }
 
     .proof-input {
@@ -195,8 +183,6 @@
       border-radius: 8px;
       border: 1px solid #ccc;
       font-size: 14px;
-      box-sizing: border-box;
-      user-select: text;
     }
 
     .closeBtn {
@@ -210,8 +196,6 @@
       border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
-      user-select: none;
-      transition: background-color 0.3s ease;
     }
 
     .closeBtn:hover {
@@ -222,62 +206,91 @@
       margin-top: 10px;
       font-weight: 600;
       min-height: 1.5em;
-      user-select: none;
     }
 
-    /* Responsive */
+    /* Mobile responsive */
     @media (max-width: 768px) {
-      nav.navbar {
-        justify-content: flex-start;
-      }
-
-      nav.navbar a {
+      nav ul {
         display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #005bb5;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        z-index: 999;
       }
 
-      nav.navbar.open a {
+      nav ul.active {
+        display: flex;
+      }
+
+      nav ul li {
+        margin: 0;
+        border-top: 1px solid rgba(255,255,255,0.2);
+        width: 100%;
+      }
+
+      nav ul li:first-child {
+        border-top: none;
+      }
+
+      nav ul li a,
+      nav ul li button#logoutBtn {
+        padding: 10px 20px;
         display: block;
+        text-align: left;
       }
 
       .hamburger {
-        display: flex;
+        display: block;
       }
+    }
+
+    /* Footer */
+    footer {
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+      user-select: none;
     }
   </style>
 </head>
 <body>
 
-<header>Pagla Clickers Jobs</header>
+<header>
+  Pagla Clickers Jobs
+  <button class="hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navList">☰</button>
+</header>
 
-<nav class="navbar" id="navbar">
-  <a href="about.html">About</a>
-  <a href="notifications.html">Notifications</a>
-  <a href="profile.html">Profile</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="postjob.html">Post Job</a>
-  <a href="taskdetail.html">Tasks</a>
-  <a href="referel.html">Referral</a>
-  <a href="deposit.html">Deposit</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="withdrawal.html">Withdraw Money</a>
-  <a href="terms.html">Terms</a>
-  <a href="faq.html">FAQ</a>
-  <a href="support.html">Support</a>
-
-  <div class="hamburger" id="hamburger" aria-label="Toggle navigation menu" role="button" tabindex="0">
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
+<nav>
+  <ul id="navList">
+    <li><a href="about.html">About</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="postjob.html">Post Job</a></li>
+    <li><a href="taskdetail.html" aria-current="page">Tasks</a></li>
+    <li><a href="referel.html">Referral</a></li>
+    <li><a href="deposit.html">Deposit</a></li>
+    <li><a href="wallet.html">Wallet</a></li>
+    <li><a href="withdrawal.html">Withdraw Money</a></li>
+    <li><a href="terms.html">Terms</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="support.html">Support</a></li>
+    <li><button id="logoutBtn">Logout</button></li>
+  </ul>
 </nav>
 
-<div class="blue-strip"></div>
+<div class="blue-strip-below-nav"></div>
 
 <h2>Available Jobs</h2>
 <div id="jobsContainer">Loading...</div>
 
 <!-- Modal -->
-<div id="jobModal" role="dialog" aria-modal="true" aria-labelledby="jobTitle">
+<div id="jobModal" role="dialog" aria-modal="true">
   <div id="jobModalContent">
     <button class="closeBtn" onclick="closeModal()" aria-label="Close modal">X</button>
     <h3 id="jobTitle"></h3>
@@ -287,6 +300,10 @@
     <p id="submitStatus"></p>
   </div>
 </div>
+
+<footer>
+  <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+</footer>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
@@ -315,10 +332,19 @@
   const proofForm = document.getElementById("proofForm");
   const submitBtn = document.getElementById("submitBtn");
   const submitStatus = document.getElementById("submitStatus");
+  const logoutBtn = document.getElementById("logoutBtn");
 
   let currentUser = null;
   let currentJob = null;
   let jobList = [];
+
+  logoutBtn.addEventListener('click', () => {
+    signOut(auth).then(() => {
+      window.location.href = 'login.html';
+    }).catch((error) => {
+      alert('Error signing out: ' + error.message);
+    });
+  });
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
@@ -337,7 +363,6 @@
       const data = docSnap.data();
       const jobId = docSnap.id;
 
-      // Get submission count
       const subsSnap = await getDocs(collection(db, `jobs/${jobId}/submissions`));
       const submittedCount = subsSnap.size;
 
@@ -353,7 +378,6 @@
       const submitted = job.submitted || 0;
       const slots = job.slots || "∞";
       const slotInfo = slots === "∞" ? "Unlimited slots" : `${submitted} / ${slots} slots used`;
-
       const isOwner = job.ownerId === currentUser?.uid;
       const crown = isOwner ? " 👑 Your Job" : "";
 
@@ -364,7 +388,7 @@
         <p>Reward: $${job.reward}</p>
         <p>Category: ${job.category}</p>
         <p>Slots: ${slotInfo}</p>
-        <button class="viewBtn" aria-label="View and submit proof for ${job.title}" onclick="openModal('${job.id}')">View & Submit</button>
+        <button class="viewBtn" onclick="openModal('${job.id}')">View & Submit</button>
       `;
       jobsContainer.appendChild(div);
     });
@@ -376,10 +400,7 @@
 
     if (currentJob.ownerId === currentUser.uid) {
       jobTitle.textContent = "Your Own Job";
-      jobDetails.innerHTML = `
-        <p><strong>Description:</strong> ${currentJob.description || "No description available."}</p>
-        <p>You cannot submit to your own job.</p>
-      `;
+      jobDetails.innerHTML = `<p><strong>Description:</strong> ${currentJob.description || "No description available."}</p><p>You cannot submit to your own job.</p>`;
       proofForm.innerHTML = "";
       submitBtn.style.display = "none";
       submitStatus.textContent = "";
@@ -390,35 +411,27 @@
     const submissionDoc = await getDoc(doc(db, `jobs/${jobId}/submissions/${currentUser.uid}`));
     if (submissionDoc.exists()) {
       jobTitle.textContent = "Already Submitted";
-      jobDetails.innerHTML = `
-        <p><strong>Description:</strong> ${currentJob.description || "No description available."}</p>
-        <p>You have already submitted proof for this job.</p>
-      `;
+      jobDetails.innerHTML = `<p><strong>Description:</strong> ${currentJob.description || "No description available."}</p><p>You have already submitted proof for this job.</p>`;
       proofForm.innerHTML = "";
       submitBtn.style.display = "none";
     } else {
       jobTitle.textContent = currentJob.title;
       jobDetails.innerHTML = `<p><strong>Description:</strong> ${currentJob.description || "No description available."}</p><p>Submit the following proofs:</p>`;
-
       proofForm.innerHTML = "";
-      // proofType is assumed to be a comma separated string like "text,screenshot"
+
       const proofs = (currentJob.proofType || "").split(',').map(p => p.trim()).filter(Boolean);
       proofs.forEach((type, index) => {
         const label = document.createElement("label");
         label.textContent = `Proof ${index + 1} (${type})`;
         const input = document.createElement("input");
-
-        if (type === "text") {
-          input.type = "text";
-        } else if (type === "screenshot") {
+        if (type === "text") input.type = "text";
+        else if (type === "screenshot") {
           input.type = "file";
           input.accept = "image/*";
         }
-
         input.name = `proof${index + 1}`;
         input.required = true;
         input.className = "proof-input";
-
         proofForm.appendChild(label);
         proofForm.appendChild(input);
       });
@@ -432,7 +445,6 @@
 
   submitBtn.onclick = async (e) => {
     e.preventDefault();
-
     const inputs = proofForm.querySelectorAll("input");
     const proofData = {};
     submitStatus.style.color = "black";
@@ -499,23 +511,21 @@
     submitStatus.textContent = "";
   };
 
-  // Hamburger toggle for mobile
-  const navbar = document.getElementById("navbar");
-  const hamburger = document.createElement("div");
-  hamburger.className = "hamburger";
-  hamburger.setAttribute("aria-label", "Toggle navigation menu");
-  hamburger.setAttribute("role", "button");
-  hamburger.setAttribute("tabindex", "0");
-  hamburger.innerHTML = "<div></div><div></div><div></div>";
-  navbar.appendChild(hamburger);
+  const hamburger = document.getElementById("hamburger");
+  const navList = document.getElementById("navList");
 
   hamburger.addEventListener("click", () => {
-    navbar.classList.toggle("open");
+    const expanded = hamburger.getAttribute("aria-expanded") === "true" || false;
+    hamburger.setAttribute("aria-expanded", !expanded);
+    navList.classList.toggle("active");
   });
+
   hamburger.addEventListener("keydown", e => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      navbar.classList.toggle("open");
+      const expanded = hamburger.getAttribute("aria-expanded") === "true" || false;
+      hamburger.setAttribute("aria-expanded", !expanded);
+      navList.classList.toggle("active");
     }
   });
 </script>

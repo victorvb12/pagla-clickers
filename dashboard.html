@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Pagla Clickers - Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       margin: 0;
@@ -16,7 +16,7 @@
       background: #007bff;
       color: white;
       text-align: center;
-      padding: 25px 0;
+      padding: 20px 0;
       font-size: 26px;
       font-weight: bold;
       position: relative;
@@ -32,12 +32,14 @@
       padding: 0;
       list-style: none;
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       justify-content: center;
+      align-items: center;
     }
 
     nav ul li {
-      margin: 10px 15px;
+      margin: 0 12px;
+      padding: 8px 0;
     }
 
     nav ul li a {
@@ -51,10 +53,29 @@
       text-decoration: underline;
     }
 
+    nav ul li button.logout-btn {
+      background: #dc3545;
+      color: white;
+      padding: 6px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: normal;
+      height: 36px;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+    }
+
+    nav ul li button.logout-btn:hover {
+      background: #b02a37;
+    }
+
     /* Blue strip below nav */
     .blue-strip-below-nav {
       background-color: #007bff;
-      height: 10px;
+      height: 15px;
       width: 100%;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
@@ -82,14 +103,24 @@
         top: 60px;
         left: 0;
         z-index: 999;
+        flex-wrap: nowrap;
       }
 
       nav ul.active {
         display: flex;
       }
 
-      .hamburger {
-        display: block;
+      nav ul li {
+        margin: 12px 0;
+        padding: 8px 0;
+        text-align: center;
+      }
+
+      nav ul li button.logout-btn {
+        width: 90%;
+        max-width: 300px;
+        margin: 10px auto;
+        height: 40px;
       }
 
       header {
@@ -123,16 +154,6 @@
       color: white;
     }
 
-    .logout-btn {
-      background: #dc3545;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-
     footer {
       background: #007bff;
       color: white;
@@ -164,10 +185,11 @@
       <li><a href="terms.html">Terms</a></li>
       <li><a href="faq.html">FAQ</a></li>
       <li><a href="support.html">Support</a></li>
+      <li><button id="logoutBtn" class="logout-btn">Logout</button></li>
     </ul>
   </nav>
 
-  <!-- Light blue strip below navbar -->
+  <!-- Blue strip below navbar -->
   <div class="blue-strip-below-nav"></div>
 
   <div class="container">
@@ -187,8 +209,6 @@
         <tr><td colspan="3">Loading completed tasks...</td></tr>
       </tbody>
     </table>
-
-    <button class="logout-btn" id="logoutBtn">Logout</button>
   </div>
 
   <footer>
@@ -201,7 +221,6 @@
     }
   </script>
 
-  <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";

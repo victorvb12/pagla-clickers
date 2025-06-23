@@ -17,7 +17,7 @@
       background: #007bff;
       color: white;
       text-align: center;
-      padding: 25px 0;
+      padding: 20px 0;
       font-size: 26px;
       font-weight: bold;
       position: relative;
@@ -35,10 +35,11 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
+      align-items: center;
     }
 
     nav ul li {
-      margin: 10px 15px;
+      margin: -6px 15px;
     }
 
     nav ul li a {
@@ -52,10 +53,27 @@
       text-decoration: underline;
     }
 
+    nav ul li button#logoutBtn {
+      background: #dc3545;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+      height: fit-content;
+    }
+
+    nav ul li button#logoutBtn:hover {
+      background: #b02a37;
+    }
+
     /* Blue strip below nav */
     .blue-strip-below-nav {
       background-color: #007bff;
-      height: 10px;
+      height: 15px;
       width: 100%;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
@@ -95,6 +113,17 @@
 
       header {
         position: relative;
+      }
+
+      nav ul li {
+        margin: 15px 0;
+        text-align: center;
+      }
+
+      nav ul li button#logoutBtn {
+        width: 90%;
+        max-width: 300px;
+        margin: 0 auto;
       }
     }
 
@@ -172,6 +201,7 @@
     <li><a href="terms.html">Terms</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="support.html">Support</a></li>
+    <li><button id="logoutBtn">Logout</button></li>
   </ul>
 </nav>
 
@@ -212,6 +242,16 @@
   function toggleMenu() {
     document.getElementById('navList').classList.toggle('active');
   }
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    // Firebase logout example, replace with your actual signOut logic:
+    import('https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js').then(({ getAuth, signOut }) => {
+      const auth = getAuth();
+      signOut(auth).then(() => {
+        window.location.href = 'login.html';
+      }).catch(err => alert('Logout error: ' + err.message));
+    });
+  });
 </script>
 
 <script type="module">

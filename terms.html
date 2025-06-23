@@ -18,7 +18,7 @@
     header {
       background-color: #007bff;
       color: white;
-      padding: 15px 0;
+      padding: 20px 0;
       text-align: center;
       font-weight: bold;
       font-size: 24px;
@@ -32,8 +32,9 @@
       background-color: #005bb5;
       display: flex;
       justify-content: center;
+      align-items: center;
       flex-wrap: wrap;
-      padding: 10px 0;
+      padding: 0;
       position: relative;
       z-index: 1001;
     }
@@ -41,26 +42,25 @@
     nav.navbar a {
       color: white;
       text-decoration: none;
-      margin: 0 15px;
+      margin: 10px 15px;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 16px;
       padding: 8px 0;
       user-select: none;
       white-space: nowrap;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     nav.navbar a:hover {
-      background-color: #004080;
-      border-radius: 4px;
-      padding: 8px 12px;
-      text-decoration: none;
+      text-decoration: underline;
+      text-decoration-color: white;
+      text-underline-offset: 6px;
     }
 
     /* Blue strip below navbar */
     .blue-strip {
       background-color: #007bff;
-      height: 10px;
+      height: 15px;
       width: 100%;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       margin-bottom: 30px;
@@ -106,6 +106,27 @@
       border-top: 1px solid rgba(255,255,255,0.2);
     }
 
+    /* Logout button styled like a nav item */
+    #logoutBtn {
+      background: #dc3545;
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      user-select: none;
+      transition: background-color 0.3s ease;
+      margin: 10px 15px;
+      align-self: center;
+      white-space: nowrap;
+    }
+
+    #logoutBtn:hover {
+      background: #b02a37;
+    }
+
     /* Container */
     .container {
       max-width: 800px;
@@ -137,24 +158,6 @@
       line-height: 1.5;
     }
 
-    /* Logout button */
-    #logoutBtn {
-      background: #dc3545;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-left: 20px;
-      font-weight: bold;
-      font-size: 14px;
-      user-select: none;
-      transition: background-color 0.3s ease;
-    }
-    #logoutBtn:hover {
-      background: #b02a37;
-    }
-
     /* Footer */
     footer {
       background: #007bff;
@@ -184,7 +187,7 @@
       }
 
       #logoutBtn {
-        margin: 10px 0 0 0;
+        margin: 10px 0;
         width: 90%;
         max-width: 300px;
         text-align: center;
@@ -210,8 +213,7 @@
   <a href="terms.html" aria-current="page">Terms</a>
   <a href="faq.html">FAQ</a>
   <a href="support.html">Support</a>
-
-  <button id="logoutBtn" title="Logout">Logout</button>
+  <button id="logoutBtn">Logout</button>
 
   <div class="hamburger" id="hamburger" aria-label="Toggle navigation menu" role="button" tabindex="0">
     <div></div>
@@ -224,7 +226,6 @@
 
 <div class="container" tabindex="0">
   <h2>Terms & Conditions</h2>
-  
   <p>By accessing or using Pagla Clickers, you agree to the following terms and conditions. Please read them carefully before registering or using the site.</p>
 
   <h3>1. Eligibility</h3>

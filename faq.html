@@ -16,7 +16,7 @@
       background: #007bff;
       color: white;
       text-align: center;
-      padding: 25px 0;
+      padding: 20px 0;
       font-size: 26px;
       font-weight: bold;
       position: relative;
@@ -33,6 +33,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
+      align-items: center;
     }
 
     nav ul li {
@@ -50,9 +51,26 @@
       text-decoration: underline;
     }
 
+    nav ul li button#logoutBtn {
+      background: #dc3545;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+      height: fit-content;
+    }
+
+    nav ul li button#logoutBtn:hover {
+      background: #b02a37;
+    }
+
     .blue-strip-below-nav {
       background-color: #007bff;
-      height: 10px;
+      height: 15px;
       width: 100%;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
@@ -91,6 +109,17 @@
 
       header {
         position: relative;
+      }
+
+      nav ul li {
+        margin: 15px 0;
+        text-align: center;
+      }
+
+      nav ul li button#logoutBtn {
+        width: 90%;
+        max-width: 300px;
+        margin: 0 auto;
       }
     }
 
@@ -155,6 +184,7 @@
     <li><a href="terms.html">Terms</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="support.html">Support</a></li>
+    <li><button id="logoutBtn">Logout</button></li>
   </ul>
 </nav>
 
@@ -208,6 +238,15 @@
     const navList = document.getElementById("navList");
     navList.classList.toggle("active");
   }
+
+  // Firebase logout logic placeholder — replace with your Firebase auth logout function
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    // Example:
+    // firebase.auth().signOut().then(() => {
+    //   window.location.href = 'login.html';
+    // });
+    alert('Logout button clicked - implement Firebase logout here.');
+  });
 </script>
 
 </body>

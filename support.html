@@ -1,210 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Support - Pagla Clickers</title>
-  <style>
-    /* Reset & base */
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f8fc;
-    }
+<meta charset="UTF-8" />
+<title>Support - Pagla Clickers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f8fc;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    user-select: none;
+  }
 
-    /* Topbar */
-    header {
-      background-color: #007bff;
-      color: white;
-      text-align: center;
-      padding: 15px 0;
-      font-weight: bold;
-      font-size: 24px;
-      user-select: none;
-      position: relative;
-      z-index: 1002;
-    }
+  header {
+    background: #007bff;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 26px;
+    font-weight: bold;
+    position: relative;
+    z-index: 1002;
+  }
 
-    /* Navbar */
-    nav.navbar {
-      background-color: #005bb5;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      padding: 10px 0;
-      position: relative;
-      z-index: 1001;
-    }
+  nav {
+    background: #005bb5;
+    padding: 0 10px;
+    position: relative;
+    z-index: 1001;
+  }
 
-    nav.navbar a {
-      color: white;
-      text-decoration: none;
-      margin: 0 15px;
-      font-weight: bold;
-      font-size: 14px;
-      white-space: nowrap;
-      user-select: none;
-    }
+  nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
 
-    nav.navbar a:hover {
-      text-decoration: underline;
-    }
+  nav ul li {
+    margin: 10px 15px;
+    display: flex;
+    align-items: center;
+  }
 
-    /* Blue strip below navbar */
-    .blue-strip {
-      background-color: #007bff;
-      height: 10px;
-      width: 100%;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-      user-select: none;
-    }
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    white-space: nowrap;
+  }
 
-    /* Hamburger menu for mobile */
-    .hamburger {
+  nav ul li a:hover {
+    text-decoration: underline;
+  }
+
+  nav ul li button#logoutBtn {
+    background: #dc3545;
+    color: white;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    height: 36px;
+    white-space: nowrap;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  nav ul li button#logoutBtn:hover {
+    background: #b02a37;
+  }
+
+  .hamburger {
+    display: none;
+    font-size: 28px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    position: absolute;
+    top: 14px;
+    right: 15px;
+    z-index: 1003;
+  }
+
+  @media (max-width: 768px) {
+    nav ul {
       display: none;
       flex-direction: column;
-      justify-content: center;
-      cursor: pointer;
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 25px;
-      height: 20px;
-      gap: 5px;
-      z-index: 1003;
-    }
-
-    .hamburger div {
-      background: white;
-      height: 3px;
-      border-radius: 2px;
-      transition: all 0.3s ease;
-    }
-
-    /* Mobile nav open */
-    nav.navbar.open {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    nav.navbar.open a {
-      margin: 10px 0;
-      display: block;
       width: 100%;
-      text-align: center;
-      padding: 10px 0;
-      border-top: 1px solid rgba(255,255,255,0.2);
-    }
-
-    /* Container */
-    .container {
-      max-width: 700px;
-      background: white;
-      margin: 0 auto 40px;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      user-select: none;
-    }
-
-    h2 {
-      color: #007bff;
-      text-align: center;
-      margin-top: 0;
-      user-select: none;
-    }
-
-    input, textarea, button {
-      width: 100%;
-      padding: 12px;
-      margin: 12px 0 0 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-      box-sizing: border-box;
-      user-select: text;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 120px;
-    }
-
-    button {
-      background-color: #007bff;
-      color: white;
-      font-weight: bold;
-      border: none;
-      margin-top: 20px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      user-select: none;
-    }
-
-    button:hover {
       background-color: #005bb5;
+      position: absolute;
+      top: 50px;
+      left: 0;
+      z-index: 999;
     }
 
-    footer {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 15px 0;
-      user-select: none;
+    nav ul.active {
+      display: flex;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      nav.navbar {
-        justify-content: flex-start;
-      }
-      nav.navbar a {
-        display: none;
-      }
-      nav.navbar.open a {
-        display: block;
-      }
-      .hamburger {
-        display: flex;
-      }
+    nav ul li {
+      margin: 12px 0;
+      justify-content: center;
     }
-  </style>
+
+    nav ul li button#logoutBtn {
+      width: 90%;
+      max-width: 300px;
+      margin: 10px auto;
+      height: 40px;
+    }
+
+    .hamburger {
+      display: block;
+    }
+  }
+
+  .blue-strip-below-nav {
+    background-color: #007bff;
+    height: 15px;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+  }
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    flex-grow: 1;
+    user-select: text;
+  }
+
+  h2 {
+    color: #007bff;
+    margin-top: 0;
+    margin-bottom: 20px;
+    user-select: none;
+    text-align: center;
+  }
+
+  form input[type="text"],
+  form input[type="email"],
+  form textarea,
+  form input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
+    font-family: inherit;
+  }
+
+  form textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  form button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border: none;
+    margin-top: 20px;
+    padding: 14px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    user-select: none;
+    transition: background-color 0.3s ease;
+    width: 100%;
+  }
+
+  form button[type="submit"]:hover {
+    background-color: #005bb5;
+  }
+
+  footer {
+    background: #007bff;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    user-select: none;
+    margin-top: auto;
+  }
+</style>
 </head>
 <body>
 
-<header>Pagla Clickers</header>
+<header>
+  Pagla Clickers
+  <button class="hamburger" aria-label="Toggle navigation menu" onclick="toggleMenu()">☰</button>
+</header>
 
-<nav class="navbar" id="navbar">
-  <a href="about.html">About</a>
-  <a href="notifications.html">Notifications</a>
-  <a href="profile.html">Profile</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="postjob.html">Post Job</a>
-  <a href="taskdetail.html">Tasks</a>
-  <a href="referel.html">Referral</a>
-  <a href="deposit.html">Deposit</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="withdrawal.html">Withdraw Money</a>
-  <a href="terms.html">Terms</a>
-  <a href="faq.html">FAQ</a>
-  <a href="support.html">Support</a>
-
-  <div class="hamburger" id="hamburger" aria-label="Toggle navigation menu" role="button" tabindex="0">
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
+<nav>
+  <ul id="navList">
+    <li><a href="about.html">About</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="postjob.html">Post Job</a></li>
+    <li><a href="taskdetail.html">Tasks</a></li>
+    <li><a href="referel.html">Referral</a></li>
+    <li><a href="deposit.html">Deposit</a></li>
+    <li><a href="wallet.html">Wallet</a></li>
+    <li><a href="withdrawal.html">Withdraw Money</a></li>
+    <li><a href="terms.html">Terms</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="support.html" aria-current="page">Support</a></li>
+    <li><button id="logoutBtn">Logout</button></li>
+  </ul>
 </nav>
 
-<div class="blue-strip"></div>
+<div class="blue-strip-below-nav"></div>
 
 <div class="container">
   <h2>Contact Support</h2>
-  <form id="supportForm">
-    <input type="text" id="name" placeholder="Your Name" required />
-    <input type="email" id="email" placeholder="Your Email" required />
+  <form id="supportForm" enctype="multipart/form-data">
+    <input type="text" id="name" placeholder="Your Name" required autocomplete="name" />
+    <input type="email" id="email" placeholder="Your Email" required autocomplete="email" />
     <textarea id="message" placeholder="Type your message here..." required></textarea>
     <input type="file" id="attachment" accept="image/*,.pdf,.doc,.docx" />
     <button type="submit">Send Message</button>
@@ -219,6 +249,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
   import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
   import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -233,6 +264,7 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const storage = getStorage(app);
+  const auth = getAuth(app);
 
   const supportForm = document.getElementById('supportForm');
 
@@ -275,18 +307,21 @@
     }
   });
 
-  // Hamburger toggle
-  const navbar = document.getElementById("navbar");
-  const hamburger = document.getElementById("hamburger");
-  hamburger.addEventListener("click", () => {
-    navbar.classList.toggle("open");
-  });
-  hamburger.addEventListener("keydown", e => {
-    if(e.key === "Enter" || e.key === " "){
-      e.preventDefault();
-      navbar.classList.toggle("open");
+  // Logout function
+  const logoutBtn = document.getElementById('logoutBtn');
+  logoutBtn.addEventListener('click', async () => {
+    try {
+      await signOut(auth);
+      window.location.href = "login.html";
+    } catch (error) {
+      alert("Logout failed: " + error.message);
     }
   });
+
+  // Hamburger toggle
+  function toggleMenu() {
+    document.getElementById('navList').classList.toggle('active');
+  }
 </script>
 
 </body>

@@ -1,235 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Pagla Clickers - Withdrawal</title>
-<style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f8fc;
-    color: #222;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-
-  /* Topbar */
-  header {
-    background-color: #007bff;
-    color: white;
-    padding: 15px 0;
-    text-align: center;
-    font-weight: bold;
-    font-size: 22px;
-    position: relative;
-    user-select: none;
-    z-index: 1002;
-  }
-
-  /* Navbar */
-  nav.navbar {
-    background-color: #005bb5;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 10px 0;
-    position: relative;
-    z-index: 1001;
-  }
-
-  nav.navbar a, nav.navbar button {
-    color: white;
-    text-decoration: none;
-    margin: 0 15px;
-    font-weight: bold;
-    font-size: 14px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 4px;
-    user-select: none;
-    transition: background-color 0.3s ease;
-    white-space: nowrap;
-  }
-
-  nav.navbar a:hover,
-  nav.navbar button:hover {
-    background-color: #004080;
-  }
-
-  /* Blue strip below navbar */
-  .blue-strip {
-    background-color: #007bff;
-    height: 10px;
-    width: 100%;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-    user-select: none;
-  }
-
-  /* Hamburger menu */
-  .hamburger {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    cursor: pointer;
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 25px;
-    height: 20px;
-    gap: 5px;
-    z-index: 1003;
-    user-select: none;
-  }
-
-  .hamburger div {
-    background: white;
-    height: 3px;
-    border-radius: 2px;
-    transition: all 0.3s ease;
-  }
-
-  /* Mobile nav open */
-  nav.navbar.open {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  nav.navbar.open a, nav.navbar.open button {
-    margin: 10px 0;
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 10px 0;
-    border-top: 1px solid rgba(255,255,255,0.2);
-  }
-
-  main {
-    flex: 1;
-    max-width: 500px;
-    margin: auto;
-    padding: 2rem 2.5rem;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    user-select: text;
-  }
-
-  h2 {
-    color: #007bff;
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    color: #333;
-  }
-
-  input[type="number"],
-  input[type="text"],
-  select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 1.5rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-    box-sizing: border-box;
-  }
-
-  button[type="submit"] {
-    width: 100%;
-    background: #007bff;
-    color: #fff;
-    border: none;
-    padding: 12px;
-    border-radius: 6px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-
-  button[type="submit"]:hover {
-    background: #0056b3;
-  }
-
-  .message {
-    margin-bottom: 1rem;
-    text-align: center;
-    font-size: 0.95rem;
-  }
-
-  .success {
-    color: green;
-  }
-
-  .error {
-    color: red;
-  }
-
-  footer {
-    background: #007bff;
-    color: white;
-    text-align: center;
-    padding: 15px;
-    margin-top: 40px;
-    user-select: none;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    nav.navbar {
-      justify-content: flex-start;
-    }
-
-    nav.navbar a, nav.navbar button {
-      display: none;
-    }
-
-    nav.navbar.open a, nav.navbar.open button {
-      display: block;
-    }
-
-    .hamburger {
+  <meta charset="UTF-8" />
+  <title>Pagla Clickers - Withdrawal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f8fc;
       display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
-  }
-</style>
+
+    /* Topbar */
+    header {
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 25px 0;
+      font-size: 26px;
+      font-weight: bold;
+      position: relative;
+    }
+
+    /* Navbar */
+    nav {
+      background: #005bb5;
+    }
+
+    nav ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    nav ul li {
+      margin: 10px 15px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      white-space: nowrap;
+    }
+
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+
+    nav ul li button#logoutBtn {
+      background: #dc3545;
+      color: white;
+      padding: 6px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      height: 36px;
+      white-space: nowrap;
+      transition: background-color 0.3s ease;
+    }
+
+    nav ul li button#logoutBtn:hover {
+      background: #b02a37;
+    }
+
+    /* Blue strip */
+    .blue-strip {
+      background-color: #007bff;
+      height: 15px;
+      width: 100%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      position: absolute;
+      top: 20px;
+      right: 15px;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #005bb5;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        z-index: 999;
+      }
+
+      nav ul.active {
+        display: flex;
+      }
+
+      nav ul li {
+        margin: 12px 0;
+        text-align: center;
+      }
+
+      nav ul li button#logoutBtn {
+        width: 90%;
+        max-width: 300px;
+        margin: 10px auto;
+        height: 40px;
+      }
+
+      .hamburger {
+        display: block;
+      }
+
+      header {
+        position: relative;
+      }
+    }
+
+    main {
+      flex: 1;
+      max-width: 700px;
+      width: 90%;
+      margin: 0 auto 40px auto;
+      padding: 30px 40px 40px 40px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      user-select: text;
+    }
+
+    h2 {
+      color: #007bff;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      user-select: none;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 1.8rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    button[type="submit"]:hover {
+      background: #0056b3;
+    }
+
+    .message {
+      margin-bottom: 1rem;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+
+    footer {
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: auto;
+      user-select: none;
+    }
+  </style>
 </head>
 <body>
 
-<header>Pagla Clickers Withdrawal</header>
+<header>
+  Pagla Clickers
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</header>
 
-<nav class="navbar" id="navbar" role="navigation" aria-label="Primary navigation">
-  <a href="about.html">About</a>
-  <a href="notifications.html">Notifications</a>
-  <a href="profile.html">Profile</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="postjob.html">Post Job</a>
-  <a href="taskdetail.html">Tasks</a>
-  <a href="referel.html">Referral</a>
-  <a href="deposit.html">Deposit</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="withdrawal.html" aria-current="page">Withdraw Money</a>
-  <a href="terms.html">Terms</a>
-  <a href="faq.html">FAQ</a>
-  <a href="support.html">Support</a>
-
-  <button id="logoutBtn" title="Logout">Logout</button>
-
-  <div class="hamburger" id="hamburger" aria-label="Toggle navigation menu" role="button" tabindex="0">
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
+<nav>
+  <ul id="navList">
+    <li><a href="about.html">About</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="postjob.html">Post Job</a></li>
+    <li><a href="taskdetail.html">Tasks</a></li>
+    <li><a href="referel.html">Referral</a></li>
+    <li><a href="deposit.html">Deposit</a></li>
+    <li><a href="wallet.html">Wallet</a></li>
+    <li><a href="withdrawal.html" aria-current="page">Withdraw Money</a></li>
+    <li><a href="terms.html">Terms</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="support.html">Support</a></li>
+    <li><button id="logoutBtn">Logout</button></li>
+  </ul>
 </nav>
 
 <div class="blue-strip"></div>
@@ -271,8 +276,7 @@
     projectId: "pagla-b1c17",
     storageBucket: "pagla-b1c17.appspot.com",
     messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:1595070cdac289170f5e27",
-    measurementId: "G-M9Y7SBBEXM"
+    appId: "1:192578902502:web:1595070cdac289170f5e27"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -286,7 +290,6 @@
   let userId = null;
   let userBalance = 0;
 
-  // Logout button handler
   logoutBtn.addEventListener('click', () => {
     signOut(auth).then(() => {
       window.location.href = 'login.html';
@@ -339,10 +342,10 @@
 
     try {
       await addDoc(collection(db, "withdrawalRequests"), {
-        userId: userId,
-        amount: amount,
-        paymentMethod: paymentMethod,
-        phoneNumber: phoneNumber,
+        userId,
+        amount,
+        paymentMethod,
+        phoneNumber,
         status: "pending",
         requestedAt: serverTimestamp()
       });
@@ -355,19 +358,9 @@
     }
   });
 
-  // Hamburger toggle for mobile
-  const navbar = document.getElementById("navbar");
-  const hamburger = document.getElementById("hamburger");
-
-  hamburger.addEventListener("click", () => {
-    navbar.classList.toggle("open");
-  });
-  hamburger.addEventListener("keydown", e => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      navbar.classList.toggle("open");
-    }
-  });
+  function toggleMenu() {
+    document.getElementById('navList').classList.toggle('active');
+  }
 </script>
 
 </body>

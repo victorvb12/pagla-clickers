@@ -2,107 +2,150 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Refer & Earn - Pagla Clickers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: linear-gradient(to bottom right, #f5faff, #e0f0ff);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
-    /* Topbar */
+
     header {
       background: #007bff;
       color: white;
       text-align: center;
-      padding: 15px 0;
+      padding: 20px 0;
       font-weight: bold;
-      font-size: 24px;
-      user-select: none;
+      font-size: 26px;
+      position: relative;
     }
-    /* Navbar */
-    .navbar {
+
+    nav {
       background-color: #005bb5;
+    }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
       display: flex;
       justify-content: center;
-      flex-wrap: wrap;
-      padding: 10px 0;
-      position: relative;
-      z-index: 1000;
+      align-items: center;
+      flex-wrap: nowrap;
     }
-    .navbar a {
+
+    nav ul li {
+      margin: 0 12px;
+      padding: 8px 0;
+    }
+
+    nav ul li a {
       color: white;
       text-decoration: none;
-      margin: 0 15px;
       font-weight: bold;
-      font-size: 14px;
-      white-space: nowrap;
+      font-size: 16px;
     }
-    .navbar a:hover {
+
+    nav ul li a:hover {
       text-decoration: underline;
     }
-    /* Light blue strip below navbar */
-    .blue-strip-below-nav {
+
+    nav ul li button#logoutBtn {
+      background: #dc3545;
+      color: white;
+      padding: 6px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      height: 36px;
+    }
+
+    nav ul li button#logoutBtn:hover {
+      background: #b02a37;
+    }
+
+    .blue-strip {
       background-color: #007bff;
-      height: 10px;
+      height: 15px;
       width: 100%;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       margin-bottom: 30px;
     }
-    /* Hamburger menu for mobile */
+
     .hamburger {
       display: none;
-      flex-direction: column;
-      justify-content: center;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
       cursor: pointer;
       position: absolute;
+      top: 20px;
       right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 25px;
-      height: 20px;
-      gap: 5px;
-      z-index: 1001;
+      z-index: 1003;
     }
-    .hamburger div {
-      background: white;
-      height: 3px;
-      border-radius: 2px;
-      transition: all 0.3s ease;
+
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #005bb5;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        z-index: 999;
+      }
+
+      nav ul.active {
+        display: flex;
+      }
+
+      nav ul li {
+        margin: 12px 0;
+        text-align: center;
+      }
+
+      nav ul li button#logoutBtn {
+        width: 90%;
+        max-width: 300px;
+        margin: 10px auto;
+        height: 40px;
+      }
+
+      header {
+        position: relative;
+      }
     }
-    /* Mobile nav open */
-    .navbar.open {
-      flex-direction: column;
-      align-items: center;
-    }
-    .navbar.open a {
-      margin: 10px 0;
-      display: block;
-      width: 100%;
-      text-align: center;
-      padding: 10px 0;
-      border-top: 1px solid rgba(255,255,255,0.2);
-    }
-    /* Container */
-    .container {
+
+    main {
+      flex: 1;
       max-width: 700px;
-      background: white;
-      margin: 0 auto 40px auto;
+      margin: auto;
       padding: 30px;
+      background: white;
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
       text-align: center;
-      user-select: none;
     }
+
     h2 {
       color: #007bff;
       margin-bottom: 10px;
     }
+
     p {
       font-size: 16px;
-      margin-bottom: 20px;
       color: #333;
+      margin-bottom: 20px;
     }
+
     .ref-box {
       background: #e3f2fd;
       padding: 15px;
@@ -114,6 +157,7 @@
       gap: 10px;
       margin-bottom: 20px;
     }
+
     input[type="text"] {
       padding: 10px;
       border-radius: 6px;
@@ -121,9 +165,9 @@
       width: 60%;
       max-width: 400px;
       font-size: 16px;
-      user-select: all;
     }
-    button {
+
+    button.copy {
       background-color: #007bff;
       color: white;
       border: none;
@@ -131,24 +175,26 @@
       font-size: 14px;
       border-radius: 6px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
-    button:hover {
+
+    button.copy:hover {
       background-color: #005bb5;
     }
+
     .copied-msg {
       color: green;
       font-size: 13px;
       margin-top: 5px;
       min-height: 18px;
     }
+
     .share-buttons {
       display: flex;
       justify-content: center;
       gap: 10px;
       margin-top: 20px;
-      user-select: none;
     }
+
     .share-buttons a {
       text-decoration: none;
       background: #007bff;
@@ -156,93 +202,78 @@
       padding: 8px 16px;
       border-radius: 6px;
       font-size: 14px;
-      transition: background-color 0.3s ease;
     }
+
     .share-buttons a:hover {
       background-color: #005bb5;
     }
+
     footer {
       background: #007bff;
       color: white;
-      padding: 15px 0;
+      padding: 15px;
       text-align: center;
-      margin-top: 0;
-      user-select: none;
-    }
-    /* Responsive */
-    @media (max-width: 768px) {
-      .navbar {
-        justify-content: flex-start;
-      }
-      .navbar a {
-        display: none;
-      }
-      .navbar.open a {
-        display: block;
-      }
-      .hamburger {
-        display: flex;
-      }
-      .ref-box {
-        flex-direction: column;
-      }
-      input[type="text"] {
-        width: 100%;
-      }
+      margin-top: 40px;
     }
   </style>
 </head>
 <body>
 
-<header>Pagla Clickers</header>
+<header>
+  Pagla Clickers
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</header>
 
-<nav class="navbar" id="navbar">
-  <a href="about.html">About</a>
-  <a href="notifications.html">Notifications</a>
-  <a href="profile.html">Profile</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="postjob.html">Post Job</a>
-  <a href="taskdetail.html">Tasks</a>
-  <a href="referel.html">Referral</a>
-  <a href="deposit.html">Deposit</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="withdrawal.html">Withdraw Money</a>
-  <a href="terms.html">Terms</a>
-  <a href="faq.html">FAQ</a>
-  <a href="support.html">Support</a>
-
-  <div class="hamburger" id="hamburger" aria-label="Toggle navigation menu" role="button" tabindex="0">
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
+<nav>
+  <ul id="navList">
+    <li><a href="about.html">About</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="postjob.html">Post Job</a></li>
+    <li><a href="taskdetail.html">Tasks</a></li>
+    <li><a href="referel.html" aria-current="page">Referral</a></li>
+    <li><a href="deposit.html">Deposit</a></li>
+    <li><a href="wallet.html">Wallet</a></li>
+    <li><a href="withdrawal.html">Withdraw Money</a></li>
+    <li><a href="terms.html">Terms</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="support.html">Support</a></li>
+    <li><button id="logoutBtn">Logout</button></li>
+  </ul>
 </nav>
 
-<div class="blue-strip-below-nav"></div>
+<div class="blue-strip"></div>
 
-<div class="container">
+<main>
   <h2>Refer & Earn</h2>
   <p>Invite your friends using the link below and earn <strong>10 points</strong> for each signup!</p>
 
   <div class="ref-box">
     <input type="text" id="refLink" readonly />
-    <button onclick="copyLink()">Copy</button>
+    <button class="copy" onclick="copyLink()">Copy</button>
   </div>
   <div class="copied-msg" id="copiedMsg"></div>
 
   <div class="share-buttons" id="shareButtons" style="display:none;">
-    <a id="waShare" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp">WhatsApp</a>
-    <a id="fbShare" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">Facebook</a>
+    <a id="waShare" target="_blank">WhatsApp</a>
+    <a id="fbShare" target="_blank">Facebook</a>
   </div>
-</div>
+</main>
 
 <footer>
   <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
 </footer>
 
+<script>
+  function toggleMenu() {
+    document.getElementById("navList").classList.toggle("active");
+  }
+</script>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
   import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -251,8 +282,7 @@
     projectId: "pagla-b1c17",
     storageBucket: "pagla-b1c17.appspot.com",
     messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:1595070cdac289170f5e27",
-    measurementId: "G-M9Y7SBBEXM"
+    appId: "1:192578902502:web:1595070cdac289170f5e27"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -264,6 +294,13 @@
   const shareButtons = document.getElementById("shareButtons");
   const waShare = document.getElementById("waShare");
   const fbShare = document.getElementById("fbShare");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  logoutBtn.addEventListener("click", () => {
+    signOut(auth).then(() => {
+      window.location.href = 'login.html';
+    }).catch(err => alert("Logout error: " + err.message));
+  });
 
   let referralURL = "";
 
@@ -272,8 +309,7 @@
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
       if (userSnap.exists()) {
-        const data = userSnap.data();
-        const referralCode = data.referralCode;
+        const referralCode = userSnap.data().referralCode;
         if (referralCode) {
           referralURL = `https://paglaclickers.com/register?ref=${referralCode}`;
           refInput.value = referralURL;
@@ -282,8 +318,6 @@
         } else {
           refInput.value = "No referral code found.";
         }
-      } else {
-        alert("User data not found.");
       }
     } else {
       window.location.href = "login.html";
@@ -305,19 +339,6 @@
     waShare.href = `https://wa.me/?text=Join Pagla Clickers and earn! Use my referral link: ${encodeURIComponent(link)}`;
     fbShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
   }
-
-  // Hamburger toggle
-  const navbar = document.getElementById("navbar");
-  const hamburger = document.getElementById("hamburger");
-  hamburger.addEventListener("click", () => {
-    navbar.classList.toggle("open");
-  });
-  hamburger.addEventListener("keydown", e => {
-    if(e.key === "Enter" || e.key === " "){
-      e.preventDefault();
-      navbar.classList.toggle("open");
-    }
-  });
 </script>
 
 </body>
