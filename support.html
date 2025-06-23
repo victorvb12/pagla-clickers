@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pagla Clickers - Support</title>
   <style>
+    /* Reset and base */
     body {
       font-family: Arial, sans-serif;
       background: #f4faff;
@@ -11,19 +13,47 @@
       padding: 0;
     }
 
-    header, footer {
-      background: #007bff;
+    header {
+      background-color: #1976d2;
       color: white;
+      padding: 15px;
       text-align: center;
-      padding: 15px 0;
+      position: relative;
     }
 
+    /* Hamburger */
+    #menuToggle {
+      display: none;
+    }
+
+    .menu-icon {
+      display: none;
+      cursor: pointer;
+      position: absolute;
+      top: 18px;
+      left: 15px;
+      width: 25px;
+      height: 22px;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 2;
+    }
+
+    .menu-icon span {
+      display: block;
+      height: 3px;
+      background: white;
+      border-radius: 2px;
+    }
+
+    /* Navbar */
     .navbar {
       background-color: #005bb5;
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
       padding: 10px 0;
+      transition: max-height 0.3s ease;
     }
 
     .navbar a {
@@ -32,12 +62,14 @@
       margin: 0 15px;
       font-weight: bold;
       font-size: 14px;
+      padding: 8px 0;
     }
 
     .navbar a:hover {
       text-decoration: underline;
     }
 
+    /* Container */
     .container {
       max-width: 600px;
       margin: 40px auto;
@@ -50,6 +82,7 @@
     h2 {
       text-align: center;
       color: #007bff;
+      margin-top: 0;
     }
 
     input, textarea, button {
@@ -58,6 +91,8 @@
       margin: 10px 0;
       border-radius: 5px;
       border: 1px solid #ccc;
+      font-size: 16px;
+      box-sizing: border-box;
     }
 
     textarea {
@@ -70,6 +105,7 @@
       font-weight: bold;
       border: none;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
 
     button:hover {
@@ -80,37 +116,74 @@
       font-size: 14px;
       color: #333;
       margin-top: 20px;
+      text-align: center;
+    }
+
+    footer {
+      background: #1976d2;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+    }
+
+    /* Responsive - Hamburger menu for smaller screens */
+    @media (max-width: 768px) {
+      .menu-icon {
+        display: flex;
+      }
+
+      .navbar {
+        flex-direction: column;
+        max-height: 0;
+        overflow: hidden;
+      }
+
+      #menuToggle:checked + .menu-icon + .navbar {
+        max-height: 500px; /* enough height to show all links */
+      }
+
+      .navbar a {
+        margin: 10px 0;
+      }
     }
   </style>
 </head>
 <body>
 
 <header>
+  <input type="checkbox" id="menuToggle" />
+  <label for="menuToggle" class="menu-icon" aria-label="Toggle navigation menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </label>
   <h1>Pagla Clickers</h1>
-  <div class="navbar">
-    <a href="about.html">About</a>
-    <a href="notifications.html">Notifications</a>
-    <a href="profile.html">Profile</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="postjob.html">Post Job</a>
-    <a href="taskdetail.html">Tasks</a>
-    <a href="referel.html">Referral</a>
-    <a href="deposit.html">Deposit</a>
-    <a href="wallet.html">Wallet</a>
-    <a href="withdrawal.html">Withdraw Money</a>
-    <a href="terms.html">Terms</a>
-    <a href="faq.html">FAQ</a>
-    <a href="support.html">Support</a>
-  </div>
 </header>
+
+<nav class="navbar">
+  <a href="about.html">About</a>
+  <a href="notifications.html">Notifications</a>
+  <a href="profile.html">Profile</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="postjob.html">Post Job</a>
+  <a href="taskdetail.html">Tasks</a>
+  <a href="referel.html">Referral</a>
+  <a href="deposit.html">Deposit</a>
+  <a href="wallet.html">Wallet</a>
+  <a href="withdrawal.html">Withdraw Money</a>
+  <a href="terms.html">Terms</a>
+  <a href="faq.html">FAQ</a>
+  <a href="support.html">Support</a>
+</nav>
 
 <div class="container">
   <h2>Contact Support</h2>
   <form id="supportForm">
-    <input type="text" id="name" placeholder="Your Name" required>
-    <input type="email" id="email" placeholder="Your Email" required>
+    <input type="text" id="name" placeholder="Your Name" required />
+    <input type="email" id="email" placeholder="Your Email" required />
     <textarea id="message" rows="5" placeholder="Type your message here..." required></textarea>
-    <input type="file" id="attachment" accept="image/*,.pdf,.doc,.docx">
+    <input type="file" id="attachment" accept="image/*,.pdf,.doc,.docx" />
     <button type="submit">Send Message</button>
   </form>
 
