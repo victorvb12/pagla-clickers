@@ -115,6 +115,18 @@
     <label for="description">Job Description</label>
     <textarea id="description" required placeholder="Enter job details"></textarea>
 
+    <!-- New Category dropdown added here -->
+    <label for="category">Category</label>
+    <select id="category" required>
+      <option value="" disabled selected>Select category</option>
+      <option value="Marketing">Marketing</option>
+      <option value="Design">Design</option>
+      <option value="Writing">Writing</option>
+      <option value="Development">Development</option>
+      <option value="Research">Research</option>
+      <option value="Other">Other</option>
+    </select>
+
     <label for="reward">Reward per Task ($)</label>
     <input type="number" id="reward" min="0.01" step="0.01" required placeholder="0.10" />
 
@@ -222,6 +234,7 @@
 
     const title = document.getElementById("title").value.trim();
     const description = document.getElementById("description").value.trim();
+    const category = document.getElementById("category").value;
     const reward = parseFloat(document.getElementById("reward").value);
     const slots = parseInt(document.getElementById("slots").value);
     const proofType = document.getElementById("proofType").value;
@@ -229,7 +242,7 @@
     const proof2 = document.getElementById("proof2").value || null;
     const proof3 = document.getElementById("proof3").value || null;
 
-    if (!title || !description || !reward || !slots || !proofType) {
+    if (!title || !description || !category || !reward || !slots || !proofType) {
       messageDiv.textContent = "Please fill out all required fields.";
       messageDiv.classList.add("error");
       return;
@@ -239,6 +252,7 @@
       await addDoc(collection(db, "jobs"), {
         title,
         description,
+        category,
         reward,
         slots,
         proofType,
