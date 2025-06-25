@@ -2,229 +2,79 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Terms & Conditions - Pagla Clickers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f8fc;
-      margin: 0;
-      padding: 0;
-      color: #222;
-      user-select: none;
-    }
-
-    /* Topbar */
-    header {
-      background-color: #007bff;
-      color: white;
-      padding: 20px 0;
-      text-align: center;
-      font-weight: bold;
-      font-size: 24px;
-      position: relative;
-      user-select: none;
-      z-index: 1002;
-    }
-
-    /* Navbar */
-    nav.navbar {
-      background-color: #005bb5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-      padding: 0;
-      position: relative;
-      z-index: 1001;
-    }
-
-    nav.navbar a {
-      color: white;
-      text-decoration: none;
-      margin: 10px 15px;
-      font-weight: bold;
-      font-size: 16px;
-      padding: 8px 0;
-      user-select: none;
-      white-space: nowrap;
-      transition: all 0.3s ease;
-    }
-
-    nav.navbar a:hover {
-      text-decoration: underline;
-      text-decoration-color: white;
-      text-underline-offset: 6px;
-    }
-
-    /* Blue strip below navbar */
-    .blue-strip {
-      background-color: #007bff;
-      height: 15px;
-      width: 100%;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-      user-select: none;
-    }
-
-    /* Hamburger menu */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      cursor: pointer;
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 25px;
-      height: 20px;
-      gap: 5px;
-      z-index: 1003;
-      user-select: none;
-    }
-
-    .hamburger div {
-      background: white;
-      height: 3px;
-      border-radius: 2px;
-      transition: all 0.3s ease;
-    }
-
-    /* Mobile nav open */
-    nav.navbar.open {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    nav.navbar.open a {
-      margin: 10px 0;
-      display: block;
-      width: 100%;
-      text-align: center;
-      padding: 10px 0;
-      border-top: 1px solid rgba(255,255,255,0.2);
-    }
-
-    /* Logout button styled like a nav item */
-    #logoutBtn {
-      background: #dc3545;
-      color: white;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 14px;
-      user-select: none;
-      transition: background-color 0.3s ease;
-      margin: 10px 15px;
-      align-self: center;
-      white-space: nowrap;
-    }
-
-    #logoutBtn:hover {
-      background: #b02a37;
-    }
-
-    /* Container */
+    /* Scoped styles for terms content */
     .container {
       max-width: 800px;
       margin: 30px auto;
-      padding: 20px;
-      background: white;
+      padding: 25px 20px;
+      background: #f5f0ff;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(161, 133, 207, 0.15);
+      color: #4a4175;
       user-select: text;
     }
-
-    h2 {
-      color: #007bff;
+    .container h2 {
+      color: #6743b8;
+      margin-bottom: 25px;
+      font-weight: 700;
+      border-bottom: 3px solid #7a5dc7;
+      padding-bottom: 8px;
+      display: inline-block;
+    }
+    .container h3 {
+      color: #7a5dc7;
+      margin-top: 25px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .container p, .container ul {
+      line-height: 1.6;
+      margin-bottom: 18px;
       user-select: text;
     }
-
-    h3 {
-      color: #005bb5;
-      user-select: text;
+    .container ul {
+      padding-left: 1.5rem;
     }
-
-    ul {
-      margin-left: 1.5rem;
-      user-select: text;
-    }
-
-    p {
-      user-select: text;
-      line-height: 1.5;
-    }
-
-    /* Footer */
-    footer {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      margin-top: 40px;
-      user-select: none;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      nav.navbar {
-        justify-content: flex-start;
-      }
-
-      nav.navbar a {
-        display: none;
-      }
-
-      nav.navbar.open a {
-        display: block;
-      }
-
-      .hamburger {
-        display: flex;
-      }
-
-      #logoutBtn {
-        margin: 10px 0;
-        width: 90%;
-        max-width: 300px;
-        text-align: center;
-      }
+    .container ul li {
+      margin-bottom: 8px;
     }
   </style>
 </head>
 <body>
 
-<header>Pagla Clickers</header>
+<header>
+  Pagla Clickers
+  <button class="hamburger" aria-label="Toggle navigation menu" onclick="toggleMenu()">☰</button>
+</header>
 
-<nav class="navbar" id="navbar" role="navigation" aria-label="Primary">
-  <a href="about.html">About</a>
-  <a href="notifications.html">Notifications</a>
-  <a href="profile.html">Profile</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="postjob.html">Post Job</a>
-  <a href="taskdetail.html">Tasks</a>
-  <a href="referel.html">Referral</a>
-  <a href="deposit.html">Deposit</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="withdrawal.html">Withdraw Money</a>
-  <a href="terms.html" aria-current="page">Terms</a>
-  <a href="faq.html">FAQ</a>
-  <a href="support.html">Support</a>
-  <button id="logoutBtn">Logout</button>
-
-  <div class="hamburger" id="hamburger" aria-label="Toggle navigation menu" role="button" tabindex="0">
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
+<nav>
+  <ul class="nav-links" id="navList">
+    <li><a href="about.html">About</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="postjob.html">Post Job</a></li>
+    <li><a href="taskdetail.html">Tasks</a></li>
+    <li><a href="referel.html">Referral</a></li>
+    <li><a href="deposit.html">Deposit</a></li>
+    <li><a href="wallet.html">Wallet</a></li>
+    <li><a href="withdrawal.html">Withdraw Money</a></li>
+    <li><a href="terms.html" aria-current="page">Terms</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="support.html">Support</a></li>
+    <li>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </li>
+  </ul>
 </nav>
 
-<div class="blue-strip"></div>
+<div class="blue-strip-below-nav"></div>
 
-<div class="container" tabindex="0">
+<div class="container" role="main" tabindex="0">
   <h2>Terms & Conditions</h2>
   <p>By accessing or using Pagla Clickers, you agree to the following terms and conditions. Please read them carefully before registering or using the site.</p>
 
@@ -258,32 +108,22 @@
   <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
 </footer>
 
-<script type="module">
-  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+<script>
+  function toggleMenu() {
+    document.getElementById('navList').classList.toggle('active');
+  }
 
-  const logoutBtn = document.getElementById('logoutBtn');
-  const auth = getAuth();
-
-  logoutBtn.addEventListener('click', () => {
-    signOut(auth).then(() => {
-      window.location.href = 'login.html';
-    }).catch((error) => {
-      alert('Error signing out: ' + error.message);
+  // Firebase logout script
+  import('https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js').then(({ getAuth, signOut }) => {
+    const logoutBtn = document.getElementById('logoutBtn');
+    const auth = getAuth();
+    logoutBtn.addEventListener('click', () => {
+      signOut(auth).then(() => {
+        window.location.href = 'login.html';
+      }).catch((error) => {
+        alert('Error signing out: ' + error.message);
+      });
     });
-  });
-
-  // Hamburger toggle for mobile
-  const navbar = document.getElementById("navbar");
-  const hamburger = document.getElementById("hamburger");
-
-  hamburger.addEventListener("click", () => {
-    navbar.classList.toggle("open");
-  });
-  hamburger.addEventListener("keydown", e => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      navbar.classList.toggle("open");
-    }
   });
 </script>
 

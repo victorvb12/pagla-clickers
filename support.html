@@ -1,206 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Support - Pagla Clickers</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f8fc;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    user-select: none;
-  }
-
-  header {
-    background: #007bff;
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-    font-size: 26px;
-    font-weight: bold;
-    position: relative;
-    z-index: 1002;
-  }
-
-  nav {
-    background: #005bb5;
-    padding: 0 10px;
-    position: relative;
-    z-index: 1001;
-  }
-
-  nav ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-  }
-
-  nav ul li {
-    margin: 10px 15px;
-    display: flex;
-    align-items: center;
-  }
-
-  nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 16px;
-    white-space: nowrap;
-  }
-
-  nav ul li a:hover {
-    text-decoration: underline;
-  }
-
-  nav ul li button#logoutBtn {
-    background: #dc3545;
-    color: white;
-    padding: 6px 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
-    height: 36px;
-    white-space: nowrap;
-    transition: background-color 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-  }
-
-  nav ul li button#logoutBtn:hover {
-    background: #b02a37;
-  }
-
-  .hamburger {
-    display: none;
-    font-size: 28px;
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    position: absolute;
-    top: 14px;
-    right: 15px;
-    z-index: 1003;
-  }
-
-  @media (max-width: 768px) {
-    nav ul {
-      display: none;
-      flex-direction: column;
-      width: 100%;
-      background-color: #005bb5;
-      position: absolute;
-      top: 50px;
-      left: 0;
-      z-index: 999;
-    }
-
-    nav ul.active {
+  <meta charset="UTF-8" />
+  <title>Support - Pagla Clickers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+  
+  <style>
+    /* Organize support form contents */
+    #supportForm {
       display: flex;
+      flex-direction: column;
+      gap: 18px;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
-    nav ul li {
-      margin: 12px 0;
-      justify-content: center;
+    #supportForm input[type="text"],
+    #supportForm input[type="email"],
+    #supportForm textarea,
+    #supportForm input[type="file"] {
+      font-size: 16px;
+      padding: 12px 14px;
+      border: 1.5px solid #9b8bc3;
+      border-radius: 8px;
+      font-family: inherit;
+      transition: border-color 0.3s ease;
+      resize: vertical;
     }
 
-    nav ul li button#logoutBtn {
-      width: 90%;
-      max-width: 300px;
-      margin: 10px auto;
-      height: 40px;
+    #supportForm input[type="text"]:focus,
+    #supportForm input[type="email"]:focus,
+    #supportForm textarea:focus {
+      border-color: #7a5dc7;
+      outline: none;
+      box-shadow: 0 0 6px #7a5dc7aa;
     }
 
-    .hamburger {
-      display: block;
+    #supportForm textarea {
+      min-height: 140px;
     }
-  }
 
-  .blue-strip-below-nav {
-    background-color: #007bff;
-    height: 15px;
-    width: 100%;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-  }
+    #supportForm button[type="submit"] {
+      background-color: #7a5dc7;
+      color: white;
+      font-weight: 700;
+      font-size: 17px;
+      padding: 14px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s ease, transform 0.15s ease;
+      user-select: none;
+    }
 
-  .container {
-    max-width: 700px;
-    margin: 0 auto 40px auto;
-    padding: 30px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    flex-grow: 1;
-    user-select: text;
-  }
+    #supportForm button[type="submit"]:hover,
+    #supportForm button[type="submit"]:focus {
+      background-color: #5a3ea7;
+      transform: scale(1.03);
+      outline: none;
+    }
 
-  h2 {
-    color: #007bff;
-    margin-top: 0;
-    margin-bottom: 20px;
-    user-select: none;
-    text-align: center;
-  }
-
-  form input[type="text"],
-  form input[type="email"],
-  form textarea,
-  form input[type="file"] {
-    width: 100%;
-    padding: 12px;
-    margin-top: 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    box-sizing: border-box;
-    font-family: inherit;
-  }
-
-  form textarea {
-    resize: vertical;
-    min-height: 120px;
-  }
-
-  form button[type="submit"] {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-    border: none;
-    margin-top: 20px;
-    padding: 14px;
-    cursor: pointer;
-    border-radius: 8px;
-    font-size: 16px;
-    user-select: none;
-    transition: background-color 0.3s ease;
-    width: 100%;
-  }
-
-  form button[type="submit"]:hover {
-    background-color: #005bb5;
-  }
-
-  footer {
-    background: #007bff;
-    color: white;
-    text-align: center;
-    padding: 15px 0;
-    user-select: none;
-    margin-top: auto;
-  }
-</style>
+    /* Label styles - optional: add labels for accessibility */
+    #supportForm label {
+      font-weight: 600;
+      color: #6743b8;
+      margin-bottom: 6px;
+      user-select: none;
+    }
+  </style>
 </head>
 <body>
 
@@ -210,7 +78,7 @@
 </header>
 
 <nav>
-  <ul id="navList">
+  <ul class="nav-links" id="navList">
     <li><a href="about.html">About</a></li>
     <li><a href="notifications.html">Notifications</a></li>
     <li><a href="profile.html">Profile</a></li>
@@ -224,7 +92,9 @@
     <li><a href="terms.html">Terms</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="support.html" aria-current="page">Support</a></li>
-    <li><button id="logoutBtn">Logout</button></li>
+    <li>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </li>
   </ul>
 </nav>
 
@@ -232,11 +102,19 @@
 
 <div class="container">
   <h2>Contact Support</h2>
-  <form id="supportForm" enctype="multipart/form-data">
+  <form id="supportForm" enctype="multipart/form-data" novalidate>
+    <label for="name">Your Name</label>
     <input type="text" id="name" placeholder="Your Name" required autocomplete="name" />
+
+    <label for="email">Your Email</label>
     <input type="email" id="email" placeholder="Your Email" required autocomplete="email" />
+
+    <label for="message">Message</label>
     <textarea id="message" placeholder="Type your message here..." required></textarea>
+
+    <label for="attachment">Attachment (optional)</label>
     <input type="file" id="attachment" accept="image/*,.pdf,.doc,.docx" />
+
     <button type="submit">Send Message</button>
   </form>
 </div>
@@ -244,6 +122,12 @@
 <footer>
   <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
 </footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('navList').classList.toggle('active');
+  }
+</script>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
@@ -257,8 +141,7 @@
     projectId: "pagla-b1c17",
     storageBucket: "pagla-b1c17.appspot.com",
     messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:1595070cdac289170f5e27",
-    measurementId: "G-M9Y7SBBEXM"
+    appId: "1:192578902502:web:1595070cdac289170f5e27"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -266,9 +149,7 @@
   const storage = getStorage(app);
   const auth = getAuth(app);
 
-  const supportForm = document.getElementById('supportForm');
-
-  supportForm.addEventListener('submit', async (e) => {
+  document.getElementById('supportForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const name = document.getElementById('name').value.trim();
@@ -300,16 +181,14 @@
       });
 
       alert("Your message has been sent successfully!");
-      supportForm.reset();
+      e.target.reset();
     } catch (error) {
       console.error("Error sending support message:", error);
       alert("Failed to send your message. Please try again later.");
     }
   });
 
-  // Logout function
-  const logoutBtn = document.getElementById('logoutBtn');
-  logoutBtn.addEventListener('click', async () => {
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
     try {
       await signOut(auth);
       window.location.href = "login.html";
@@ -317,11 +196,6 @@
       alert("Logout failed: " + error.message);
     }
   });
-
-  // Hamburger toggle
-  function toggleMenu() {
-    document.getElementById('navList').classList.toggle('active');
-  }
 </script>
 
 </body>

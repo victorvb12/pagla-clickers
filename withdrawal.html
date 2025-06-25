@@ -2,194 +2,85 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Pagla Clickers - Withdrawal</title>
+  <title>Withdraw Money - Pagla Clickers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+  
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f8fc;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    /* Topbar */
-    header {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 25px 0;
-      font-size: 26px;
-      font-weight: bold;
-      position: relative;
-    }
-
-    /* Navbar */
-    nav {
-      background: #005bb5;
-    }
-
-    nav ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-    }
-
-    nav ul li {
-      margin: 10px 15px;
-    }
-
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 16px;
-      white-space: nowrap;
-    }
-
-    nav ul li a:hover {
-      text-decoration: underline;
-    }
-
-    nav ul li button#logoutBtn {
-      background: #dc3545;
-      color: white;
-      padding: 6px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 14px;
-      height: 36px;
-      white-space: nowrap;
-      transition: background-color 0.3s ease;
-    }
-
-    nav ul li button#logoutBtn:hover {
-      background: #b02a37;
-    }
-
-    /* Blue strip */
-    .blue-strip {
-      background-color: #007bff;
-      height: 15px;
-      width: 100%;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-    }
-
-    /* Hamburger */
-    .hamburger {
-      display: none;
-      font-size: 24px;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      position: absolute;
-      top: 20px;
-      right: 15px;
-    }
-
-    @media (max-width: 768px) {
-      nav ul {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        background-color: #005bb5;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        z-index: 999;
-      }
-
-      nav ul.active {
-        display: flex;
-      }
-
-      nav ul li {
-        margin: 12px 0;
-        text-align: center;
-      }
-
-      nav ul li button#logoutBtn {
-        width: 90%;
-        max-width: 300px;
-        margin: 10px auto;
-        height: 40px;
-      }
-
-      .hamburger {
-        display: block;
-      }
-
-      header {
-        position: relative;
-      }
-    }
-
-    main {
-      flex: 1;
-      max-width: 700px;
-      width: 90%;
-      margin: 0 auto 40px auto;
-      padding: 30px 40px 40px 40px;
-      background: white;
+    /* Styles ONLY for the withdrawal form content */
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 25px 20px;
+      background: #f5f0ff;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      user-select: text;
+      box-shadow: 0 2px 8px rgba(161, 133, 207, 0.15);
     }
 
-    h2 {
-      color: #007bff;
+    .container h2 {
+      color: #6743b8;
       text-align: center;
-      margin-bottom: 1.5rem;
-      user-select: none;
+      margin-bottom: 30px;
+      border-bottom: 3px solid #7a5dc7;
+      display: inline-block;
+      padding-bottom: 8px;
+      font-weight: 700;
     }
 
     label {
       display: block;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 15px;
+      color: #4a4175;
     }
 
     input[type="number"],
     input[type="text"],
     select {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 1.8rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      font-size: 15px;
+      border: 1px solid #9b8bc3;
+      border-radius: 6px;
       box-sizing: border-box;
+      font-family: inherit;
+      color: #4a4175;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    select:focus {
+      border-color: #7a5dc7;
+      outline: none;
+      box-shadow: 0 0 5px #8f7ad1cc;
     }
 
     button[type="submit"] {
       width: 100%;
-      background: #007bff;
-      color: #fff;
-      border: none;
-      padding: 14px;
-      border-radius: 8px;
+      background: #7a5dc7;
+      color: white;
+      padding: 14px 0;
       font-size: 18px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s;
+      transition: background-color 0.3s ease, transform 0.15s ease;
     }
 
-    button[type="submit"]:hover {
-      background: #0056b3;
+    button[type="submit"]:hover,
+    button[type="submit"]:focus {
+      background-color: #5f469a;
+      transform: scale(1.03);
+      outline: none;
     }
 
     .message {
-      margin-bottom: 1rem;
       text-align: center;
+      margin-bottom: 1.5rem;
       font-size: 0.95rem;
     }
 
@@ -200,26 +91,17 @@
     .error {
       color: red;
     }
-
-    footer {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      margin-top: auto;
-      user-select: none;
-    }
   </style>
 </head>
 <body>
 
 <header>
   Pagla Clickers
-  <button class="hamburger" onclick="toggleMenu()">☰</button>
+  <button class="hamburger" aria-label="Toggle menu">☰</button>
 </header>
 
 <nav>
-  <ul id="navList">
+  <ul class="nav-links" id="navList">
     <li><a href="about.html">About</a></li>
     <li><a href="notifications.html">Notifications</a></li>
     <li><a href="profile.html">Profile</a></li>
@@ -233,17 +115,24 @@
     <li><a href="terms.html">Terms</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="support.html">Support</a></li>
-    <li><button id="logoutBtn">Logout</button></li>
+    <li><button id="logoutBtn" class="logout-btn">Logout</button></li>
   </ul>
 </nav>
 
-<div class="blue-strip"></div>
+<div class="blue-strip-below-nav"></div>
 
-<main>
+<div class="container" role="main" tabindex="0">
   <h2>Request Withdrawal</h2>
   <form id="withdrawForm" novalidate>
     <label for="amount">Amount to withdraw ($)</label>
-    <input type="number" id="amount" min="1" step="0.01" required placeholder="Enter amount" />
+    <input
+      type="number"
+      id="amount"
+      min="1"
+      step="0.01"
+      required
+      placeholder="Enter amount"
+    />
 
     <label for="paymentMethod">Select Payment Method</label>
     <select id="paymentMethod" required>
@@ -253,22 +142,47 @@
     </select>
 
     <label for="phoneNumber">Phone Number</label>
-    <input type="text" id="phoneNumber" placeholder="Enter your Nagad or Bkash number" required />
+    <input
+      type="text"
+      id="phoneNumber"
+      placeholder="Enter your Nagad or Bkash number"
+      required
+    />
 
     <div id="message" class="message"></div>
 
     <button type="submit">Submit Withdrawal Request</button>
   </form>
-</main>
+</div>
 
 <footer>
   <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
 </footer>
 
+<script>
+  // Hamburger toggle
+  const hamburger = document.querySelector('.hamburger');
+  const navList = document.getElementById('navList');
+  hamburger.addEventListener('click', () => {
+    navList.classList.toggle('active');
+  });
+</script>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  import {
+    getAuth,
+    onAuthStateChanged,
+    signOut,
+  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    collection,
+    addDoc,
+    serverTimestamp,
+  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -276,26 +190,28 @@
     projectId: "pagla-b1c17",
     storageBucket: "pagla-b1c17.appspot.com",
     messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:1595070cdac289170f5e27"
+    appId: "1:192578902502:web:1595070cdac289170f5e27",
   };
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  const form = document.getElementById('withdrawForm');
-  const messageDiv = document.getElementById('message');
-  const logoutBtn = document.getElementById('logoutBtn');
+  const form = document.getElementById("withdrawForm");
+  const messageDiv = document.getElementById("message");
+  const logoutBtn = document.getElementById("logoutBtn");
 
   let userId = null;
   let userBalance = 0;
 
-  logoutBtn.addEventListener('click', () => {
-    signOut(auth).then(() => {
-      window.location.href = 'login.html';
-    }).catch(error => {
-      alert('Error signing out: ' + error.message);
-    });
+  logoutBtn.addEventListener("click", () => {
+    signOut(auth)
+      .then(() => {
+        window.location.href = "login.html";
+      })
+      .catch((error) => {
+        alert("Error signing out: " + error.message);
+      });
   });
 
   onAuthStateChanged(auth, async (user) => {
@@ -310,33 +226,33 @@
     }
   });
 
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    messageDiv.textContent = '';
-    messageDiv.className = 'message';
+    messageDiv.textContent = "";
+    messageDiv.className = "message";
 
-    const amount = parseFloat(document.getElementById('amount').value);
-    const paymentMethod = document.getElementById('paymentMethod').value;
-    const phoneNumber = document.getElementById('phoneNumber').value.trim();
+    const amount = parseFloat(document.getElementById("amount").value);
+    const paymentMethod = document.getElementById("paymentMethod").value;
+    const phoneNumber = document.getElementById("phoneNumber").value.trim();
 
     if (!amount || amount < 1) {
       messageDiv.textContent = "Please enter a valid withdrawal amount.";
-      messageDiv.classList.add('error');
+      messageDiv.classList.add("error");
       return;
     }
     if (!paymentMethod) {
       messageDiv.textContent = "Please select a payment method.";
-      messageDiv.classList.add('error');
+      messageDiv.classList.add("error");
       return;
     }
     if (!phoneNumber) {
       messageDiv.textContent = "Please enter your phone number.";
-      messageDiv.classList.add('error');
+      messageDiv.classList.add("error");
       return;
     }
     if (amount > userBalance) {
       messageDiv.textContent = "Insufficient balance.";
-      messageDiv.classList.add('error');
+      messageDiv.classList.add("error");
       return;
     }
 
@@ -347,20 +263,16 @@
         paymentMethod,
         phoneNumber,
         status: "pending",
-        requestedAt: serverTimestamp()
+        requestedAt: serverTimestamp(),
       });
       messageDiv.textContent = "Withdrawal request submitted successfully.";
-      messageDiv.classList.add('success');
+      messageDiv.classList.add("success");
       form.reset();
     } catch (error) {
       messageDiv.textContent = "Error submitting request: " + error.message;
-      messageDiv.classList.add('error');
+      messageDiv.classList.add("error");
     }
   });
-
-  function toggleMenu() {
-    document.getElementById('navList').classList.toggle('active');
-  }
 </script>
 
 </body>

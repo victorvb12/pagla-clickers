@@ -1,0 +1,208 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #D1CBDF;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: #7a5dc7;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 26px;
+  font-weight: bold;
+  position: relative;
+}
+
+nav {
+  background: #6743b8;
+  position: relative;
+  z-index: 1000;
+  user-select: none;
+}
+
+.nav-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+.nav-links li {
+  margin: 0 6px;
+}
+
+.nav-links li a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 15px 8px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.nav-links li a:hover,
+.nav-links li a:focus {
+  background-color: #8f7ad1cc;
+  color: #f0eaff;
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(143, 122, 209, 0.5);
+  outline: none;
+}
+
+.blue-strip-below-nav {
+  background-color: #7a5dc7;
+  height: 15px;
+  width: 100%;
+}
+
+.hamburger {
+  display: none;
+  font-size: 28px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  position: absolute;
+  right: 15px;
+  top: 22px;
+  user-select: none;
+}
+
+/* Logout Button - Desktop & Mobile Shared */
+.logout-btn {
+  background: #a46ee0;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.logout-btn:hover,
+.logout-btn:focus {
+  background: #7d4cbc;
+  transform: scale(1.03);
+  outline: none;
+}
+
+.container {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 25px 20px;
+  background: #f5f0ff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(161, 133, 207, 0.15);
+}
+
+h2 {
+  color: #6743b8;
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 3px solid #7a5dc7;
+  display: inline-block;
+  padding-bottom: 8px;
+  font-weight: 700;
+}
+
+footer {
+  background: #7a5dc7;
+  color: white;
+  text-align: center;
+  padding: 18px 10px;
+  margin-top: 60px;
+  font-size: 15px;
+  user-select: none;
+  box-shadow: 0 -2px 8px rgba(138, 115, 202, 0.25);
+}
+
+button:hover,
+button:focus {
+  opacity: 0.9;
+  transform: scale(1.03);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  outline: none;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  color: #4a4175;
+}
+
+th, td {
+  padding: 12px 15px;
+  border: 1px solid #9b8bc3;
+  text-align: left;
+}
+
+thead tr {
+  background-color: #7a5dc7;
+  color: white;
+  font-weight: 600;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    background-color: #6743b8;
+    width: 100%;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    z-index: 10000;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links li {
+    margin: 8px 0;
+    text-align: center;
+  }
+
+  .nav-links li a {
+    padding: 12px 0;
+    font-size: 17px;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  header {
+    position: relative;
+  }
+
+  /* Make logout button full-width on mobile */
+  .nav-links li:last-child {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .logout-btn {
+    width: 90%;
+    max-width: 320px;
+    margin: 10px auto;
+    display: block;
+    text-align: center;
+  }
+}

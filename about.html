@@ -2,241 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>About Us - Pagla Clickers</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f8fc;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    /* Topbar */
-    header {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 20px 0;
-      font-size: 26px;
-      font-weight: bold;
-      position: relative;
-      z-index: 1002;
-      user-select: none;
-    }
-
-    /* Navbar */
-    nav {
-      background: #005bb5;
-      position: relative;
-      z-index: 1001;
-    }
-
-    nav ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: center;
-      align-items: center;
-    }
-
-    nav ul li {
-      margin: 10px 15px;
-    }
-
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 16px;
-      white-space: nowrap;
-    }
-
-    nav ul li a:hover {
-      text-decoration: underline;
-    }
-
-    nav ul li button#logoutBtn {
-      background: #dc3545;
-      color: white;
-      padding: 6px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 14px;
-      height: 36px;
-      white-space: nowrap;
-      transition: background-color 0.3s ease;
-    }
-
-    nav ul li button#logoutBtn:hover {
-      background: #b02a37;
-    }
-
-    /* Blue strip below navbar */
-    .blue-strip-below-nav {
-      background-color: #007bff;
-      height: 15px;
-      width: 100%;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-    }
-
-    /* Hamburger for mobile */
-    .hamburger {
-      display: none;
-      font-size: 24px;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      position: absolute;
-      top: 20px;
-      right: 15px;
-      z-index: 1003;
-    }
-
-    @media (max-width: 768px) {
-      nav ul {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        background-color: #005bb5;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        z-index: 999;
-        flex-wrap: nowrap;
-      }
-
-      nav ul.active {
-        display: flex;
-      }
-
-      nav ul li {
-        margin: 12px 0;
-        text-align: center;
-      }
-
-      nav ul li button#logoutBtn {
-        width: 90%;
-        max-width: 300px;
-        margin: 10px auto;
-        height: 40px;
-      }
-
-      header {
-        position: relative;
-      }
-
-      .hamburger {
-        display: block;
-      }
-    }
-
-    /* Main container */
-    .container {
-      max-width: 800px;
-      margin: 0 auto 40px auto;
-      padding: 25px 30px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      line-height: 1.6;
-      flex-grow: 1;
-    }
-
-    h2 {
-      color: #007bff;
-      margin-bottom: 1rem;
-      user-select: none;
-    }
-
-    footer {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      user-select: none;
-    }
-  </style>
+  <title>About - Pagla Clickers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<header>
-  Pagla Clickers
-  <button class="hamburger" aria-label="Toggle navigation menu" onclick="toggleMenu()">☰</button>
-</header>
+  <header>
+    Pagla Clickers
+    <button class="hamburger" aria-label="Toggle menu" onclick="toggleMenu()">☰</button>
+  </header>
 
-<nav>
-  <ul id="navList">
-    <li><a href="about.html" aria-current="page">About</a></li>
-    <li><a href="notifications.html">Notifications</a></li>
-    <li><a href="profile.html">Profile</a></li>
-    <li><a href="dashboard.html">Dashboard</a></li>
-    <li><a href="postjob.html">Post Job</a></li>
-    <li><a href="taskdetail.html">Tasks</a></li>
-    <li><a href="referel.html">Referral</a></li>
-    <li><a href="deposit.html">Deposit</a></li>
-    <li><a href="wallet.html">Wallet</a></li>
-    <li><a href="withdrawal.html">Withdraw Money</a></li>
-    <li><a href="terms.html">Terms</a></li>
-    <li><a href="faq.html">FAQ</a></li>
-    <li><a href="support.html">Support</a></li>
-    <li><button id="logoutBtn">Logout</button></li>
-  </ul>
-</nav>
+  <nav>
+    <ul class="nav-links" id="navList">
+      <li><a href="about.html" aria-current="page">About</a></li>
+      <li><a href="notifications.html">Notifications</a></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="postjob.html">Post Job</a></li>
+      <li><a href="taskdetail.html">Tasks</a></li>
+      <li><a href="referel.html">Referral</a></li>
+      <li><a href="deposit.html">Deposit</a></li>
+      <li><a href="wallet.html">Wallet</a></li>
+      <li><a href="withdrawal.html">Withdraw Money</a></li>
+      <li><a href="terms.html">Terms</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="support.html">Support</a></li>
+      <li style="display:flex; justify-content:center; align-items:center;">
+        <button id="logoutBtn" class="logout-btn" style="width:auto; max-width:100%; text-align:center;">Logout</button>
+      </li>
+    </ul>
+  </nav>
 
-<div class="blue-strip-below-nav"></div>
+  <div class="blue-strip-below-nav"></div>
 
-<div class="container">
-  <h2>About Us</h2>
-  <p><strong>Pagla Clickers</strong> is a fun and rewarding platform where users earn rewards by completing simple tasks online. Whether it’s clicking, watching, referring, or engaging with offers — we make your online time valuable!</p>
+  <div class="container">
+    <h2>About Pagla Clickers</h2>
+    <p>Welcome to Pagla Clickers, your go-to platform for easy and rewarding online tasks. We connect advertisers and freelancers seamlessly, enabling users to earn money by completing simple jobs online.</p>
+    <p>Our mission is to provide a trustworthy and user-friendly environment where you can grow your income at your own pace. Whether you're here to post jobs or complete them, Pagla Clickers offers a reliable space for both.</p>
+    <p>If you have any questions or need support, feel free to visit our Support page or contact us directly.</p>
+  </div>
 
-  <p>Founded with the idea of helping people earn from home, Pagla Clickers is designed to be user-friendly, honest, and exciting. Our goal is to grow a loyal community that benefits from small actions taken consistently.</p>
+  <footer>
+    <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+  </footer>
 
-  <p>We believe in transparency, fairness, and giving value back to our users. With regular updates, reliable support, and a variety of tasks, we aim to be one of the most trusted earning platforms in the clicker world.</p>
+  <script>
+    // Hamburger toggle and logout button responsive width
+    function toggleMenu() {
+      const navList = document.getElementById('navList');
+      navList.classList.toggle('active');
 
-  <p>Thank you for being part of our journey!</p>
-</div>
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (window.innerWidth <= 768) {
+        logoutBtn.style.width = '90%';
+      } else {
+        logoutBtn.style.width = 'auto';
+      }
+    }
 
-<footer>
-  <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
-</footer>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
-    authDomain: "pagla-b1c17.firebaseapp.com",
-    projectId: "pagla-b1c17",
-    storageBucket: "pagla-b1c17.appspot.com",
-    messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:1595070cdac289170f5e27"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  document.getElementById('logoutBtn').addEventListener('click', () => {
-    signOut(auth).then(() => {
-      window.location.href = 'login.html';
-    }).catch(error => {
-      alert('Logout failed: ' + error.message);
+    document.addEventListener("DOMContentLoaded", () => {
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (window.innerWidth <= 768) {
+        logoutBtn.style.width = '90%';
+      } else {
+        logoutBtn.style.width = 'auto';
+      }
     });
-  });
-
-  function toggleMenu() {
-    document.getElementById('navList').classList.toggle('active');
-  }
-</script>
+  </script>
 
 </body>
 </html>

@@ -2,131 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pagla Clickers - Notifications</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f8fc;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 20px 0;
-      font-size: 26px;
-      font-weight: bold;
-      position: relative;
-    }
-
-    nav {
-      background: #005bb5;
-    }
-
-    .nav-links {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .nav-links li {
-      margin: 10px 15px;
-    }
-
-    .nav-links li a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    .nav-links li a:hover {
-      text-decoration: underline;
-    }
-
-    .blue-strip-below-nav {
-      background-color: #007bff;
-      height: 15px;
-      width: 100%;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    .hamburger {
-      display: none;
-      font-size: 24px;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      position: absolute;
-      right: 15px;
-      top: 20px;
-    }
-
-    #logoutBtn {
-      background: #dc3545;
-      color: white;
-      padding: 8px 15px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 14px;
-      transition: background-color 0.3s ease;
-      align-self: center;
-      margin: 10px 15px;
-      height: fit-content;
-    }
-
-    #logoutBtn:hover {
-      background: #b02a37;
-    }
-
-    @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-        flex-direction: column;
-        background-color: #005bb5;
-        width: 100%;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        z-index: 999;
-      }
-
-      .nav-links.active {
-        display: flex;
-      }
-
-      .hamburger {
-        display: block;
-      }
-
-      header {
-        position: relative;
-      }
-
-      #logoutBtn {
-        width: 90%;
-        max-width: 300px;
-        text-align: center;
-      }
-    }
-
+    /* Only styles for notifications container content */
     .container {
       max-width: 800px;
       margin: 30px auto;
-      padding: 20px;
+      padding: 25px 20px;
       background: white;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      color: #333;
     }
 
     h2 {
@@ -139,39 +27,25 @@
       border-left: 5px solid #007bff;
       background: #f9f9f9;
       margin-bottom: 15px;
-      padding: 15px;
+      padding: 15px 20px;
       border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
     .notification h4 {
-      margin: 0;
+      margin: 0 0 5px 0;
       color: #007bff;
     }
 
     .notification p {
-      margin: 5px 0 0;
-      color: #333;
+      margin: 0;
+      line-height: 1.5;
     }
 
     .timestamp {
       font-size: 12px;
       color: #777;
-      margin-top: 5px;
-    }
-
-    .empty-message {
-      text-align: center;
-      color: #888;
-      margin-top: 20px;
-      font-size: 16px;
-    }
-
-    footer {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      margin-top: 40px;
+      margin-top: 8px;
     }
   </style>
 </head>
@@ -179,13 +53,13 @@
 
 <header>
   Pagla Clickers
-  <button class="hamburger" onclick="toggleMenu()">☰</button>
+  <button class="hamburger" aria-label="Toggle navigation menu" onclick="toggleMenu()">☰</button>
 </header>
 
 <nav>
   <ul class="nav-links" id="navList">
     <li><a href="about.html">About</a></li>
-    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="notifications.html" aria-current="page">Notifications</a></li>
     <li><a href="profile.html">Profile</a></li>
     <li><a href="dashboard.html">Dashboard</a></li>
     <li><a href="postjob.html">Post Job</a></li>
@@ -197,7 +71,11 @@
     <li><a href="terms.html">Terms</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="support.html">Support</a></li>
-    <button id="logoutBtn">Logout</button>
+    <li>
+      <button id="logoutBtn" class="logout-btn" 
+        style="width:auto;"
+        aria-label="Logout from Pagla Clickers">Logout</button>
+    </li>
   </ul>
 </nav>
 
@@ -218,7 +96,27 @@
   function toggleMenu() {
     const navList = document.getElementById("navList");
     navList.classList.toggle("active");
+
+    // On mobile, adjust logout button width
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (window.innerWidth <= 768) {
+      logoutBtn.style.width = '90%';
+    } else {
+      logoutBtn.style.width = 'auto';
+    }
   }
+
+  // Fix logout button width on page load & resize
+  function adjustLogoutBtnWidth() {
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (window.innerWidth <= 768) {
+      logoutBtn.style.width = '90%';
+    } else {
+      logoutBtn.style.width = 'auto';
+    }
+  }
+  window.addEventListener('resize', adjustLogoutBtnWidth);
+  document.addEventListener('DOMContentLoaded', adjustLogoutBtnWidth);
 </script>
 
 <script type="module">

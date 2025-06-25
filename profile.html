@@ -4,251 +4,17 @@
   <meta charset="UTF-8" />
   <title>Pagla Clickers - User Profile</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, #f5faff, #e0f0ff);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    /* Topbar */
-    header {
-      background-color: #007bff;
-      color: white;
-      padding: 25px 0;
-      text-align: center;
-      font-weight: bold;
-      font-size: 26px;
-      user-select: none;
-      position: relative;
-      z-index: 1002;
-    }
-
-    /* Navbar */
-    nav {
-      background: #005bb5;
-    }
-
-    nav ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      z-index: 1001;
-    }
-
-    nav ul li {
-      margin: 0 12px;
-      padding: 8px 0;
-    }
-
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 16px;
-      white-space: nowrap;
-      user-select: none;
-    }
-
-    nav ul li a:hover {
-      text-decoration: underline;
-    }
-
-    /* Logout Button in Navbar */
-    nav ul li button#logoutBtn {
-      background: #dc3545;
-      color: white;
-      padding: 6px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 14px;
-      line-height: normal;
-      height: 36px;
-      white-space: nowrap;
-      transition: background-color 0.3s ease;
-    }
-
-    nav ul li button#logoutBtn:hover {
-      background: #b02a37;
-    }
-
-    /* Blue strip below navbar */
-    .blue-strip {
-      background-color: #007bff;
-      height: 10px;
-      width: 100%;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
-    }
-
-    /* Hamburger */
-    .hamburger {
-      display: none;
-      font-size: 24px;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      position: absolute;
-      top: 20px;
-      right: 15px;
-      z-index: 1003;
-    }
-
-    /* Container */
-    .container {
-      flex: 1;
-      max-width: 700px;
-      background: white;
-      margin: 0 auto 40px;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-      color: #007bff;
-      text-align: center;
-      margin-bottom: 30px;
-      user-select: none;
-    }
-
-    .profile-info {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .info-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .info-label {
-      font-weight: bold;
-      color: #333;
-      flex: 1 1 150px;
-      user-select: none;
-    }
-
-    input {
-      flex: 2 1 300px;
-      padding: 8px;
-      font-size: 14px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      transition: border-color 0.3s ease;
-    }
-
-    input[readonly] {
-      background-color: #f0f0f0;
-      border-color: #ddd;
-      cursor: not-allowed;
-    }
-
-    input:not([readonly]):focus {
-      border-color: #007bff;
-      outline: none;
-      background: white;
-    }
-
-    .buttons {
-      text-align: center;
-      margin-top: 25px;
-      user-select: none;
-    }
-
-    .buttons button {
-      margin: 0 10px;
-      background-color: #007bff;
-      color: white;
-      padding: 10px 24px;
-      font-size: 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .buttons button:hover {
-      background-color: #005bb5;
-    }
-
-    footer {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 15px 0;
-      margin-top: auto;
-      user-select: none;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      nav ul {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        background-color: #005bb5;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        z-index: 999;
-      }
-
-      nav ul.active {
-        display: flex;
-      }
-
-      nav ul li {
-        margin: 12px 0;
-        padding: 8px 0;
-        text-align: center;
-      }
-
-      nav ul li button#logoutBtn {
-        width: 90%;
-        max-width: 300px;
-        margin: 10px auto;
-        height: 40px;
-      }
-
-      .hamburger {
-        display: block;
-      }
-
-      .info-item {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .info-label, input {
-        flex: 1 1 100%;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <header>
   Pagla Clickers
-  <button class="hamburger" aria-label="Toggle navigation menu" id="hamburgerBtn">☰</button>
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()">☰</button>
 </header>
 
 <nav>
-  <ul id="navList">
+  <ul class="nav-links" id="navList">
     <li><a href="about.html">About</a></li>
     <li><a href="notifications.html">Notifications</a></li>
     <li><a href="profile.html" aria-current="page">Profile</a></li>
@@ -262,42 +28,42 @@
     <li><a href="terms.html">Terms</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="support.html">Support</a></li>
-    <li><button id="logoutBtn">Logout</button></li>
+    <li><button id="logoutBtn" class="logout-btn">Logout</button></li>
   </ul>
 </nav>
 
-<div class="blue-strip"></div>
+<div class="blue-strip-below-nav"></div>
 
-<div class="container">
-  <h2>User Profile</h2>
+<div class="container" style="max-width:700px; margin: 30px auto; padding: 30px 40px; background: #fff; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,123,255,0.15);">
+  <h2 style="color: #007bff; text-align: center; margin-bottom: 35px; font-weight: 700; user-select: none;">User Profile</h2>
 
-  <div class="profile-info">
-    <div class="info-item">
-      <span class="info-label">Name:</span>
-      <input type="text" id="user-name" readonly />
+  <div class="profile-info" style="display: flex; flex-direction: column; gap: 25px;">
+    <div class="info-item" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+      <span style="font-weight: 600; font-size: 16px; min-width: 140px; color: #222; user-select: none;">Name:</span>
+      <input type="text" id="user-name" readonly style="flex-grow: 1; padding: 10px 14px; font-size: 15px; border: 1.8px solid #ddd; border-radius: 8px; background-color: #f9fbff;"/>
     </div>
-    <div class="info-item">
-      <span class="info-label">Phone Number:</span>
-      <input type="text" id="user-phone" readonly />
+    <div class="info-item" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+      <span style="font-weight: 600; font-size: 16px; min-width: 140px; color: #222; user-select: none;">Phone Number:</span>
+      <input type="text" id="user-phone" readonly style="flex-grow: 1; padding: 10px 14px; font-size: 15px; border: 1.8px solid #ddd; border-radius: 8px; background-color: #f9fbff;"/>
     </div>
-    <div class="info-item">
-      <span class="info-label">Email:</span>
-      <input type="text" id="user-email" readonly />
+    <div class="info-item" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+      <span style="font-weight: 600; font-size: 16px; min-width: 140px; color: #222; user-select: none;">Email:</span>
+      <input type="text" id="user-email" readonly style="flex-grow: 1; padding: 10px 14px; font-size: 15px; border: 1.8px solid #ddd; border-radius: 8px; background-color: #f9fbff;"/>
     </div>
-    <div class="info-item">
-      <span class="info-label">Points:</span>
-      <input type="text" id="user-points" readonly />
+    <div class="info-item" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+      <span style="font-weight: 600; font-size: 16px; min-width: 140px; color: #222; user-select: none;">Points:</span>
+      <input type="text" id="user-points" readonly style="flex-grow: 1; padding: 10px 14px; font-size: 15px; border: 1.8px solid #ddd; border-radius: 8px; background-color: #f9fbff;"/>
     </div>
-    <div class="info-item">
-      <span class="info-label">Referral Code:</span>
-      <input type="text" id="user-ref" readonly />
+    <div class="info-item" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+      <span style="font-weight: 600; font-size: 16px; min-width: 140px; color: #222; user-select: none;">Referral Code:</span>
+      <input type="text" id="user-ref" readonly style="flex-grow: 1; padding: 10px 14px; font-size: 15px; border: 1.8px solid #ddd; border-radius: 8px; background-color: #f9fbff;"/>
     </div>
   </div>
 
-  <div class="buttons">
-    <button id="editBtn" onclick="enableEdit()">Edit Profile</button>
-    <button id="saveBtn" onclick="saveProfile()" style="display:none;">Save</button>
-    <button onclick="resetPassword()">Reset Password</button>
+  <div class="buttons" style="text-align: center; margin-top: 30px;">
+    <button id="editBtn" onclick="enableEdit()" style="background-color:#007bff; color:white; padding: 10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer; margin-right: 15px;">Edit Profile</button>
+    <button id="saveBtn" onclick="saveProfile()" style="display:none; background-color:#007bff; color:white; padding: 10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer; margin-right: 15px;">Save</button>
+    <button onclick="resetPassword()" style="background-color:#6c757d; color:white; padding: 10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer;">Reset Password</button>
   </div>
 </div>
 
@@ -316,8 +82,7 @@
     projectId: "pagla-b1c17",
     storageBucket: "pagla-b1c17.appspot.com",
     messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:1595070cdac289170f5e27",
-    measurementId: "G-M9Y7SBBEXM"
+    appId: "1:192578902502:web:1595070cdac289170f5e27"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -407,19 +172,12 @@
         alert("Error signing out: " + error.message);
       });
   });
+</script>
 
-  // Hamburger toggle
-  const navList = document.getElementById("navList");
-  const hamburgerBtn = document.getElementById("hamburgerBtn");
-  hamburgerBtn.addEventListener("click", () => {
-    navList.classList.toggle("active");
-  });
-  hamburgerBtn.addEventListener("keydown", e => {
-    if(e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      navList.classList.toggle("active");
-    }
-  });
+<script>
+  function toggleMenu() {
+    document.getElementById("navList").classList.toggle("active");
+  }
 </script>
 
 </body>

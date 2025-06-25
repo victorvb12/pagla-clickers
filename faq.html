@@ -2,163 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FAQ - Pagla Clickers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f8fc;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 20px 0;
-      font-size: 26px;
-      font-weight: bold;
-      position: relative;
-    }
-
-    nav {
-      background: #005bb5;
-    }
-
-    nav ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-    }
-
-    nav ul li {
-      margin: 10px 15px;
-    }
-
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    nav ul li a:hover {
-      text-decoration: underline;
-    }
-
-    nav ul li button#logoutBtn {
-      background: #dc3545;
-      color: white;
-      padding: 8px 15px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 14px;
-      transition: background-color 0.3s ease;
-      height: fit-content;
-    }
-
-    nav ul li button#logoutBtn:hover {
-      background: #b02a37;
-    }
-
-    .blue-strip-below-nav {
-      background-color: #007bff;
-      height: 15px;
-      width: 100%;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    .hamburger {
-      display: none;
-      font-size: 24px;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      position: absolute;
-      right: 15px;
-      top: 20px;
-    }
-
+    /* Mobile logout button width */
     @media (max-width: 768px) {
-      nav ul {
-        display: none;
-        flex-direction: column;
-        background-color: #005bb5;
-        width: 100%;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        z-index: 999;
-      }
-
-      nav ul.active {
-        display: flex;
-      }
-
-      .hamburger {
-        display: block;
-      }
-
-      header {
-        position: relative;
-      }
-
-      nav ul li {
-        margin: 15px 0;
-        text-align: center;
-      }
-
-      nav ul li button#logoutBtn {
-        width: 90%;
-        max-width: 300px;
-        margin: 0 auto;
+      .logout-wrapper button.logout-btn {
+        width: 90% !important;
+        max-width: 320px !important;
+        margin: 10px auto !important;
+        display: block !important;
+        text-align: center !important;
       }
     }
 
-    .container {
-      max-width: 800px;
-      margin: 30px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    h2 {
-      color: #005bb5;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
+    /* FAQ content styling */
     .faq-item {
       margin-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 12px;
     }
 
     .faq-question {
-      font-weight: bold;
+      font-weight: 700;
       color: #007bff;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
     }
 
     .faq-answer {
       color: #333;
-      line-height: 1.6;
-    }
-
-    footer {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      margin-top: 40px;
+      line-height: 1.5;
+      font-size: 1rem;
+      white-space: pre-line;
     }
   </style>
 </head>
@@ -166,11 +43,11 @@
 
 <header>
   Pagla Clickers
-  <button class="hamburger" onclick="toggleMenu()">☰</button>
+  <button class="hamburger" aria-label="Toggle navigation menu" onclick="toggleMenu()">☰</button>
 </header>
 
 <nav>
-  <ul id="navList">
+  <ul class="nav-links" id="navList">
     <li><a href="about.html">About</a></li>
     <li><a href="notifications.html">Notifications</a></li>
     <li><a href="profile.html">Profile</a></li>
@@ -182,9 +59,11 @@
     <li><a href="wallet.html">Wallet</a></li>
     <li><a href="withdrawal.html">Withdraw Money</a></li>
     <li><a href="terms.html">Terms</a></li>
-    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="faq.html" aria-current="page">FAQ</a></li>
     <li><a href="support.html">Support</a></li>
-    <li><button id="logoutBtn">Logout</button></li>
+    <li class="logout-wrapper" style="display:flex; justify-content:center; align-items:center;">
+      <button id="logoutBtn" class="logout-btn" style="width:auto; max-width:100%; text-align:center;">Logout</button>
+    </li>
   </ul>
 </nav>
 
@@ -235,17 +114,13 @@
 
 <script>
   function toggleMenu() {
-    const navList = document.getElementById("navList");
-    navList.classList.toggle("active");
+    const navList = document.getElementById('navList');
+    navList.classList.toggle('active');
   }
 
-  // Firebase logout logic placeholder — replace with your Firebase auth logout function
+  // Firebase logout (replace with actual logic)
   document.getElementById('logoutBtn').addEventListener('click', () => {
-    // Example:
-    // firebase.auth().signOut().then(() => {
-    //   window.location.href = 'login.html';
-    // });
-    alert('Logout button clicked - implement Firebase logout here.');
+    alert('Logout clicked — add Firebase signOut here');
   });
 </script>
 

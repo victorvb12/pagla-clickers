@@ -2,223 +2,91 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Pagla Clickers - Post Job</title>
+  <title>Post Job - Pagla Clickers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f8fc;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      user-select: none;
-    }
-
-    header {
-      background-color: #007bff;
-      color: white;
-      padding: 25px 0;
-      text-align: center;
-      font-weight: bold;
-      font-size: 26px;
-      position: relative;
-      z-index: 1002;
-    }
-
-    nav {
-      background: #005bb5;
-    }
-
-    nav ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: center;
-      align-items: center;
-    }
-
-    nav ul li {
-      margin: 0 12px;
-      padding: 8px 0;
-    }
-
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 16px;
-      white-space: nowrap;
-    }
-
-    nav ul li a:hover {
-      text-decoration: underline;
-    }
-
-    nav ul li button#logoutBtn {
-      background: #dc3545;
-      color: white;
-      padding: 6px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 14px;
-      line-height: normal;
-      height: 36px;
-      transition: background-color 0.3s ease;
-      white-space: nowrap;
-    }
-
-    nav ul li button#logoutBtn:hover {
-      background: #b02a37;
-    }
-
-    .blue-strip {
-      background-color: #007bff;
-      height: 10px;
-      width: 100%;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
-    }
-
-    .hamburger {
-      display: none;
-      font-size: 24px;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      position: absolute;
-      top: 20px;
-      right: 15px;
-      z-index: 1003;
-    }
-
-    @media (max-width: 768px) {
-      nav ul {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        background-color: #005bb5;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        z-index: 999;
-        flex-wrap: nowrap;
-      }
-
-      nav ul.active {
-        display: flex;
-      }
-
-      nav ul li {
-        margin: 12px 0;
-        padding: 8px 0;
-        text-align: center;
-      }
-
-      nav ul li button#logoutBtn {
-        width: 90%;
-        max-width: 300px;
-        margin: 10px auto;
-        height: 40px;
-      }
-
-      header {
-        position: relative;
-      }
-    }
-
-    main {
-      flex: 1;
-      width: 100%;
-      max-width: 800px;
-      margin: auto;
-      padding: 35px 30px;
-      background: white;
+    /* Internal style ONLY for form inside .container */
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 25px 20px;
+      background-color: #ffffff;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
-    h2 {
-      color: #007bff;
+    .container h2 {
       text-align: center;
-      margin-top: 0;
-      margin-bottom: 30px;
+      color: #007bff;
+      margin-bottom: 25px;
     }
 
-    label {
-      display: block;
-      margin: 15px 0 6px;
+    .container label {
       font-weight: bold;
+      margin-top: 15px;
+      display: block;
       color: #333;
     }
 
-    input, select, textarea {
+    .container input,
+    .container textarea,
+    .container select {
       width: 100%;
-      max-width: 100%;
-      padding: 14px 18px;
+      padding: 12px;
       margin-top: 8px;
-      font-size: 17px;
-      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 16px;
       border: 1px solid #ccc;
+      border-radius: 6px;
       box-sizing: border-box;
-      transition: border-color 0.3s ease;
+    }
+
+    .container textarea {
       resize: vertical;
-      font-family: inherit;
-      background: #fff;
+      min-height: 100px;
     }
 
-    input:focus, select:focus, textarea:focus {
-      border-color: #007bff;
-      outline: none;
-      background: white;
-    }
-
-    button#postJobBtn {
-      margin-top: 25px;
+    .container button[type="submit"] {
+      width: 100%;
+      padding: 12px;
       background-color: #007bff;
       color: white;
-      border: none;
       font-weight: bold;
-      font-size: 16px;
-      padding: 14px 0;
+      border: none;
       border-radius: 6px;
       cursor: pointer;
-      width: 100%;
-      transition: background-color 0.3s ease;
+      font-size: 16px;
     }
 
-    button#postJobBtn:hover:not(:disabled) {
+    .container button[type="submit"]:hover {
       background-color: #005bb5;
     }
 
-    button#postJobBtn:disabled {
-      background-color: #a6c8ff;
-      cursor: not-allowed;
-    }
-
-    .status {
-      margin-top: 20px;
+    .container .message {
+      margin-top: 15px;
       text-align: center;
       font-weight: bold;
-      color: #333;
-      min-height: 1.5em;
+    }
+
+    .container .message.success {
+      color: green;
+    }
+
+    .container .message.error {
+      color: red;
     }
   </style>
 </head>
 <body>
 
 <header>
-  Pagla Clickers Post Job
-  <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle navigation menu">☰</button>
+  Pagla Clickers
+  <button class="hamburger" aria-label="Toggle menu">☰</button>
 </header>
 
 <nav>
-  <ul id="navList">
+  <ul class="nav-links" id="navList">
     <li><a href="about.html">About</a></li>
     <li><a href="notifications.html">Notifications</a></li>
     <li><a href="profile.html">Profile</a></li>
@@ -232,72 +100,87 @@
     <li><a href="terms.html">Terms</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="support.html">Support</a></li>
-    <li><button id="logoutBtn">Logout</button></li>
+    <li><button id="logoutBtn" class="logout-btn">Logout</button></li>
   </ul>
 </nav>
 
-<div class="blue-strip"></div>
+<div class="blue-strip-below-nav"></div>
 
-<main>
-  <h2>Post a Job</h2>
+<div class="container" role="main" tabindex="0">
+  <h2>Post a New Job</h2>
+  <form id="postJobForm" novalidate>
+    <label for="title">Job Title</label>
+    <input type="text" id="title" required placeholder="Enter job title" />
 
-  <label for="title">Job Title</label>
-  <input type="text" id="title" placeholder="Enter job title" required />
+    <label for="description">Job Description</label>
+    <textarea id="description" required placeholder="Enter job details"></textarea>
 
-  <label for="category">Category</label>
-  <select id="category" required>
-    <option value="">Select Category</option>
-    <option value="Facebook">Facebook</option>
-    <option value="YouTube">YouTube</option>
-    <option value="Telegram">Telegram</option>
-    <option value="Application">Application</option>
-  </select>
+    <label for="reward">Reward per Task ($)</label>
+    <input type="number" id="reward" min="0.01" step="0.01" required placeholder="0.10" />
 
-  <label for="description">Job Description</label>
-  <textarea id="description" placeholder="Enter job description..." required></textarea>
+    <label for="slots">Available Slots</label>
+    <input type="number" id="slots" min="1" required placeholder="Enter number of workers" />
 
-  <label for="reward">Reward ($)</label>
-  <input type="number" id="reward" placeholder="0.00" min="0" step="0.01" required />
+    <label for="proofType">Proof Required</label>
+    <select id="proofType" required>
+      <option value="" disabled selected>Select proof type</option>
+      <option value="text">Text Proof</option>
+      <option value="screenshot">Screenshot</option>
+    </select>
 
-  <label for="slots">Number of Slots</label>
-  <input type="number" id="slots" placeholder="1" min="1" required />
+    <label for="proof1">Additional Proof 1 (optional)</label>
+    <select id="proof1">
+      <option value="" selected>None</option>
+      <option value="text">Text Proof</option>
+      <option value="screenshot">Screenshot</option>
+    </select>
 
-  <label>Proof 1</label>
-  <select id="proof1">
-    <option value="">None</option>
-    <option value="text">Text</option>
-    <option value="screenshot">Screenshot</option>
-  </select>
+    <label for="proof2">Additional Proof 2 (optional)</label>
+    <select id="proof2">
+      <option value="" selected>None</option>
+      <option value="text">Text Proof</option>
+      <option value="screenshot">Screenshot</option>
+    </select>
 
-  <label>Proof 2</label>
-  <select id="proof2">
-    <option value="">None</option>
-    <option value="text">Text</option>
-    <option value="screenshot">Screenshot</option>
-  </select>
+    <label for="proof3">Additional Proof 3 (optional)</label>
+    <select id="proof3">
+      <option value="" selected>None</option>
+      <option value="text">Text Proof</option>
+      <option value="screenshot">Screenshot</option>
+    </select>
 
-  <label>Proof 3</label>
-  <select id="proof3">
-    <option value="">None</option>
-    <option value="text">Text</option>
-    <option value="screenshot">Screenshot</option>
-  </select>
+    <div id="message" class="message"></div>
 
-  <label>Proof 4</label>
-  <select id="proof4">
-    <option value="">None</option>
-    <option value="text">Text</option>
-    <option value="screenshot">Screenshot</option>
-  </select>
+    <button type="submit">Submit Job</button>
+  </form>
+</div>
 
-  <button id="postJobBtn" disabled>Post Job</button>
-  <div class="status" id="status"></div>
-</main>
+<footer>
+  <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+</footer>
+
+<script>
+  // Hamburger toggle
+  const hamburger = document.querySelector('.hamburger');
+  const navList = document.getElementById('navList');
+  hamburger.addEventListener('click', () => {
+    navList.classList.toggle('active');
+  });
+</script>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import {
+    getAuth,
+    onAuthStateChanged,
+    signOut,
+  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -305,96 +188,75 @@
     projectId: "pagla-b1c17",
     storageBucket: "pagla-b1c17.appspot.com",
     messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:4b441210b15cfebf008ecf",
-    measurementId: "G-2Z08RL7X9H"
+    appId: "1:192578902502:web:1595070cdac289170f5e27",
   };
 
   const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
   const auth = getAuth(app);
+  const db = getFirestore(app);
 
-  const postJobBtn = document.getElementById('postJobBtn');
-  const statusDiv = document.getElementById('status');
-  const logoutBtn = document.getElementById('logoutBtn');
+  const form = document.getElementById("postJobForm");
+  const messageDiv = document.getElementById("message");
+  const logoutBtn = document.getElementById("logoutBtn");
 
-  let currentUser = null;
+  logoutBtn.addEventListener("click", () => {
+    signOut(auth)
+      .then(() => (window.location.href = "login.html"))
+      .catch((error) => alert("Error signing out: " + error.message));
+  });
 
-  // Check auth state and enable post button
-  onAuthStateChanged(auth, (user) => {
+  let userId = null;
+
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
-      currentUser = user;
-      postJobBtn.disabled = false;
+      userId = user.uid;
     } else {
       window.location.href = "login.html";
     }
   });
 
-  // Logout
-  logoutBtn.addEventListener('click', async () => {
-    try {
-      await signOut(auth);
-      window.location.href = "login.html";
-    } catch (error) {
-      alert("Failed to logout.");
-      console.error(error);
-    }
-  });
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    messageDiv.textContent = "";
+    messageDiv.className = "message";
 
-  // Hamburger toggle
-  function toggleMenu() {
-    document.getElementById('navList').classList.toggle('active');
-  }
+    const title = document.getElementById("title").value.trim();
+    const description = document.getElementById("description").value.trim();
+    const reward = parseFloat(document.getElementById("reward").value);
+    const slots = parseInt(document.getElementById("slots").value);
+    const proofType = document.getElementById("proofType").value;
+    const proof1 = document.getElementById("proof1").value || null;
+    const proof2 = document.getElementById("proof2").value || null;
+    const proof3 = document.getElementById("proof3").value || null;
 
-  // Post Job logic
-  postJobBtn.onclick = async () => {
-    statusDiv.textContent = "";
-    postJobBtn.disabled = true;
-
-    const title = document.getElementById('title').value.trim();
-    const category = document.getElementById('category').value.trim();
-    const description = document.getElementById('description').value.trim();
-    const reward = parseFloat(document.getElementById('reward').value.trim());
-    const slots = parseInt(document.getElementById('slots').value.trim());
-
-    const proof1 = document.getElementById('proof1').value;
-    const proof2 = document.getElementById('proof2').value;
-    const proof3 = document.getElementById('proof3').value;
-    const proof4 = document.getElementById('proof4').value;
-
-    if (!title || !category || !description || isNaN(reward) || isNaN(slots) || reward < 0 || slots < 1) {
-      statusDiv.textContent = "Please fill all job fields correctly.";
-      postJobBtn.disabled = false;
+    if (!title || !description || !reward || !slots || !proofType) {
+      messageDiv.textContent = "Please fill out all required fields.";
+      messageDiv.classList.add("error");
       return;
     }
-
-    const proofTypes = [proof1, proof2, proof3, proof4].filter(pt => pt !== "");
 
     try {
       await addDoc(collection(db, "jobs"), {
         title,
-        category,
         description,
         reward,
         slots,
-        submissions: 0,
-        ownerId: currentUser.uid,
-        proofType: proofTypes,
-        createdAt: serverTimestamp()
+        proofType,
+        proof1,
+        proof2,
+        proof3,
+        userId,
+        createdAt: serverTimestamp(),
+        status: "pending"
       });
-      statusDiv.textContent = "✅ Job posted successfully!";
-      // Clear form
-      document.getElementById('title').value = "";
-      document.getElementById('category').value = "";
-      document.getElementById('description').value = "";
-      document.getElementById('reward').value = "";
-      document.getElementById('slots').value = "";
-      ['proof1','proof2','proof3','proof4'].forEach(id => document.getElementById(id).value = "");
+      messageDiv.textContent = "Job submitted successfully for approval.";
+      messageDiv.classList.add("success");
+      form.reset();
     } catch (error) {
-      console.error("Error posting job:", error);
-      statusDiv.textContent = "❌ Failed to post job.";
+      messageDiv.textContent = "Error posting job: " + error.message;
+      messageDiv.classList.add("error");
     }
-    postJobBtn.disabled = false;
-  };
+  });
 </script>
 
 </body>

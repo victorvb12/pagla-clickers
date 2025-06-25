@@ -4,164 +4,7 @@
   <meta charset="UTF-8" />
   <title>Pagla Clickers - Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f8fc;
-    }
-
-    /* Topbar */
-    header {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 20px 0;
-      font-size: 26px;
-      font-weight: bold;
-      position: relative;
-    }
-
-    /* Navbar */
-    nav {
-      background: #005bb5;
-    }
-
-    nav ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: center;
-      align-items: center;
-    }
-
-    nav ul li {
-      margin: 0 12px;
-      padding: 8px 0;
-    }
-
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    nav ul li a:hover {
-      text-decoration: underline;
-    }
-
-    nav ul li button.logout-btn {
-      background: #dc3545;
-      color: white;
-      padding: 6px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 14px;
-      line-height: normal;
-      height: 36px;
-      transition: background-color 0.3s ease;
-      white-space: nowrap;
-    }
-
-    nav ul li button.logout-btn:hover {
-      background: #b02a37;
-    }
-
-    /* Blue strip below nav */
-    .blue-strip-below-nav {
-      background-color: #007bff;
-      height: 15px;
-      width: 100%;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    /* Responsive */
-    .hamburger {
-      display: none;
-      font-size: 24px;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      position: absolute;
-      top: 20px;
-      right: 15px;
-    }
-
-    @media (max-width: 768px) {
-      nav ul {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        background-color: #005bb5;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        z-index: 999;
-        flex-wrap: nowrap;
-      }
-
-      nav ul.active {
-        display: flex;
-      }
-
-      nav ul li {
-        margin: 12px 0;
-        padding: 8px 0;
-        text-align: center;
-      }
-
-      nav ul li button.logout-btn {
-        width: 90%;
-        max-width: 300px;
-        margin: 10px auto;
-        height: 40px;
-      }
-
-      header {
-        position: relative;
-      }
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 30px auto;
-      padding: 25px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th, td {
-      padding: 12px;
-      border: 1px solid #ccc;
-      text-align: left;
-    }
-
-    th {
-      background-color: #007bff;
-      color: white;
-    }
-
-    footer {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      margin-top: 40px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -171,7 +14,7 @@
   </header>
 
   <nav>
-    <ul id="navList">
+    <ul class="nav-links" id="navList">
       <li><a href="about.html">About</a></li>
       <li><a href="notifications.html">Notifications</a></li>
       <li><a href="profile.html">Profile</a></li>
@@ -189,7 +32,6 @@
     </ul>
   </nav>
 
-  <!-- Blue strip below navbar -->
   <div class="blue-strip-below-nav"></div>
 
   <div class="container">
@@ -197,18 +39,21 @@
     <p>Your Balance: <strong id="userBalance">Loading...</strong></p>
 
     <h3>Completed Tasks</h3>
-    <table id="completedTasksTable">
-      <thead>
-        <tr>
-          <th>Task Title</th>
-          <th>Status</th>
-          <th>Submitted At</th>
-        </tr>
-      </thead>
-      <tbody id="completedTasksBody">
-        <tr><td colspan="3">Loading completed tasks...</td></tr>
-      </tbody>
-    </table>
+
+    <div style="overflow-x:auto; margin-top:20px; border:1px solid #9b8bc3; border-radius:8px; box-shadow: 0 2px 6px rgba(138, 115, 202, 0.25); background: white;">
+      <table style="width:100%; border-collapse: collapse; font-size: 15px; color: #4a4175;">
+        <thead>
+          <tr style="background-color:#7a5dc7; color:white; font-weight:600;">
+            <th style="padding:12px 15px; border:1px solid #9b8bc3; text-align:left;">Task Title</th>
+            <th style="padding:12px 15px; border:1px solid #9b8bc3; text-align:left;">Status</th>
+            <th style="padding:12px 15px; border:1px solid #9b8bc3; text-align:left;">Submitted At</th>
+          </tr>
+        </thead>
+        <tbody id="completedTasksBody" style="border:1px solid #9b8bc3;">
+          <tr><td colspan="3" style="padding:12px 15px; border:1px solid #9b8bc3; text-align:center;">Loading completed tasks...</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <footer>
@@ -275,7 +120,7 @@
 
         completedTasksBody.innerHTML = "";
         if (userSubs.length === 0) {
-          completedTasksBody.innerHTML = "<tr><td colspan='3'>No completed tasks found.</td></tr>";
+          completedTasksBody.innerHTML = "<tr><td colspan='3' style='padding:12px 15px; border:1px solid #9b8bc3; text-align:center;'>No completed tasks found.</td></tr>";
         } else {
           for (const sub of userSubs) {
             let title = "Loading...";
@@ -288,9 +133,9 @@
 
             const tr = document.createElement("tr");
             tr.innerHTML = `
-              <td>${title}</td>
-              <td>${sub.status || "Pending"}</td>
-              <td>${sub.submittedAt?.toDate().toLocaleString() || "N/A"}</td>
+              <td style="padding:12px 15px; border:1px solid #9b8bc3;">${title}</td>
+              <td style="padding:12px 15px; border:1px solid #9b8bc3;">${sub.status || "Pending"}</td>
+              <td style="padding:12px 15px; border:1px solid #9b8bc3;">${sub.submittedAt?.toDate().toLocaleString() || "N/A"}</td>
             `;
             completedTasksBody.appendChild(tr);
           }
