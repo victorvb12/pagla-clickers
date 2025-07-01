@@ -2,82 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Task Detail - Pagla Clickers</title>
+  <title>Pagla Clickers - Jobs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Container for filters: search, category, sort */
-    #filterContainer {
-      margin-bottom: 10px;
+    /* Tab container */
+    .tabs {
       display: flex;
-      flex-wrap: nowrap; /* keep in one line */
-      gap: 5px;
-      align-items: center;
-      overflow-x: auto; /* horizontal scroll on narrow screens */
+      border-bottom: 2px solid #7a5dc7;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: 700;
+      color: #7a5dc7;
+      border: 2px solid transparent;
+      border-bottom: none;
+      user-select: none;
+    }
+    .tab.active {
+      background: #7a5dc7;
+      color: white;
+      border-radius: 8px 8px 0 0;
+      border-color: #7a5dc7;
+      border-bottom: 2px solid white;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
     }
 
-    #filterContainer label {
-      white-space: nowrap;
-      font-weight: 300;
-      color: #333;
-      margin: 0;
-    }
-
-    #filterContainer input[type="search"],
-    #filterContainer select {
-      padding: 8px 3px;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      min-width: 160px;
-      flex-shrink: 0; /* prevent shrinking */
-    }
-
-    /* Job cards updated */
+    /* Job card */
     .job-card {
-      background: #fff;
+      background: white;
       border-radius: 10px;
       padding: 15px 20px;
-      margin: 15px 0;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px rgba(138, 115, 202, 0.2);
+      cursor: pointer;
       user-select: text;
     }
     .job-card h3 {
-      margin: 0 0 10px 0;
-      color: #007bff;
-      font-weight: 800;
+      margin: 0 0 8px 0;
+      color: #7a5dc7;
+      font-weight: 700;
       font-size: 1.2rem;
     }
-    .job-card p {
-      margin: 6px 0;
-      color: #333;
-      font-size: 1rem;
-      font-weight: 700;
-      line-height: 1.3;
-    }
     .job-info {
-      font-size: 1rem;
-      font-weight: 700;
+      font-weight: 600;
       color: #444;
-      margin-bottom: 4px;
-    }
-    .view-btn {
-      margin-top: 10px;
-      background: #007bff;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-weight: 700;
       font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    .view-btn:hover {
-      background: #005bb5;
+      margin: 3px 0;
     }
 
-    /* Modal overlay */
+    /* Modal */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -85,10 +66,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 2000;
+      z-index: 3000;
+      user-select: text;
     }
-
-    /* Modal content */
     .modal-content {
       background: white;
       border-radius: 12px;
@@ -99,10 +79,7 @@
       position: relative;
       max-height: 90vh;
       overflow-y: auto;
-      user-select: text;
     }
-
-    /* Close button */
     .closeBtn {
       position: absolute;
       top: 12px;
@@ -120,10 +97,8 @@
     .closeBtn:hover {
       background: #b02a37;
     }
-
-    /* Job description box inside modal */
     .job-description-box {
-      border: 2px solid #007bff;
+      border: 2px solid #7a5dc7;
       border-radius: 8px;
       padding: 15px;
       margin-bottom: 20px;
@@ -132,65 +107,12 @@
       white-space: pre-line;
       background: #f0f8ff;
     }
-    .job-description-title {
-      font-weight: 800;
-      font-size: 1.2rem;
-      margin-bottom: 8px;
-      color: #007bff;
-    }
-
-    /* Proof form */
-    .proof-form label {
-      display: block;
-      font-weight: 600;
-      margin-top: 12px;
-      margin-bottom: 4px;
-      color: #222;
-    }
-    .proof-form input[type="text"],
-    .proof-form input[type="file"] {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-
-    /* Submit button */
-    .submit-proof-btn {
-      margin-top: 18px;
-      background: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      user-select: none;
-    }
-    .submit-proof-btn:hover:not(:disabled) {
-      background: #005bb5;
-    }
-    .submit-proof-btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-
-    /* Submission status text */
-    .submit-status {
-      margin-top: 10px;
-      font-weight: 600;
-      min-height: 1.5em;
-    }
   </style>
 </head>
 <body>
 
   <header>
-    Pagla Clickers
+    Pagla Clickers Jobs
     <button class="hamburger" aria-label="Toggle menu" onclick="toggleMenu()">☰</button>
   </header>
 
@@ -201,7 +123,7 @@
       <li><a href="profile.html">Profile</a></li>
       <li><a href="dashboard.html">Dashboard</a></li>
       <li><a href="postjob.html">Post Job</a></li>
-      <li><a href="taskdetail.html" aria-current="page">Tasks</a></li>
+      <li><a href="jobs.html" aria-current="page">Jobs</a></li>
       <li><a href="referel.html">Referral</a></li>
       <li><a href="deposit.html">Deposit</a></li>
       <li><a href="wallet.html">Wallet</a></li>
@@ -209,54 +131,38 @@
       <li><a href="terms.html">Terms</a></li>
       <li><a href="faq.html">FAQ</a></li>
       <li><a href="support.html">Support</a></li>
-      <li style="display:flex; justify-content:center; align-items:center;">
-        <button id="logoutBtn" class="logout-btn" style="width:auto;">Logout</button>
-      </li>
+      <li><button id="logoutBtn" class="logout-btn">Logout</button></li>
     </ul>
   </nav>
 
   <div class="blue-strip-below-nav"></div>
 
   <div class="container">
-    <h2>Available Jobs</h2>
-
-    <!-- Filters container -->
-    <div id="filterContainer" aria-label="Job filters">
-      <label for="searchInput">Search:</label>
-      <input type="search" id="searchInput" placeholder="Search jobs..." aria-describedby="searchDesc" />
-      
-      <label for="categoryFilter">Category:</label>
-      <select id="categoryFilter" aria-describedby="categoryDesc">
-        <option value="">All Categories</option>
-        <!-- categories dynamically populated -->
-      </select>
-
-      <label for="sortSelect">Sort by:</label>
-      <select id="sortSelect" aria-describedby="sortDesc">
-        <option value="default">Default</option>
-        <option value="priceAsc">Price: Low to High</option>
-        <option value="priceDesc">Price: High to Low</option>
-      </select>
+    <div class="tabs" role="tablist" aria-label="Job categories">
+      <div class="tab active" role="tab" tabindex="0" aria-selected="true" aria-controls="myJobsTab" id="myJobsTabBtn">My Jobs</div>
+      <div class="tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="completedJobsTab" id="completedJobsTabBtn">Completed Jobs</div>
     </div>
 
-    <section id="jobsContainer" class="jobs-list" aria-live="polite">Loading...</section>
+    <section id="myJobsTab" class="tab-content active" role="tabpanel" aria-labelledby="myJobsTabBtn">
+      <p id="myJobsLoading">Loading your jobs...</p>
+      <div id="myJobsList"></div>
+    </section>
+
+    <section id="completedJobsTab" class="tab-content" role="tabpanel" aria-labelledby="completedJobsTabBtn">
+      <p id="completedJobsLoading">Loading completed jobs...</p>
+      <div id="completedJobsList"></div>
+    </section>
   </div>
 
   <!-- Modal -->
   <div id="jobModal" role="dialog" aria-modal="true" class="modal-overlay" style="display:none;">
-    <div id="jobModalContent" class="modal-content">
+    <div class="modal-content">
       <button class="closeBtn" onclick="closeModal()" aria-label="Close modal">X</button>
-      <h3 id="jobTitle"></h3>
-
-      <!-- Job description box -->
-      <div>
-        <div class="job-description-title">Job Description</div>
-        <div id="jobDescriptionBox" class="job-description-box"></div>
+      <h3 id="modalJobTitle"></h3>
+      <div class="job-description-box" id="modalJobDescription"></div>
+      <div id="modalJobInfo" style="font-weight:600; margin-top: 10px; line-height: 1.4;">
+        <!-- Job info here -->
       </div>
-
-      <form id="proofForm" class="proof-form"></form>
-      <button id="submitBtn" class="submit-proof-btn" style="display: none;">Submit Proof</button>
-      <p id="submitStatus" class="submit-status"></p>
     </div>
   </div>
 
@@ -266,19 +172,45 @@
 
   <script>
     function toggleMenu() {
-      const navList = document.getElementById('navList');
-      navList.classList.toggle('active');
+      document.getElementById('navList').classList.toggle('active');
     }
     function closeModal() {
       document.getElementById('jobModal').style.display = 'none';
     }
+
+    // Tabs logic
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+          document.getElementById(t.getAttribute('aria-controls')).classList.remove('active');
+          document.getElementById(t.getAttribute('aria-controls')).setAttribute('hidden', '');
+          t.setAttribute('tabindex', '-1');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        document.getElementById(tab.getAttribute('aria-controls')).classList.add('active');
+        document.getElementById(tab.getAttribute('aria-controls')).removeAttribute('hidden');
+        tab.setAttribute('tabindex', '0');
+        tab.focus();
+      });
+      tab.addEventListener('keydown', e => {
+        if(e.key === "ArrowRight" || e.key === "ArrowLeft") {
+          let index = [...tabs].indexOf(document.activeElement);
+          if(e.key === "ArrowRight") index = (index + 1) % tabs.length;
+          else if(e.key === "ArrowLeft") index = (index - 1 + tabs.length) % tabs.length;
+          tabs[index].click();
+        }
+      });
+    });
   </script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-    import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-    import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
+    import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -286,262 +218,133 @@
       projectId: "pagla-b1c17",
       storageBucket: "pagla-b1c17.appspot.com",
       messagingSenderId: "192578902502",
-      appId: "1:192578902502:web:4b441210b15cfebf008ecf"
+      appId: "1:192578902502:web:1595070cdac289170f5e27"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const storage = getStorage(app);
 
-    const jobsContainer = document.getElementById("jobsContainer");
-    const jobModal = document.getElementById("jobModal");
-    const jobTitle = document.getElementById("jobTitle");
-    const jobDescriptionBox = document.getElementById("jobDescriptionBox");
-    const proofForm = document.getElementById("proofForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const submitStatus = document.getElementById("submitStatus");
-    const logoutBtn = document.getElementById("logoutBtn");
+    const logoutBtn = document.getElementById('logoutBtn');
+    const myJobsList = document.getElementById('myJobsList');
+    const myJobsLoading = document.getElementById('myJobsLoading');
+    const completedJobsList = document.getElementById('completedJobsList');
+    const completedJobsLoading = document.getElementById('completedJobsLoading');
 
-    const searchInput = document.getElementById("searchInput");
-    const categoryFilter = document.getElementById("categoryFilter");
-    const sortSelect = document.getElementById("sortSelect");
+    const jobModal = document.getElementById('jobModal');
+    const modalJobTitle = document.getElementById('modalJobTitle');
+    const modalJobDescription = document.getElementById('modalJobDescription');
+    const modalJobInfo = document.getElementById('modalJobInfo');
 
     let currentUser = null;
-    let currentJob = null;
-    let jobList = [];
-    let filteredList = [];
 
     logoutBtn.addEventListener('click', () => {
       signOut(auth).then(() => {
-        window.location.href = 'login.html';
-      }).catch((error) => {
-        alert('Error signing out: ' + error.message);
+        window.location.href = "login.html";
+      }).catch(error => {
+        alert("Error signing out: " + error.message);
       });
     });
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        currentUser = user;
-        await loadJobs();
-      } else {
-        window.location.href = 'login.html';
+    onAuthStateChanged(auth, async user => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
       }
+      currentUser = user;
+      await loadMyJobs();
+      await loadCompletedJobs();
     });
 
-    async function loadJobs() {
+    async function loadMyJobs() {
+      myJobsLoading.style.display = 'block';
+      myJobsList.innerHTML = '';
       try {
-        const jobSnap = await getDocs(collection(db, "jobs"));
-        jobList = [];
+        console.log("Fetching jobs for user:", currentUser.uid);
+        const q = query(collection(db, "jobs"), where("ownerId", "==", currentUser.uid));
+        const querySnapshot = await getDocs(q);
 
-        await Promise.all(jobSnap.docs.map(async (docSnap) => {
-          const data = docSnap.data();
-          const jobId = docSnap.id;
-
-          const subsSnap = await getDocs(collection(db, `jobs/${jobId}/submissions`));
-          const submittedCount = subsSnap.size;
-
-          jobList.push({ id: jobId, ...data, submitted: submittedCount });
-        }));
-
-        populateCategoryFilter();
-        applyFilters();
-      } catch (error) {
-        jobsContainer.innerHTML = `<p style="padding:20px; color:red;">Failed to load jobs: ${error.message}</p>`;
-      }
-    }
-
-    function populateCategoryFilter() {
-      const categories = new Set();
-      jobList.forEach(job => {
-        if (job.category) categories.add(job.category);
-      });
-      categoryFilter.innerHTML = '<option value="">All Categories</option>';
-      [...categories].sort().forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat;
-        option.textContent = cat;
-        categoryFilter.appendChild(option);
-      });
-    }
-
-    function applyFilters() {
-      const searchText = searchInput.value.trim().toLowerCase();
-      const selectedCategory = categoryFilter.value;
-      const sortOption = sortSelect.value;
-
-      filteredList = jobList.filter(job => {
-        const matchesSearch = job.title.toLowerCase().includes(searchText);
-        const matchesCategory = selectedCategory ? job.category === selectedCategory : true;
-        return matchesSearch && matchesCategory;
-      });
-
-      if (sortOption === "priceAsc") {
-        filteredList.sort((a, b) => (a.reward ?? 0) - (b.reward ?? 0));
-      } else if (sortOption === "priceDesc") {
-        filteredList.sort((a, b) => (b.reward ?? 0) - (a.reward ?? 0));
-      }
-
-      renderJobs();
-    }
-
-    function renderJobs() {
-      jobsContainer.innerHTML = "";
-      if (filteredList.length === 0) {
-        jobsContainer.innerHTML = "<p>No jobs found matching criteria.</p>";
-        return;
-      }
-      filteredList.forEach(job => {
-        const submitted = job.submitted || 0;
-        const slots = job.slots || "∞";
-        const slotInfo = slots === "∞" ? "Unlimited slots" : `${submitted} / ${slots} used`;
-        const isOwner = job.ownerId === currentUser?.uid;
-        const crown = isOwner ? " 👑 Your Job" : "";
-
-        const div = document.createElement("div");
-        div.className = "job-card";
-        div.tabIndex = 0;
-        div.setAttribute('role', 'region');
-        div.style.userSelect = "text";
-        div.innerHTML = `
-          <h3>${job.title || "Untitled Job"}${crown}</h3>
-          <div class="job-info">Reward: $${job.reward ?? 0}</div>
-          <div class="job-info">Slots: ${slotInfo}</div>
-          <div class="job-info">Category: ${job.category || 'N/A'}</div>
-          <button class="view-btn" aria-label="View and submit job ${job.title || 'Untitled Job'}">View & Submit</button>
-        `;
-
-        const viewBtn = div.querySelector('.view-btn');
-        viewBtn.addEventListener('click', () => openModal(job.id));
-
-        jobsContainer.appendChild(div);
-      });
-    }
-
-    window.openModal = async (jobId) => {
-      currentJob = jobList.find(j => j.id === jobId);
-      if (!currentJob) return;
-
-      proofForm.innerHTML = "";
-      submitStatus.textContent = "";
-      jobDescriptionBox.textContent = "";
-
-      if (currentJob.ownerId === currentUser.uid) {
-        jobTitle.textContent = "Your Own Job";
-        jobDescriptionBox.textContent = currentJob.description || "No description available.";
-        submitBtn.style.display = "none";
-        jobModal.style.display = "flex";
-        return;
-      }
-
-      const submissionDoc = await getDoc(doc(db, `jobs/${jobId}/submissions/${currentUser.uid}`));
-      if (submissionDoc.exists()) {
-        jobTitle.textContent = "Already Submitted";
-        jobDescriptionBox.textContent = currentJob.description || "No description available.";
-        submitBtn.style.display = "none";
-        jobModal.style.display = "flex";
-        return;
-      }
-
-      jobTitle.textContent = currentJob.title || "Untitled Job";
-      jobDescriptionBox.textContent = currentJob.description || "No description available.";
-
-      const proofs = (currentJob.proofType || "").split(',').map(p => p.trim()).filter(Boolean);
-
-      proofs.forEach((type, index) => {
-        const label = document.createElement("label");
-        label.textContent = `Proof ${index + 1} (${type})`;
-        const input = document.createElement("input");
-        input.name = `proof${index + 1}`;
-        input.className = "proof-input";
-        input.required = true;
-        if (type === "text") {
-          input.type = "text";
-          input.placeholder = "Enter your proof text here";
-        } else if (type === "screenshot") {
-          input.type = "file";
-          input.accept = "image/*";
+        if (querySnapshot.empty) {
+          myJobsList.innerHTML = "<p>No jobs found.</p>";
+        } else {
+          querySnapshot.forEach(docSnap => {
+            const job = { id: docSnap.id, ...docSnap.data() };
+            const card = createJobCard(job);
+            myJobsList.appendChild(card);
+          });
         }
-        proofForm.appendChild(label);
-        proofForm.appendChild(input);
-      });
-
-      submitBtn.style.display = "block";
-      jobModal.style.display = "flex";
-    };
-
-    submitBtn.onclick = async (e) => {
-      e.preventDefault();
-      const inputs = proofForm.querySelectorAll("input");
-      const proofData = {};
-      submitStatus.style.color = "black";
-      submitStatus.textContent = "Uploading proofs... Please wait.";
-
-      async function uploadFile(file, proofName) {
-        return new Promise((resolve, reject) => {
-          const fileName = `${currentUser.uid}_${currentJob.id}_${proofName}_${Date.now()}`;
-          const storageReference = storageRef(storage, `submissions/${fileName}`);
-          const uploadTask = uploadBytesResumable(storageReference, file);
-
-          uploadTask.on('state_changed',
-            () => {},
-            (error) => reject(error),
-            () => {
-              getDownloadURL(uploadTask.snapshot.ref).then(resolve).catch(reject);
-            }
-          );
-        });
+      } catch (err) {
+        myJobsList.innerHTML = `<p style="color:red;">Failed to load your jobs: ${err.message}</p>`;
+      } finally {
+        myJobsLoading.style.display = 'none';
       }
+    }
 
+    async function loadCompletedJobs() {
+      completedJobsLoading.style.display = 'block';
+      completedJobsList.innerHTML = '';
       try {
-        for (const input of inputs) {
-          if (input.type === "text") {
-            if (!input.value.trim()) {
-              submitStatus.style.color = "red";
-              submitStatus.textContent = "Please fill all text fields.";
-              return;
+        // We will get all submissions by current user first
+        const submissionsSnap = await getDocs(collection(db, "submissions"));
+        const userSubs = [];
+        submissionsSnap.forEach(docSnap => {
+          const sub = docSnap.data();
+          if(sub.userId === currentUser.uid) userSubs.push({ id: docSnap.id, ...sub });
+        });
+
+        if(userSubs.length === 0) {
+          completedJobsList.innerHTML = "<p>No completed jobs found.</p>";
+        } else {
+          // For each submission, get job data for display
+          for(const sub of userSubs) {
+            try {
+              const jobDoc = await getDoc(doc(db, "jobs", sub.taskId || sub.jobId || sub.job_id || ""));
+              if(!jobDoc.exists()) continue;
+              const job = { id: jobDoc.id, ...jobDoc.data() };
+              const card = createJobCard(job);
+              completedJobsList.appendChild(card);
+            } catch {
+              // Ignore errors on single job load
             }
-            proofData[input.name] = input.value.trim();
-          } else if (input.type === "file") {
-            if (!input.files[0]) {
-              submitStatus.style.color = "red";
-              submitStatus.textContent = "Please select all screenshots.";
-              return;
-            }
-            const url = await uploadFile(input.files[0], input.name);
-            proofData[input.name] = url;
           }
         }
-
-        await setDoc(doc(db, `jobs/${currentJob.id}/submissions/${currentUser.uid}`), {
-          userId: currentUser.uid,
-          userEmail: currentUser.email,
-          timestamp: new Date(),
-          proofs: proofData
-        });
-
-        submitStatus.style.color = "green";
-        submitStatus.textContent = "✅ Submission successful!";
-        submitBtn.style.display = "none";
-        currentJob.submitted = (currentJob.submitted || 0) + 1;
-        applyFilters();
-      } catch (err) {
-        submitStatus.style.color = "red";
-        submitStatus.textContent = "❌ Submission failed: " + err.message;
+      } catch(err) {
+        completedJobsList.innerHTML = `<p style="color:red;">Failed to load completed jobs: ${err.message}</p>`;
+      } finally {
+        completedJobsLoading.style.display = 'none';
       }
-    };
+    }
 
-    // Filter event listeners
-    searchInput.addEventListener('input', () => {
-      applyFilters();
-    });
-    categoryFilter.addEventListener('change', () => {
-      applyFilters();
-    });
-    sortSelect.addEventListener('change', () => {
-      applyFilters();
-    });
+    function createJobCard(job) {
+      const div = document.createElement('div');
+      div.className = 'job-card';
+      div.tabIndex = 0;
+      div.innerHTML = `
+        <h3>${job.title || 'Untitled Job'}</h3>
+        <div class="job-info">Category: ${job.category || 'N/A'}</div>
+        <div class="job-info">Reward: $${job.reward ?? 0}</div>
+      `;
+      div.addEventListener('click', () => openModal(job));
+      div.addEventListener('keypress', e => {
+        if(e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openModal(job);
+        }
+      });
+      return div;
+    }
+
+    function openModal(job) {
+      modalJobTitle.textContent = job.title || "Untitled Job";
+      modalJobDescription.textContent = job.description || "No description available.";
+      modalJobInfo.innerHTML = `
+        <p>Poster: ${job.ownerId || "N/A"}</p>
+        <p>Job ID: ${job.id}</p>
+        <p>Category: ${job.category || "N/A"}</p>
+        <p>Completion: ${job.submitted || 0} of ${job.slots || "∞"}</p>
+      `;
+      jobModal.style.display = "flex";
+    }
   </script>
-
 </body>
 </html>

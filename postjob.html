@@ -108,14 +108,13 @@
 
 <div class="container" role="main" tabindex="0">
   <h2>Post a New Job</h2>
-  <form id="postJobForm" novalidate>
+  <form id="postJobForm" novalidate enctype="multipart/form-data">
     <label for="title">Job Title</label>
     <input type="text" id="title" required placeholder="Enter job title" />
 
     <label for="description">Job Description</label>
     <textarea id="description" required placeholder="Enter job details"></textarea>
 
-    <!-- New Category dropdown added here -->
     <label for="category">Category</label>
     <select id="category" required>
       <option value="" disabled selected>Select category</option>
@@ -161,6 +160,9 @@
       <option value="screenshot">Screenshot</option>
     </select>
 
+    <label for="exampleScreenshot">Example Screenshot (optional)</label>
+    <input type="file" id="exampleScreenshot" accept="image/*" />
+
     <div id="message" class="message"></div>
 
     <button type="submit">Submit Job</button>
@@ -193,6 +195,12 @@
     addDoc,
     serverTimestamp
   } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  import {
+    getStorage,
+    ref as storageRef,
+    uploadBytes,
+    getDownloadURL
+  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -206,6 +214,7 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  const storage = getStorage(app);
 
   const form = document.getElementById("postJobForm");
   const messageDiv = document.getElementById("message");
@@ -217,11 +226,11 @@
       .catch((error) => alert("Error signing out: " + error.message));
   });
 
-  let userId = null;
+  let currentUser = null;
 
-  onAuthStateChanged(auth, async (user) => {
+  onAuthStateChanged(auth, (user) => {
     if (user) {
-      userId = user.uid;
+      currentUser = user;
     } else {
       window.location.href = "login.html";
     }
@@ -232,6 +241,15 @@
     messageDiv.textContent = "";
     messageDiv.className = "message";
 
+    if (!currentUser) {
+      messageDiv.textContent = "User not authenticated.";
+      messageDiv.classList.add("error");
+      return;
+    }
+
+    const posterName = currentUser.displayName || "Unknown";
+    const userId = currentUser.uid;
+
     const title = document.getElementById("title").value.trim();
     const description = document.getElementById("description").value.trim();
     const category = document.getElementById("category").value;
@@ -241,6 +259,7 @@
     const proof1 = document.getElementById("proof1").value || null;
     const proof2 = document.getElementById("proof2").value || null;
     const proof3 = document.getElementById("proof3").value || null;
+    const exampleFile = document.getElementById("exampleScreenshot").files[0] || null;
 
     if (!title || !description || !category || !reward || !slots || !proofType) {
       messageDiv.textContent = "Please fill out all required fields.";
@@ -249,7 +268,16 @@
     }
 
     try {
+      let exampleUrl = null;
+      if (exampleFile) {
+        const fileRef = storageRef(storage, `example_screenshots/${userId}_${Date.now()}_${exampleFile.name}`);
+        await uploadBytes(fileRef, exampleFile);
+        exampleUrl = await getDownloadURL(fileRef);
+      }
+
       await addDoc(collection(db, "jobs"), {
+        posterName,
+        userId,
         title,
         description,
         category,
@@ -259,13 +287,15 @@
         proof1,
         proof2,
         proof3,
-        userId,
+        exampleUrl,
         createdAt: serverTimestamp(),
         status: "pending"
       });
+
       messageDiv.textContent = "Job submitted successfully for approval.";
       messageDiv.classList.add("success");
       form.reset();
+
     } catch (error) {
       messageDiv.textContent = "Error posting job: " + error.message;
       messageDiv.classList.add("error");

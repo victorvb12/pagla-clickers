@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Pagla Clickers - User Profile</title>
+  <title>Pagla Clickers - Profile</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -34,46 +34,51 @@
 
 <div class="blue-strip-below-nav"></div>
 
-<div class="container" style="max-width:700px; margin: 30px auto; padding: 30px 40px; background: #fff; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,123,255,0.15);">
-  <h2 style="color: #007bff; text-align: center; margin-bottom: 35px; font-weight: 700; user-select: none;">User Profile</h2>
+<div class="container" style="max-width:600px; margin:40px auto; padding:32px; background:#fdfdfd; border-radius:16px; box-shadow:0 10px 25px rgba(0,0,0,0.08); border:1px solid #e0e0e0;">
+  <h2 style="color:#007bff; text-align:center; margin-bottom:35px; font-weight:700;">User Profile</h2>
 
-  <div class="profile-info" style="display: flex; flex-direction: column; gap: 25px;">
-    <div class="info-item" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-      <span style="font-weight: 600; font-size: 16px; min-width: 140px; color: #222; user-select: none;">Name:</span>
-      <input type="text" id="user-name" readonly style="flex-grow: 1; padding: 10px 14px; font-size: 15px; border: 1.8px solid #ddd; border-radius: 8px; background-color: #f9fbff;"/>
+  <div class="profile-info" style="display:flex; flex-direction:column; gap:20px;">
+    <div class="info-item" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <span style="flex:1; min-width:130px; font-weight:600; color:#333;">Name:</span>
+      <input type="text" id="user-name" readonly style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
     </div>
-    <div class="info-item" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-      <span style="font-weight: 600; font-size: 16px; min-width: 140px; color: #222; user-select: none;">Phone Number:</span>
-      <input type="text" id="user-phone" readonly style="flex-grow: 1; padding: 10px 14px; font-size: 15px; border: 1.8px solid #ddd; border-radius: 8px; background-color: #f9fbff;"/>
+    <div class="info-item" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <span style="flex:1; min-width:130px; font-weight:600; color:#333;">Phone Number:</span>
+      <input type="text" id="user-phone" readonly style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
     </div>
-    <div class="info-item" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-      <span style="font-weight: 600; font-size: 16px; min-width: 140px; color: #222; user-select: none;">Email:</span>
-      <input type="text" id="user-email" readonly style="flex-grow: 1; padding: 10px 14px; font-size: 15px; border: 1.8px solid #ddd; border-radius: 8px; background-color: #f9fbff;"/>
+    <div class="info-item" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <span style="flex:1; min-width:130px; font-weight:600; color:#333;">Email:</span>
+      <input type="text" id="user-email" readonly style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
     </div>
-    <div class="info-item" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-      <span style="font-weight: 600; font-size: 16px; min-width: 140px; color: #222; user-select: none;">Points:</span>
-      <input type="text" id="user-points" readonly style="flex-grow: 1; padding: 10px 14px; font-size: 15px; border: 1.8px solid #ddd; border-radius: 8px; background-color: #f9fbff;"/>
+    <div class="info-item" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <span style="flex:1; min-width:130px; font-weight:600; color:#333;">Current Balance (৳):</span>
+      <input type="text" id="user-points" readonly style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
     </div>
-    <div class="info-item" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-      <span style="font-weight: 600; font-size: 16px; min-width: 140px; color: #222; user-select: none;">Referral Code:</span>
-      <input type="text" id="user-ref" readonly style="flex-grow: 1; padding: 10px 14px; font-size: 15px; border: 1.8px solid #ddd; border-radius: 8px; background-color: #f9fbff;"/>
+    <div class="info-item" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <span style="flex:1; min-width:130px; font-weight:600; color:#333;">Referral Code:</span>
+      <input type="text" id="user-ref" readonly style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
     </div>
   </div>
 
-  <div class="buttons" style="text-align: center; margin-top: 30px;">
-    <button id="editBtn" onclick="enableEdit()" style="background-color:#007bff; color:white; padding: 10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer; margin-right: 15px;">Edit Profile</button>
-    <button id="saveBtn" onclick="saveProfile()" style="display:none; background-color:#007bff; color:white; padding: 10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer; margin-right: 15px;">Save</button>
-    <button onclick="resetPassword()" style="background-color:#6c757d; color:white; padding: 10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer;">Reset Password</button>
+  <div class="buttons" style="text-align:center; margin-top:30px;">
+    <button id="editBtn" onclick="enableEdit()" style="background-color:#007bff; color:white; padding:10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer; margin-right:15px;">Edit Profile</button>
+    <button id="saveBtn" onclick="saveProfile()" style="display:none; background-color:#007bff; color:white; padding:10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer; margin-right:15px;">Save</button>
+    <button onclick="togglePasswordForm()" style="background-color:#6c757d; color:white; padding:10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer;">Reset Password</button>
+  </div>
+
+  <div id="pwBox" style="display:none; margin-top:25px;">
+    <input type="password" id="old-pw" placeholder="Old Password" style="width:100%; padding:10px 14px; margin-bottom:12px; border:1.5px solid #ccc; border-radius:8px;" />
+    <input type="password" id="new-pw" placeholder="New Password" style="width:100%; padding:10px 14px; margin-bottom:12px; border:1.5px solid #ccc; border-radius:8px;" />
+    <input type="password" id="confirm-pw" placeholder="Confirm Password" style="width:100%; padding:10px 14px; margin-bottom:12px; border:1.5px solid #ccc; border-radius:8px;" />
+    <button onclick="changePassword()" style="width:100%; background:#28a745; color:white; padding:10px; border:none; border-radius:8px; font-weight:600;">Update Password</button>
   </div>
 </div>
 
-<footer>
-  <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
-</footer>
+<footer><p style="text-align:center; padding:20px;">&copy; 2025 Pagla Clickers. All rights reserved.</p></footer>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, EmailAuthProvider, reauthenticateWithCredential, updatePassword, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
   import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -88,7 +93,6 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-
   let currentUser;
 
   const nameInput = document.getElementById("user-name");
@@ -131,7 +135,6 @@
   window.saveProfile = async () => {
     const newName = nameInput.value.trim();
     const newPhone = phoneInput.value.trim();
-
     if (!newName || !newPhone) {
       alert("Name and Phone cannot be empty.");
       return;
@@ -149,28 +152,46 @@
       saveBtn.style.display = "none";
       editBtn.style.display = "inline-block";
     } catch (error) {
-      console.error("Error updating profile:", error);
-      alert("Failed to update profile.");
+      alert("Update failed.");
     }
   };
 
-  window.resetPassword = () => {
-    sendPasswordResetEmail(auth, currentUser.email)
-      .then(() => alert("Password reset email sent."))
-      .catch((error) => {
-        console.error("Reset error:", error);
-        alert("Failed to send reset email.");
-      });
+  window.togglePasswordForm = () => {
+    const pwBox = document.getElementById("pwBox");
+    pwBox.style.display = pwBox.style.display === "none" ? "block" : "none";
+  };
+
+  window.changePassword = async () => {
+    const oldPw = document.getElementById("old-pw").value.trim();
+    const newPw = document.getElementById("new-pw").value.trim();
+    const confirmPw = document.getElementById("confirm-pw").value.trim();
+
+    if (!oldPw || !newPw || !confirmPw) {
+      alert("Fill all fields.");
+      return;
+    }
+
+    if (newPw !== confirmPw) {
+      alert("New passwords don't match.");
+      return;
+    }
+
+    const credential = EmailAuthProvider.credential(currentUser.email, oldPw);
+
+    try {
+      await reauthenticateWithCredential(currentUser, credential);
+      await updatePassword(currentUser, newPw);
+      alert("Password updated.");
+      document.getElementById("pwBox").style.display = "none";
+    } catch (err) {
+      alert("Failed: " + err.message);
+    }
   };
 
   logoutBtn.addEventListener("click", () => {
     signOut(auth)
-      .then(() => {
-        window.location.href = "login.html";
-      })
-      .catch((error) => {
-        alert("Error signing out: " + error.message);
-      });
+      .then(() => (window.location.href = "login.html"))
+      .catch((error) => alert("Logout error: " + error.message));
   });
 </script>
 

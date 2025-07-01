@@ -5,19 +5,20 @@
   <title>Withdraw Money - Pagla Clickers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
-  
   <style>
-    /* Styles ONLY for the withdrawal form content */
+    * {
+      box-sizing: border-box;
+    }
     .container {
-      max-width: 800px;
+      max-width: 500px;
       margin: 30px auto;
       padding: 25px 20px;
       background: #f5f0ff;
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(161, 133, 207, 0.15);
+      font-family: Arial, sans-serif;
     }
-
-    .container h2 {
+    h2 {
       color: #6743b8;
       text-align: center;
       margin-bottom: 30px;
@@ -26,7 +27,30 @@
       padding-bottom: 8px;
       font-weight: 700;
     }
-
+    .tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 10px;
+  width: 100%;
+    }
+    .tab {
+      padding: 10px 25px;
+      cursor: pointer;
+      border-radius: 8px 8px 0 0;
+      background: #dcd6f7;
+      font-weight: 600;
+      color: #4a4175;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+    .tab.active {
+      background: #7a5dc7;
+      color: white;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
     label {
       display: block;
       font-weight: 600;
@@ -34,7 +58,6 @@
       font-size: 15px;
       color: #4a4175;
     }
-
     input[type="number"],
     input[type="text"],
     select {
@@ -44,20 +67,15 @@
       font-size: 15px;
       border: 1px solid #9b8bc3;
       border-radius: 6px;
-      box-sizing: border-box;
-      font-family: inherit;
       color: #4a4175;
       transition: border-color 0.3s ease;
+      font-family: inherit;
     }
-
-    input[type="number"]:focus,
-    input[type="text"]:focus,
-    select:focus {
+    input:focus, select:focus {
       border-color: #7a5dc7;
       outline: none;
       box-shadow: 0 0 5px #8f7ad1cc;
     }
-
     button[type="submit"] {
       width: 100%;
       background: #7a5dc7;
@@ -70,26 +88,41 @@
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.15s ease;
     }
-
-    button[type="submit"]:hover,
-    button[type="submit"]:focus {
+    button[type="submit"]:hover {
       background-color: #5f469a;
       transform: scale(1.03);
-      outline: none;
     }
-
     .message {
       text-align: center;
       margin-bottom: 1.5rem;
       font-size: 0.95rem;
     }
-
-    .success {
-      color: green;
+    .success { color: green; }
+    .error { color: red; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
     }
-
-    .error {
-      color: red;
+    th, td {
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background-color: #7a5dc7;
+      color: white;
+    }
+    tbody tr:nth-child(even) {
+      background: #f0e9ff;
+    }
+    #balanceDisplay {
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-align: right;
+      color: #6743b8;
+      font-size: 16px;
     }
   </style>
 </head>
@@ -121,38 +154,62 @@
 
 <div class="blue-strip-below-nav"></div>
 
-<div class="container" role="main" tabindex="0">
-  <h2>Request Withdrawal</h2>
-  <form id="withdrawForm" novalidate>
-    <label for="amount">Amount to withdraw ($)</label>
-    <input
-      type="number"
-      id="amount"
-      min="1"
-      step="0.01"
-      required
-      placeholder="Enter amount"
-    />
+<div class="container">
+  <div class="tabs">
+    <div class="tab active" data-tab="requestTab">Request Withdrawal</div>
+    <div class="tab" data-tab="historyTab">Transaction History</div>
+    <div class="tab" data-tab="leaderboardTab">Leaderboard</div>
+  </div>
 
-    <label for="paymentMethod">Select Payment Method</label>
-    <select id="paymentMethod" required>
-      <option value="" disabled selected>Select a payment method</option>
-      <option value="nagad">Nagad</option>
-      <option value="bkash">Bkash</option>
-    </select>
+  <div id="balanceDisplay">Current Balance: ৳0.00</div>
 
-    <label for="phoneNumber">Phone Number</label>
-    <input
-      type="text"
-      id="phoneNumber"
-      placeholder="Enter your Nagad or Bkash number"
-      required
-    />
+  <div id="requestTab" class="tab-content active">
+    <form id="withdrawForm" novalidate>
+      <label for="amount">Amount to withdraw (৳)</label>
+      <input type="number" id="amount" min="1" step="0.01" required placeholder="Enter amount" />
+      <label for="paymentMethod">Select Payment Method</label>
+      <select id="paymentMethod" required>
+        <option value="" disabled selected>Select a payment method</option>
+        <option value="nagad">Nagad</option>
+        <option value="bkash">Bkash</option>
+      </select>
+      <label for="phoneNumber">Phone Number</label>
+      <input type="text" id="phoneNumber" placeholder="Enter your Nagad or Bkash number" required />
+      <div id="message" class="message"></div>
+      <button type="submit">Submit Withdrawal Request</button>
+    </form>
+  </div>
 
-    <div id="message" class="message"></div>
+  <div id="historyTab" class="tab-content">
+    <table aria-label="Withdrawal transaction history">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Amount (৳)</th>
+          <th>Payment Method</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="historyBody">
+        <tr><td colspan="4" style="text-align:center;">Loading history...</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <button type="submit">Submit Withdrawal Request</button>
-  </form>
+  <div id="leaderboardTab" class="tab-content">
+    <table aria-label="Leaderboard of top users">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Username</th>
+          <th>Total Withdrawn (৳)</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+        <tr><td colspan="3" style="text-align:center;">Loading leaderboard...</td></tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <footer>
@@ -160,73 +217,71 @@
 </footer>
 
 <script>
-  // Hamburger toggle
-  const hamburger = document.querySelector('.hamburger');
-  const navList = document.getElementById('navList');
-  hamburger.addEventListener('click', () => {
-    navList.classList.toggle('active');
+  document.querySelector('.hamburger').onclick = () => {
+    document.getElementById('navList').classList.toggle('active');
+  };
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(target).classList.add('active');
+      if (target === 'leaderboardTab') loadLeaderboard();
+    });
   });
 </script>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
   import {
-    getAuth,
-    onAuthStateChanged,
-    signOut,
+    getAuth, onAuthStateChanged, signOut,
   } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
   import {
-    getFirestore,
-    doc,
-    getDoc,
-    collection,
-    addDoc,
-    serverTimestamp,
+    getFirestore, doc, getDoc, collection, addDoc, query, where, orderBy, getDocs, serverTimestamp,
   } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
-  const firebaseConfig = {
+  const app = initializeApp({
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
     authDomain: "pagla-b1c17.firebaseapp.com",
     projectId: "pagla-b1c17",
     storageBucket: "pagla-b1c17.appspot.com",
     messagingSenderId: "192578902502",
     appId: "1:192578902502:web:1595070cdac289170f5e27",
-  };
+  });
 
-  const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
   const form = document.getElementById("withdrawForm");
   const messageDiv = document.getElementById("message");
   const logoutBtn = document.getElementById("logoutBtn");
+  const balanceDisplay = document.getElementById("balanceDisplay");
+  const historyBody = document.getElementById("historyBody");
 
   let userId = null;
   let userBalance = 0;
 
-  logoutBtn.addEventListener("click", () => {
-    signOut(auth)
-      .then(() => {
-        window.location.href = "login.html";
-      })
-      .catch((error) => {
-        alert("Error signing out: " + error.message);
-      });
-  });
+  logoutBtn.onclick = () => {
+    signOut(auth).then(() => {
+      window.location.href = "login.html";
+    }).catch(error => alert("Error signing out: " + error.message));
+  };
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       userId = user.uid;
       const walletDoc = await getDoc(doc(db, "wallets", userId));
-      if (walletDoc.exists()) {
-        userBalance = walletDoc.data().balance || 0;
-      }
+      userBalance = walletDoc.exists() ? walletDoc.data().balance || 0 : 0;
+      balanceDisplay.textContent = `Current Balance: ৳${userBalance.toFixed(2)}`;
+      loadHistory();
     } else {
       window.location.href = "login.html";
     }
   });
 
-  form.addEventListener("submit", async (e) => {
+  form.onsubmit = async (e) => {
     e.preventDefault();
     messageDiv.textContent = "";
     messageDiv.className = "message";
@@ -258,21 +313,92 @@
 
     try {
       await addDoc(collection(db, "withdrawalRequests"), {
-        userId,
-        amount,
-        paymentMethod,
-        phoneNumber,
-        status: "pending",
-        requestedAt: serverTimestamp(),
+        userId, amount, paymentMethod, phoneNumber,
+        status: "pending", requestedAt: serverTimestamp(),
       });
       messageDiv.textContent = "Withdrawal request submitted successfully.";
       messageDiv.classList.add("success");
       form.reset();
+      userBalance -= amount;
+      balanceDisplay.textContent = `Current Balance: ৳${userBalance.toFixed(2)}`;
+      loadHistory();
     } catch (error) {
       messageDiv.textContent = "Error submitting request: " + error.message;
       messageDiv.classList.add("error");
     }
-  });
+  };
+
+  async function loadHistory() {
+    historyBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Loading history...</td></tr>`;
+    try {
+      const q = query(collection(db, "withdrawalRequests"), where("userId", "==", userId), orderBy("requestedAt", "desc"));
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) {
+        historyBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No withdrawal history found.</td></tr>`;
+        return;
+      }
+      let rows = "";
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        const date = d.requestedAt?.toDate ? d.requestedAt.toDate().toLocaleString() : "-";
+        rows += `
+          <tr>
+            <td>${date}</td>
+            <td>৳${d.amount.toFixed(2)}</td>
+            <td>${d.paymentMethod}</td>
+            <td>${capitalize(d.status)}</td>
+          </tr>
+        `;
+      });
+      historyBody.innerHTML = rows;
+    } catch (error) {
+      historyBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Error loading history</td></tr>`;
+    }
+  }
+
+  async function loadLeaderboard() {
+    const leaderboardBody = document.getElementById("leaderboardBody");
+    leaderboardBody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Loading leaderboard...</td></tr>`;
+
+    try {
+      const q = query(collection(db, "withdrawalRequests"), where("status", "==", "approved"));
+      const snapshot = await getDocs(q);
+
+      const totals = {};
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        if (!totals[d.userId]) totals[d.userId] = 0;
+        totals[d.userId] += d.amount || 0;
+      });
+
+      const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]).slice(0, 10);
+      const usernames = {};
+
+      await Promise.all(sorted.map(async ([uid]) => {
+        const userSnap = await getDoc(doc(db, "users", uid));
+        usernames[uid] = userSnap.exists() ? (userSnap.data().username || "User") : "Unknown";
+      }));
+
+      if (sorted.length === 0) {
+        leaderboardBody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No leaderboard data found.</td></tr>`;
+        return;
+      }
+
+      leaderboardBody.innerHTML = sorted.map(([uid, amount], i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${usernames[uid]}</td>
+          <td>৳${amount.toFixed(2)}</td>
+        </tr>
+      `).join("");
+    } catch (err) {
+      leaderboardBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:red;">Error loading leaderboard</td></tr>`;
+    }
+  }
+
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 </script>
 
 </body>

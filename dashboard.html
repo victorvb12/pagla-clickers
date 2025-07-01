@@ -5,12 +5,188 @@
   <title>Pagla Clickers - Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Removed completed tasks styles since section is deleted */
+
+    /* Task Detail styles */
+    #filterContainer {
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 5px;
+      align-items: center;
+      overflow-x: auto;
+    }
+
+    #filterContainer label {
+      white-space: nowrap;
+      font-weight: 300;
+      color: #333;
+      margin: 0;
+    }
+
+    #filterContainer input[type="search"],
+    #filterContainer select {
+      padding: 8px 3px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      min-width: 160px;
+      flex-shrink: 0;
+    }
+
+    .job-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 15px 20px;
+      margin: 15px 0;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      user-select: text;
+      cursor: pointer;
+      outline-offset: 4px;
+      outline: none;
+      transition: box-shadow 0.3s ease;
+    }
+    .job-card:hover,
+    .job-card:focus {
+      box-shadow: 0 0 25px rgba(0,123,255,0.6);
+    }
+    .job-card h3 {
+      margin: 0 0 10px 0;
+      color: #007bff;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .job-info {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #444;
+      margin-bottom: 4px;
+    }
+
+    /* Removed .view-btn styles because buttons removed */
+
+    /* Modal overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    /* Modal content */
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      max-width: 520px;
+      width: 90%;
+      padding: 25px 30px;
+      box-sizing: border-box;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+      user-select: text;
+    }
+
+    .closeBtn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #dc3545;
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .closeBtn:hover {
+      background: #b02a37;
+    }
+
+    .job-description-box {
+      border: 2px solid #007bff;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      color: #444;
+      white-space: pre-line;
+      background: #f0f8ff;
+    }
+    .job-description-title {
+      font-weight: 800;
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      color: #007bff;
+    }
+
+    /* Job info details inside modal */
+    .modal-job-info {
+      margin-bottom: 20px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #222;
+    }
+    .modal-job-info div {
+      margin-bottom: 6px;
+    }
+
+    .proof-form label {
+      display: block;
+      font-weight: 600;
+      margin-top: 12px;
+      margin-bottom: 4px;
+      color: #222;
+    }
+    .proof-form input[type="text"],
+    .proof-form input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .submit-proof-btn {
+      margin-top: 18px;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    .submit-proof-btn:hover:not(:disabled) {
+      background: #005bb5;
+    }
+    .submit-proof-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .submit-status {
+      margin-top: 10px;
+      font-weight: 600;
+      min-height: 1.5em;
+    }
+  </style>
 </head>
 <body>
 
   <header>
     Pagla Clickers Dashboard
-    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <button class="hamburger" aria-label="Toggle menu" onclick="toggleMenu()">☰</button>
   </header>
 
   <nav>
@@ -18,7 +194,7 @@
       <li><a href="about.html">About</a></li>
       <li><a href="notifications.html">Notifications</a></li>
       <li><a href="profile.html">Profile</a></li>
-      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="dashboard.html" aria-current="page">Dashboard</a></li>
       <li><a href="postjob.html">Post Job</a></li>
       <li><a href="taskdetail.html">Tasks</a></li>
       <li><a href="referel.html">Referral</a></li>
@@ -35,41 +211,89 @@
   <div class="blue-strip-below-nav"></div>
 
   <div class="container">
-    <h2>Welcome, <span id="userName">Loading...</span></h2>
-    <p>Your Balance: <strong id="userBalance">Loading...</strong></p>
 
-    <h3>Completed Tasks</h3>
+    <!-- Dashboard Section -->
+    <section id="dashboardSection">
+      <h2>Welcome, <span id="userName">Loading...</span></h2>
+      <p>Your Balance: <strong id="userBalance">Loading...</strong></p>
+    </section>
 
-    <div style="overflow-x:auto; margin-top:20px; border:1px solid #9b8bc3; border-radius:8px; box-shadow: 0 2px 6px rgba(138, 115, 202, 0.25); background: white;">
-      <table style="width:100%; border-collapse: collapse; font-size: 15px; color: #4a4175;">
-        <thead>
-          <tr style="background-color:#7a5dc7; color:white; font-weight:600;">
-            <th style="padding:12px 15px; border:1px solid #9b8bc3; text-align:left;">Task Title</th>
-            <th style="padding:12px 15px; border:1px solid #9b8bc3; text-align:left;">Status</th>
-            <th style="padding:12px 15px; border:1px solid #9b8bc3; text-align:left;">Submitted At</th>
-          </tr>
-        </thead>
-        <tbody id="completedTasksBody" style="border:1px solid #9b8bc3;">
-          <tr><td colspan="3" style="padding:12px 15px; border:1px solid #9b8bc3; text-align:center;">Loading completed tasks...</td></tr>
-        </tbody>
-      </table>
+    <!-- Divider -->
+    <hr style="margin: 30px 0; border-color: #ccc;" />
+
+    <!-- Task Detail Section -->
+    <section id="taskDetailSection">
+      <h2>Available Jobs</h2>
+	<p id="jobCount" style="margin-bottom: 10px; font-weight: 600;">Loading jobs...</p>
+
+      <div id="filterContainer" aria-label="Job filters">
+        <label for="searchInput">Search:</label>
+        <input type="search" id="searchInput" placeholder="Search jobs..." aria-describedby="searchDesc" />
+
+        <label for="categoryFilter">Category:</label>
+        <select id="categoryFilter" aria-describedby="categoryDesc">
+          <option value="">All Categories</option>
+        </select>
+
+        <label for="sortSelect">Sort by:</label>
+        <select id="sortSelect" aria-describedby="sortDesc">
+          <option value="default">Default</option>
+          <option value="priceAsc">Price: Low to High</option>
+          <option value="priceDesc">Price: High to Low</option>
+        </select>
+      </div>
+
+      <section id="jobsContainer" class="jobs-list" aria-live="polite">Loading...</section>
+    </section>
+  </div>
+
+  <!-- Modal -->
+  <div id="jobModal" role="dialog" aria-modal="true" class="modal-overlay" style="display:none;">
+    <div id="jobModalContent" class="modal-content">
+      <button class="closeBtn" onclick="closeModal()" aria-label="Close modal">X</button>
+      <h3 id="jobTitle"></h3>
+
+      <!-- Job info details added here -->
+      <div class="modal-job-info" id="modalJobInfo">
+        <div><strong>Poster:</strong> N/A</div>
+        <div><strong>Job ID:</strong> <span id="modalJobId"></span></div>
+        <div><strong>Category:</strong> <span id="modalJobCategory"></span></div>
+        <div><strong>Completion:</strong> <span id="modalJobCompletion"></span></div>
+      </div>
+
+      <div>
+        <div class="job-description-title">Job Description</div>
+        <div id="jobDescriptionBox" class="job-description-box"></div>
+      </div>
+
+      <form id="proofForm" class="proof-form"></form>
+      <button id="submitBtn" class="submit-proof-btn" style="display: none;">Submit Proof</button>
+      <p id="submitStatus" class="submit-status"></p>
     </div>
   </div>
 
   <footer>
-    <p>&copy; 2025 Pagla Clickers</p>
+    <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
   </footer>
 
   <script>
     function toggleMenu() {
       document.getElementById('navList').classList.toggle('active');
     }
+    function closeModal() {
+      document.getElementById('jobModal').style.display = 'none';
+      currentJob = null;
+      proofForm.innerHTML = "";
+      submitStatus.textContent = "";
+      submitBtn.style.display = "none";
+    }
   </script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+    import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -77,17 +301,42 @@
       projectId: "pagla-b1c17",
       storageBucket: "pagla-b1c17.appspot.com",
       messagingSenderId: "192578902502",
-      appId: "1:192578902502:web:1595070cdac289170f5e27"
+      appId: "1:192578902502:web:4b441210b15cfebf008ecf"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const storage = getStorage(app);
 
+    // Dashboard Elements
     const userName = document.getElementById('userName');
     const userBalance = document.getElementById('userBalance');
-    const completedTasksBody = document.getElementById('completedTasksBody');
+
+    // Task Detail Elements
+    const jobsContainer = document.getElementById("jobsContainer");
+    const jobModal = document.getElementById("jobModal");
+    const jobTitle = document.getElementById("jobTitle");
+    const jobDescriptionBox = document.getElementById("jobDescriptionBox");
+    const proofForm = document.getElementById("proofForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const submitStatus = document.getElementById("submitStatus");
+
+    // Modal job info spans
+    const modalJobId = document.getElementById("modalJobId");
+    const modalJobCategory = document.getElementById("modalJobCategory");
+    const modalJobCompletion = document.getElementById("modalJobCompletion");
+
+    // Controls
     const logoutBtn = document.getElementById('logoutBtn');
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const sortSelect = document.getElementById("sortSelect");
+
+    let currentUser = null;
+    let currentJob = null;
+    let jobList = [];
+    let filteredList = [];
 
     logoutBtn.addEventListener('click', () => {
       signOut(auth).then(() => {
@@ -99,6 +348,9 @@
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
+        currentUser = user;
+
+        // Load Dashboard info
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
           const data = userDoc.data();
@@ -109,41 +361,237 @@
           userBalance.innerText = "৳0";
         }
 
-        const submissionsSnap = await getDocs(collection(db, "submissions"));
-        const userSubs = [];
-        submissionsSnap.forEach(doc => {
-          const data = doc.data();
-          if (data.userId === user.uid) {
-            userSubs.push({ ...data, id: doc.id });
-          }
-        });
+        // Load jobs for Task Detail
+        await loadJobs();
 
-        completedTasksBody.innerHTML = "";
-        if (userSubs.length === 0) {
-          completedTasksBody.innerHTML = "<tr><td colspan='3' style='padding:12px 15px; border:1px solid #9b8bc3; text-align:center;'>No completed tasks found.</td></tr>";
-        } else {
-          for (const sub of userSubs) {
-            let title = "Loading...";
-            try {
-              const taskDoc = await getDoc(doc(db, "tasks", sub.taskId));
-              title = taskDoc.exists() ? taskDoc.data().title : "Unknown Task";
-            } catch {
-              title = "Error Loading Title";
-            }
-
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-              <td style="padding:12px 15px; border:1px solid #9b8bc3;">${title}</td>
-              <td style="padding:12px 15px; border:1px solid #9b8bc3;">${sub.status || "Pending"}</td>
-              <td style="padding:12px 15px; border:1px solid #9b8bc3;">${sub.submittedAt?.toDate().toLocaleString() || "N/A"}</td>
-            `;
-            completedTasksBody.appendChild(tr);
-          }
-        }
       } else {
         window.location.href = "login.html";
       }
     });
+
+    async function loadJobs() {
+      try {
+        const jobSnap = await getDocs(collection(db, "jobs"));
+        jobList = [];
+
+        await Promise.all(jobSnap.docs.map(async (docSnap) => {
+          const data = docSnap.data();
+          const jobId = docSnap.id;
+
+          const subsSnap = await getDocs(collection(db, `jobs/${jobId}/submissions`));
+          const submittedCount = subsSnap.size;
+
+          jobList.push({ id: jobId, ...data, submitted: submittedCount });
+        }));
+
+        populateCategoryFilter();
+        applyFilters();
+      } catch (error) {
+        jobsContainer.innerHTML = `<p style="padding:20px; color:red;">Failed to load jobs: ${error.message}</p>`;
+      }
+    }
+
+    function populateCategoryFilter() {
+      const categories = new Set();
+      jobList.forEach(job => {
+        if (job.category) categories.add(job.category);
+      });
+      categoryFilter.innerHTML = '<option value="">All Categories</option>';
+      [...categories].sort().forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        categoryFilter.appendChild(option);
+      });
+    }
+
+    function applyFilters() {
+      const searchText = searchInput.value.trim().toLowerCase();
+      const selectedCategory = categoryFilter.value;
+      const sortOption = sortSelect.value;
+
+      filteredList = jobList.filter(job => {
+        const matchesSearch = job.title.toLowerCase().includes(searchText);
+        const matchesCategory = selectedCategory ? job.category === selectedCategory : true;
+        return matchesSearch && matchesCategory;
+      });
+
+      if (sortOption === "priceAsc") {
+        filteredList.sort((a, b) => (a.reward ?? 0) - (b.reward ?? 0));
+      } else if (sortOption === "priceDesc") {
+        filteredList.sort((a, b) => (b.reward ?? 0) - (a.reward ?? 0));
+      }
+
+      renderJobs();
+    }
+
+    function renderJobs() {
+	document.getElementById("jobCount").textContent = `Showing ${filteredList.length} job(s)`;
+      jobsContainer.innerHTML = "";
+      if (filteredList.length === 0) {
+        jobsContainer.innerHTML = "<p>No jobs found matching criteria.</p>";
+        return;
+      }
+      filteredList.forEach(job => {
+        const submitted = job.submitted || 0;
+        const slots = job.slots || "∞";
+        const slotInfo = slots === "∞" ? "Unlimited slots" : `${submitted} / ${slots} used`;
+        const isOwner = job.ownerId === currentUser?.uid;
+        const crown = isOwner ? " 👑 Your Job" : "";
+
+        const div = document.createElement("div");
+        div.className = "job-card";
+        div.tabIndex = 0;
+        div.setAttribute('role', 'region');
+        div.style.userSelect = "text";
+        div.innerHTML = `
+          <h3>${job.title || "Untitled Job"}${crown}</h3>
+          <div class="job-info">Reward: $${job.reward ?? 0}</div>
+          <div class="job-info">Slots: ${slotInfo}</div>
+          <div class="job-info">Category: ${job.category || 'N/A'}</div>
+        `;
+
+        div.addEventListener('click', () => openModal(job.id));
+        div.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openModal(job.id);
+          }
+        });
+
+        jobsContainer.appendChild(div);
+      });
+    }
+
+    window.openModal = async (jobId) => {
+      currentJob = jobList.find(j => j.id === jobId);
+      if (!currentJob) return;
+
+      proofForm.innerHTML = "";
+      submitStatus.textContent = "";
+      jobDescriptionBox.textContent = "";
+
+      // Set modal job info
+      modalJobId.textContent = currentJob.id;
+      modalJobCategory.textContent = currentJob.category || "N/A";
+      modalJobCompletion.textContent = `${currentJob.submitted || 0} of ${currentJob.slots || "∞"}`;
+
+      if (currentJob.ownerId === currentUser.uid) {
+        jobTitle.textContent = "Your Own Job";
+        jobDescriptionBox.textContent = currentJob.description || "No description available.";
+        submitBtn.style.display = "none";
+        jobModal.style.display = "flex";
+        return;
+      }
+
+      const submissionDoc = await getDoc(doc(db, `jobs/${jobId}/submissions/${currentUser.uid}`));
+      if (submissionDoc.exists()) {
+        jobTitle.textContent = "Already Submitted";
+        jobDescriptionBox.textContent = currentJob.description || "No description available.";
+        submitBtn.style.display = "none";
+        jobModal.style.display = "flex";
+        return;
+      }
+
+      jobTitle.textContent = currentJob.title || "Untitled Job";
+      jobDescriptionBox.textContent = currentJob.description || "No description available.";
+
+      const proofs = (currentJob.proofType || "").split(',').map(p => p.trim()).filter(Boolean);
+
+      proofs.forEach((type, index) => {
+        const label = document.createElement("label");
+        label.textContent = `Proof ${index + 1} (${type})`;
+        const input = document.createElement("input");
+        input.name = `proof${index + 1}`;
+        input.className = "proof-input";
+        input.required = true;
+        if (type === "text") {
+          input.type = "text";
+          input.placeholder = "Enter your proof text here";
+        } else if (type === "screenshot") {
+          input.type = "file";
+          input.accept = "image/*";
+        }
+        proofForm.appendChild(label);
+        proofForm.appendChild(input);
+      });
+
+      submitBtn.style.display = proofs.length > 0 ? "block" : "none";
+      jobModal.style.display = "flex";
+    };
+
+    submitBtn.onclick = async (e) => {
+      e.preventDefault();
+      const inputs = proofForm.querySelectorAll("input");
+      const proofData = {};
+      submitStatus.style.color = "black";
+      submitStatus.textContent = "Uploading proofs... Please wait.";
+
+      async function uploadFile(file, proofName) {
+        return new Promise((resolve, reject) => {
+          const fileName = `${currentUser.uid}_${currentJob.id}_${proofName}_${Date.now()}`;
+          const storageReference = storageRef(storage, `submissions/${fileName}`);
+          const uploadTask = uploadBytesResumable(storageReference, file);
+
+          uploadTask.on('state_changed',
+            () => {},
+            (error) => reject(error),
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then(resolve).catch(reject);
+            }
+          );
+        });
+      }
+
+      try {
+        for (const input of inputs) {
+          if (input.type === "text") {
+            if (!input.value.trim()) {
+              submitStatus.style.color = "red";
+              submitStatus.textContent = "Please fill all text fields.";
+              return;
+            }
+            proofData[input.name] = input.value.trim();
+          } else if (input.type === "file") {
+            if (!input.files[0]) {
+              submitStatus.style.color = "red";
+              submitStatus.textContent = "Please select all screenshots.";
+              return;
+            }
+            const url = await uploadFile(input.files[0], input.name);
+            proofData[input.name] = url;
+          }
+        }
+
+        await setDoc(doc(db, `jobs/${currentJob.id}/submissions/${currentUser.uid}`), {
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          timestamp: new Date(),
+          proofs: proofData
+        });
+
+        submitStatus.style.color = "green";
+        submitStatus.textContent = "✅ Submission successful!";
+        submitBtn.style.display = "none";
+        currentJob.submitted = (currentJob.submitted || 0) + 1;
+        applyFilters();
+      } catch (err) {
+        submitStatus.style.color = "red";
+        submitStatus.textContent = "❌ Submission failed: " + err.message;
+      }
+    };
+
+    // Filter event listeners
+    searchInput.addEventListener('input', () => {
+      applyFilters();
+    });
+    categoryFilter.addEventListener('change', () => {
+      applyFilters();
+    });
+    sortSelect.addEventListener('change', () => {
+      applyFilters();
+    });
   </script>
+
 </body>
 </html>
