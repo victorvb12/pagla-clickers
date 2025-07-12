@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Your existing CSS (unchanged) */
     .ref-container {
       background: #f5f0ff;
       padding: 25px 20px;
@@ -221,6 +220,21 @@
       tabEarn.style.color = '#4a4175';
     }
   }
+
+  function copyLink() {
+    const refInput = document.getElementById("refLink");
+    const copiedMsg = document.getElementById("copiedMsg");
+    refInput.select();
+    refInput.setSelectionRange(0, 99999); // For mobile devices
+
+    navigator.clipboard.writeText(refInput.value).then(() => {
+      copiedMsg.textContent = "Copied to clipboard ✅";
+      setTimeout(() => copiedMsg.textContent = "", 2000);
+    }).catch(() => {
+      copiedMsg.textContent = "Failed to copy!";
+      setTimeout(() => copiedMsg.textContent = "", 2000);
+    });
+  }
 </script>
 
 <script type="module">
@@ -282,21 +296,6 @@
       });
     }
   });
-
-  function copyLink() {
-    refInput.removeAttribute("readonly");
-    refInput.select();
-    refInput.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(refInput.value)
-      .then(() => {
-        copiedMsg.textContent = "Copied to clipboard ✅";
-        setTimeout(() => copiedMsg.textContent = "", 2000);
-      })
-      .catch(() => {
-        copiedMsg.textContent = "Failed to copy ❌";
-      });
-    refInput.setAttribute("readonly", true);
-  }
 
   function setupShareLinks(link) {
     waShare.href = `https://wa.me/?text=Join Pagla Clickers and earn! Use my referral link: ${encodeURIComponent(link)}`;
