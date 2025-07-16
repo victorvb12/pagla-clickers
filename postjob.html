@@ -193,7 +193,9 @@
     getFirestore,
     collection,
     addDoc,
-    serverTimestamp
+    serverTimestamp,
+    doc,
+    getDoc
   } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
   import {
     getStorage,
@@ -227,10 +229,23 @@
   });
 
   let currentUser = null;
+  let posterName = "Unknown";
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = user;
+      // Fetch username from Firestore users collection
+      try {
+        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          posterName = userData.username || currentUser.displayName || "Unknown";
+        } else {
+          posterName = currentUser.displayName || "Unknown";
+        }
+      } catch (error) {
+        posterName = currentUser.displayName || "Unknown";
+      }
     } else {
       window.location.href = "login.html";
     }
@@ -247,7 +262,6 @@
       return;
     }
 
-    const posterName = currentUser.displayName || "Unknown";
     const userId = currentUser.uid;
 
     const title = document.getElementById("title").value.trim();
