@@ -177,7 +177,7 @@
     </section>
 
     <section id="completedJobsTab" class="tab-content" role="tabpanel" aria-labelledby="completedJobsTabBtn">
-      <p id="completedJobsLoading">Loading completed jobs...</p>
+      <p>No completed jobs to show.</p>
       <div id="completedJobsList"></div>
     </section>
   </div>
@@ -238,7 +238,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-    import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+    import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -256,8 +256,6 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const myJobsList = document.getElementById('myJobsList');
     const myJobsLoading = document.getElementById('myJobsLoading');
-    const completedJobsList = document.getElementById('completedJobsList');
-    const completedJobsLoading = document.getElementById('completedJobsLoading');
 
     const jobModal = document.getElementById('jobModal');
     const modalJobTitle = document.getElementById('modalJobTitle');
@@ -281,7 +279,7 @@
       }
       currentUser = user;
       await loadMyJobs();
-      await loadCompletedJobs();
+      // Completed jobs loading intentionally disabled
     });
 
     async function loadMyJobs() {
@@ -304,39 +302,6 @@
         myJobsList.innerHTML = `<p style="color:red;">Failed to load your jobs: ${err.message}</p>`;
       } finally {
         myJobsLoading.style.display = 'none';
-      }
-    }
-
-    async function loadCompletedJobs() {
-      completedJobsLoading.style.display = 'block';
-      completedJobsList.innerHTML = '';
-      try {
-        const submissionsSnap = await getDocs(collection(db, "submissions"));
-        const userSubs = [];
-        submissionsSnap.forEach(docSnap => {
-          const sub = docSnap.data();
-          if(sub.userId === currentUser.uid) userSubs.push({ id: docSnap.id, ...sub });
-        });
-
-        if(userSubs.length === 0) {
-          completedJobsList.innerHTML = "<p>No completed jobs found.</p>";
-        } else {
-          for(const sub of userSubs) {
-            try {
-              const jobDoc = await getDoc(doc(db, "jobs", sub.taskId || sub.jobId || sub.job_id || ""));
-              if(!jobDoc.exists()) continue;
-              const job = { id: jobDoc.id, ...jobDoc.data() };
-              const card = createJobCard(job);
-              completedJobsList.appendChild(card);
-            } catch {
-              // Ignore single job load errors
-            }
-          }
-        }
-      } catch(err) {
-        completedJobsList.innerHTML = `<p style="color:red;">Failed to load completed jobs: ${err.message}</p>`;
-      } finally {
-        completedJobsLoading.style.display = 'none';
       }
     }
 
