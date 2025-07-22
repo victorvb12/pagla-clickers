@@ -44,6 +44,7 @@
       box-shadow: 0 0 10px rgba(138, 115, 202, 0.2);
       cursor: pointer;
       user-select: text;
+      position: relative;
     }
     .job-card h3 {
       margin: 0 0 8px 0;
@@ -57,13 +58,40 @@
       font-size: 1rem;
       margin: 3px 0;
     }
+    .job-actions {
+      margin-top: 10px;
+    }
+    .job-actions button {
+      padding: 6px 12px;
+      margin-right: 8px;
+      font-weight: 700;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+    .btn-increase {
+      background-color: #28a745;
+      color: white;
+    }
+    .btn-increase:hover {
+      background-color: #218838;
+    }
+    .btn-delete {
+      background-color: #dc3545;
+      color: white;
+    }
+    .btn-delete:hover {
+      background-color: #b02a37;
+    }
 
     /* Modal */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.7);
-      display: flex;
+      display: none;
       justify-content: center;
       align-items: center;
       z-index: 3000;
@@ -155,7 +183,7 @@
   </div>
 
   <!-- Modal -->
-  <div id="jobModal" role="dialog" aria-modal="true" class="modal-overlay" style="display:none;">
+  <div id="jobModal" role="dialog" aria-modal="true" class="modal-overlay">
     <div class="modal-content">
       <button class="closeBtn" onclick="closeModal()" aria-label="Close modal">X</button>
       <h3 id="modalJobTitle"></h3>
@@ -210,7 +238,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-    import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+    import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -260,8 +288,7 @@
       myJobsLoading.style.display = 'block';
       myJobsList.innerHTML = '';
       try {
-        console.log("Fetching jobs for user:", currentUser.uid);
-        const q = query(collection(db, "jobs"), where("ownerId", "==", currentUser.uid));
+        const q = query(collection(db, "jobs"), where("userId", "==", currentUser.uid));
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
@@ -284,7 +311,6 @@
       completedJobsLoading.style.display = 'block';
       completedJobsList.innerHTML = '';
       try {
-        // We will get all submissions by current user first
         const submissionsSnap = await getDocs(collection(db, "submissions"));
         const userSubs = [];
         submissionsSnap.forEach(docSnap => {
@@ -295,7 +321,6 @@
         if(userSubs.length === 0) {
           completedJobsList.innerHTML = "<p>No completed jobs found.</p>";
         } else {
-          // For each submission, get job data for display
           for(const sub of userSubs) {
             try {
               const jobDoc = await getDoc(doc(db, "jobs", sub.taskId || sub.jobId || sub.job_id || ""));
@@ -304,7 +329,7 @@
               const card = createJobCard(job);
               completedJobsList.appendChild(card);
             } catch {
-              // Ignore errors on single job load
+              // Ignore single job load errors
             }
           }
         }
@@ -319,18 +344,62 @@
       const div = document.createElement('div');
       div.className = 'job-card';
       div.tabIndex = 0;
+
       div.innerHTML = `
         <h3>${job.title || 'Untitled Job'}</h3>
         <div class="job-info">Category: ${job.category || 'N/A'}</div>
         <div class="job-info">Reward: $${job.reward ?? 0}</div>
+        <div class="job-info">Slots: ${job.slots ?? 0}</div>
+        <div class="job-actions">
+          <button class="btn-increase" type="button">Increase Slots</button>
+          <button class="btn-delete" type="button">Delete</button>
+        </div>
       `;
-      div.addEventListener('click', () => openModal(job));
+
+      // Open modal on clicking card but NOT on clicking buttons
+      div.addEventListener('click', e => {
+        if(e.target.tagName.toLowerCase() === 'button') return;
+        openModal(job);
+      });
       div.addEventListener('keypress', e => {
         if(e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           openModal(job);
         }
       });
+
+      // Increase slots button
+      div.querySelector('.btn-increase').addEventListener('click', async e => {
+        e.stopPropagation();
+        const value = prompt("Enter how many slots to add:");
+        const addValue = parseInt(value);
+        if (isNaN(addValue) || addValue < 1) {
+          alert("Invalid number");
+          return;
+        }
+        try {
+          const jobRef = doc(db, "jobs", job.id);
+          await updateDoc(jobRef, { slots: (job.slots ?? 0) + addValue });
+          alert("Slots updated");
+          await loadMyJobs();
+        } catch (err) {
+          alert("Error updating slots: " + err.message);
+        }
+      });
+
+      // Delete button
+      div.querySelector('.btn-delete').addEventListener('click', async e => {
+        e.stopPropagation();
+        if (!confirm("Delete this job?")) return;
+        try {
+          await deleteDoc(doc(db, "jobs", job.id));
+          alert("Job deleted");
+          await loadMyJobs();
+        } catch (err) {
+          alert("Error deleting job: " + err.message);
+        }
+      });
+
       return div;
     }
 
@@ -338,7 +407,7 @@
       modalJobTitle.textContent = job.title || "Untitled Job";
       modalJobDescription.textContent = job.description || "No description available.";
       modalJobInfo.innerHTML = `
-        <p>Poster: ${job.ownerId || "N/A"}</p>
+        <p>Poster: ${job.posterName || job.userId || "N/A"}</p>
         <p>Job ID: ${job.id}</p>
         <p>Category: ${job.category || "N/A"}</p>
         <p>Completion: ${job.submitted || 0} of ${job.slots || "∞"}</p>
