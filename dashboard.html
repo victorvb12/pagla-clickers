@@ -473,159 +473,159 @@ width: 100%;
       renderJobs();
     }
 
-    function renderJobs() {
-      document.getElementById("jobCount").textContent = `Showing ${filteredList.length} job(s)`;
-      jobsContainer.innerHTML = "";
-      if (filteredList.length === 0) {
-        jobsContainer.innerHTML = "<p>No jobs found matching criteria.</p>";
-        return;
-      }
-      filteredList.forEach(job => {
-        const submitted = job.submitted || 0;
-        const slots = job.slots ?? "∞";
-        const slotInfo = slots === "∞" ? "Unlimited slots" : `${submitted} / ${slots} used`;
-        const isOwner = job.userId === currentUser?.uid;
-        const crown = isOwner ? " 👑 Your Job" : "";
+function renderJobs() {
+  document.getElementById("jobCount").textContent = `Showing ${filteredList.length} job(s)`;
+  jobsContainer.innerHTML = "";
+  if (filteredList.length === 0) {
+    jobsContainer.innerHTML = "<p>No jobs found matching criteria.</p>";
+    return;
+  }
+  filteredList.forEach(job => {
+    const submitted = job.submitted || 0;
+    const slots = job.slots ?? "∞";
+    const slotInfo = slots === "∞" ? "Unlimited slots" : `${submitted} / ${slots} used`;
+    const isOwner = job.userId === currentUser?.uid;
+    const crown = isOwner ? " 👑 Your Job" : "";
 
+    const div = document.createElement("div");
+    div.className = "job-card";
+    div.tabIndex = 0;
+    div.setAttribute('role', 'region');
+    div.innerHTML = `
+      <h3>${job.title || "Untitled Job"}${crown}</h3>
+      <div class="job-info" style="display:flex; flex-direction: column; gap: 3px;">
+        <div>Category: ${job.category || "Uncategorized"}</div>
+        <div>Reward: ৳${job.reward ?? 0}</div>
+        <div>Slots: ${slotInfo}</div>
+      </div>
+    `;
+
+    div.addEventListener("click", () => openModal(job));
+    div.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal(job); } });
+
+    jobsContainer.appendChild(div);
+  });
+}
+
+
+    searchInput.addEventListener("input", applyFilters);
+    categoryFilter.addEventListener("change", applyFilters);
+    sortSelect.addEventListener("change", applyFilters);
+
+    // --- FIXED openModal function ---
+async function openModal(job) {
+  currentJob = job;
+  jobTitle.textContent = job.title || "Untitled Job";
+  modalPosterName.textContent = job.posterName || "N/A";
+  modalJobId.textContent = job.id;
+  modalJobCategory.textContent = job.category || "Uncategorized";
+
+  const submitted = job.submitted || 0;
+  const slots = job.slots === undefined ? Infinity : job.slots;
+  const slotInfo = slots === Infinity ? "Unlimited slots" : `${submitted} / ${slots} used`;
+  modalJobCompletion.textContent = slotInfo;
+
+  jobDescriptionBox.textContent = job.description || "No description provided.";
+
+  proofForm.innerHTML = "";
+  submitStatus.textContent = "";
+  submitBtn.style.display = "none";
+  submitBtn.disabled = false;
+
+  // Check if user already submitted for this job
+  const submissionRef = doc(db, "jobs", job.id, "submissions", currentUser.uid);
+  const submissionSnap = await getDoc(submissionRef);
+  const hasSubmitted = submissionSnap.exists();
+
+  if (currentUser.uid !== job.userId && !hasSubmitted) {
+    // Collect all proof fields from job document
+    const proofFields = [];
+    if (job.proofType) proofFields.push(job.proofType);
+    if (job.proof1) proofFields.push(job.proof1);
+    if (job.proof2) proofFields.push(job.proof2);
+    if (job.proof3) proofFields.push(job.proof3);
+
+    // Filter out empty or 'None'
+    const filteredProofFields = proofFields.filter(pt => pt && pt.trim() !== "" && pt.toLowerCase() !== "none");
+
+    function createProofInput(type, index) {
+      const label = document.createElement("label");
+      label.textContent = `Proof (${type}):`;
+      const input = document.createElement("input");
+      input.type = "text";
+      input.className = "proof-input";
+      input.name = `proof${index + 1}`;
+      input.placeholder = `Enter your proof (${type})`;
+      proofForm.appendChild(label);
+      proofForm.appendChild(input);
+    }
+
+    if (filteredProofFields.length > 0) {
+      filteredProofFields.forEach((type, index) => {
+        createProofInput(type, index);
+      });
+    } else {
+      createProofInput("Proof", 0);
+    }
+
+    submitBtn.style.display = "inline-block";
+
+  } else if (hasSubmitted) {
+    // Show saved proofs from firestore fields proof1, proof2, proof3
+    const data = submissionSnap.data();
+    proofForm.innerHTML = "<strong>Your submission:</strong>";
+    ['proof1', 'proof2', 'proof3'].forEach(key => {
+      if (data[key]) {
         const div = document.createElement("div");
-        div.className = "job-card";
-        div.tabIndex = 0;
-        div.setAttribute('role', 'region');
-        div.innerHTML = `
-          <h3>${job.title || "Untitled Job"}${crown}</h3>
-          <div class="job-info">Reward: ৳${job.reward ?? 0}</div>
-          <div class="job-info">Slots: ${slotInfo}</div>
-          <div class="job-info">Category: ${job.category || 'N/A'}</div>
-        `;
-        div.addEventListener('click', () => openModal(job.id));
-        div.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            openModal(job.id);
-          }
-        });
-        jobsContainer.appendChild(div);
-      });
-    }
-
-    window.openModal = async (jobId) => {
-      currentJob = jobList.find(j => j.id === jobId);
-      if (!currentJob) return;
-
-      proofForm.innerHTML = "";
-      submitStatus.textContent = "";
-      jobDescriptionBox.textContent = "";
-
-      modalPosterName.textContent = currentJob.posterName || "N/A";
-      modalJobId.textContent = currentJob.id;
-      modalJobCategory.textContent = currentJob.category || "N/A";
-      modalJobCompletion.textContent = `${currentJob.submitted || 0} of ${currentJob.slots || "∞"}`;
-
-      if (currentJob.userId === currentUser.uid) {
-        jobTitle.textContent = "👑 Your Job";
-        jobDescriptionBox.textContent = currentJob.description || "No description available.";
-        submitBtn.style.display = "none";
-        showModal();
-        return;
-      }
-
-      const submissionDoc = await getDoc(doc(db, "jobs", jobId, "submissions", currentUser.uid));
-      if (submissionDoc.exists()) {
-        jobTitle.textContent = "You have already submitted proof for this job.";
-        jobDescriptionBox.textContent = currentJob.description || "";
-        submitBtn.style.display = "none";
-        showModal();
-        return;
-      }
-
-      jobTitle.textContent = currentJob.title || "Job Details";
-      jobDescriptionBox.textContent = currentJob.description || "";
-
-      // Build proof input fields
-      const proofTypes = currentJob.proofType || ["Link"];
-      proofForm.innerHTML = "";
-      proofTypes.forEach(type => {
-        const label = document.createElement("label");
-        label.textContent = `Proof (${type}):`;
-        const input = document.createElement("input");
-        input.type = "text";
-        input.className = "proof-input";
-        input.name = type.toLowerCase();
-        input.placeholder = `Enter your proof (${type})`;
-        proofForm.appendChild(label);
-        proofForm.appendChild(input);
-      });
-
-      submitBtn.style.display = "inline-block";
-      submitBtn.disabled = false;
-      submitStatus.textContent = "";
-
-      showModal();
-    };
-
-    function showModal() {
-      jobModal.classList.add("show");
-      jobModal.setAttribute('aria-hidden', 'false');
-      submitBtn.focus();
-    }
-
-    submitBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      submitBtn.disabled = true;
-      submitStatus.textContent = "Submitting proof...";
-      submitStatus.style.color = "#333";
-
-      const inputs = proofForm.querySelectorAll("input.proof-input");
-      let valid = true;
-      const proofData = {};
-      inputs.forEach(input => {
-        if (!input.value.trim()) valid = false;
-        proofData[input.name] = input.value.trim();
-      });
-
-      if (!valid) {
-        submitStatus.textContent = "Please fill in all proof fields.";
-        submitStatus.style.color = "red";
-        submitBtn.disabled = false;
-        return;
-      }
-
-      try {
-        await setDoc(doc(db, "jobs", currentJob.id, "submissions", currentUser.uid), {
-          userId: currentUser.uid,
-          proof: proofData,
-          submittedAt: new Date().toISOString()
-        });
-
-        submitStatus.textContent = "Proof submitted successfully!";
-        submitStatus.style.color = "green";
-        submitBtn.style.display = "none";
-      } catch (error) {
-        submitStatus.textContent = "Failed to submit proof: " + error.message;
-        submitStatus.style.color = "red";
-        submitBtn.disabled = false;
+        div.style.marginTop = "6px";
+        div.textContent = `${key}: ${data[key]}`;
+        proofForm.appendChild(div);
       }
     });
+  }
 
-    searchInput.addEventListener('input', () => {
-      applyFilters();
-    });
-    categoryFilter.addEventListener('change', () => {
-      applyFilters();
-    });
-    sortSelect.addEventListener('change', () => {
-      applyFilters();
-    });
+  jobModal.classList.add("show");
+  jobModal.setAttribute("aria-hidden", "false");
+}
 
-    // Close modal on overlay click or Escape key
-    jobModal.addEventListener('click', (e) => {
-      if (e.target === jobModal) closeModal();
+submitBtn.addEventListener("click", async (e) => {
+  e.preventDefault();
+  submitStatus.textContent = "";
+  submitBtn.disabled = true;
+
+  const inputs = [...proofForm.querySelectorAll("input.proof-input")];
+  const proofData = {};
+  let allFilled = true;
+  inputs.forEach(input => {
+    if (!input.value.trim()) allFilled = false;
+    proofData[input.name] = input.value.trim();
+  });
+
+  if (!allFilled) {
+    submitStatus.textContent = "Please fill in all proof fields.";
+    submitStatus.style.color = "red";
+    submitBtn.disabled = false;
+    return;
+  }
+
+  try {
+    await setDoc(doc(db, "jobs", currentJob.id, "submissions", currentUser.uid), {
+      ...proofData,
+      userId: currentUser.uid,
+      userName: userName.textContent,
+      submittedAt: new Date().toISOString(),
     });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && jobModal.classList.contains('show')) {
-        closeModal();
-      }
-    });
+    submitStatus.textContent = "Submission successful!";
+    submitStatus.style.color = "green";
+    submitBtn.style.display = "none";
+  } catch (error) {
+    submitStatus.textContent = "Error submitting proof: " + error.message;
+    submitStatus.style.color = "red";
+  } finally {
+    submitBtn.disabled = false;
+  }
+});
+
   </script>
 </body>
 </html>
