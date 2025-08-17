@@ -4,186 +4,282 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pagla Clickers - Notifications</title>
+  <meta name="description" content="View your latest notifications on Pagla Clickers." />
   <link rel="stylesheet" href="style.css" />
+
   <style>
-    /* Only styles for notifications container content */
+    /* Page-specific styles (kept lightweight) */
     .container {
       max-width: 800px;
       margin: 30px auto;
       padding: 25px 20px;
-      background: white;
+      background: #ffffff;
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       color: #333;
     }
-
-    h2 {
-      color: #005bb5;
+    .container h2 {
+      color: #6743b8;
       text-align: center;
-      margin-bottom: 30px;
+      margin: 0 0 20px;
+      font-weight: 700;
     }
+    .actions {
+      display: flex; justify-content: center; margin-bottom: 12px;
+    }
+    .mark-all-btn {
+      background:#7a5dc7; color:#fff; border:none; border-radius:6px; padding:8px 14px; font-weight:700; cursor:pointer;
+    }
+    .mark-all-btn:hover { background:#5a3a9f; }
 
     .notification {
-      border-left: 5px solid #007bff;
-      background: #f9f9f9;
+      border-left: 5px solid #7a5dc7;
+      background: #f9f7ff;
       margin-bottom: 15px;
       padding: 15px 20px;
       border-radius: 6px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      outline: none;
     }
+    .notification.unread {
+      background:#efeaff;
+      border-left-color:#4f2fb8;
+      box-shadow: 0 2px 8px rgba(79,47,184,0.15);
+    }
+    .notification[role="button"] { cursor: pointer; }
+    .notification:focus { box-shadow: 0 0 0 3px rgba(103,67,184,.35); }
 
     .notification h4 {
-      margin: 0 0 5px 0;
-      color: #007bff;
+      margin: 0 0 6px 0;
+      color: #6743b8;
     }
-
-    .notification p {
-      margin: 0;
-      line-height: 1.5;
-    }
-
-    .timestamp {
-      font-size: 12px;
-      color: #777;
-      margin-top: 8px;
-    }
+    .notification p { margin: 0; line-height: 1.55; }
+    .timestamp { font-size: 12px; color: #777; margin-top: 8px; }
+    .empty-message { color: #4a4175; text-align: center; }
   </style>
 </head>
 <body>
 
-<header>
-  Pagla Clickers
-  <button class="hamburger" aria-label="Toggle navigation menu" onclick="toggleMenu()">☰</button>
-</header>
+  <header>
+    Pagla Clickers
+    <button class="hamburger"
+            id="menuBtn"
+            type="button"
+            aria-label="Toggle navigation menu"
+            aria-controls="navList"
+            aria-expanded="false">☰</button>
+  </header>
 
-<nav>
-  <ul class="nav-links" id="navList">
-    <li><a href="about.html">About</a></li>
-    <li><a href="notifications.html" aria-current="page">Notifications</a></li>
-    <li><a href="profile.html">Profile</a></li>
-    <li><a href="dashboard.html">Dashboard</a></li>
-    <li><a href="postjob.html">Post Job</a></li>
-    <li><a href="jobs.html">My Jobs</a></li>
-    <li><a href="referel.html">Referral</a></li>
-    <li><a href="deposit.html">Deposit</a></li>
-    <li><a href="wallet.html">Wallet</a></li>
-    <li><a href="withdrawal.html">Withdraw Money</a></li>
-    <li><a href="terms.html">Terms</a></li>
-    <li><a href="faq.html">FAQ</a></li>
-    <li><a href="support.html">Support</a></li>
-    <li>
-      <button id="logoutBtn" class="logout-btn" 
-        style="width:auto;"
-        aria-label="Logout from Pagla Clickers">Logout</button>
-    </li>
-  </ul>
-</nav>
+  <nav>
+    <ul class="nav-links" id="navList">
+      <li><a href="about.html">About</a></li>
+      <li><a href="notifications.html" aria-current="page">Notifications</a></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="postjob.html">Post Job</a></li>
+      <li><a href="jobs.html">My Jobs</a></li>
+      <li><a href="referral.html">Referral</a></li>
+      <li><a href="deposit.html">Deposit</a></li>
+      <li><a href="wallet.html">Wallet</a></li>
+      <li><a href="withdrawal.html">Withdraw Money</a></li>
+      <li><a href="terms.html">Terms</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="support.html">Support</a></li>
+      <li style="display:flex; justify-content:center; align-items:center;">
+        <button id="logoutBtn" class="logout-btn" type="button" aria-label="Logout from Pagla Clickers">Logout</button>
+      </li>
+    </ul>
+  </nav>
 
-<div class="blue-strip-below-nav"></div>
+  <div class="blue-strip-below-nav" aria-hidden="true"></div>
 
-<div class="container">
-  <h2>Your Notifications</h2>
-  <div id="notificationsContainer">
-    <p class="empty-message">Loading notifications...</p>
+  <div class="container">
+    <h2>Your Notifications</h2>
+    <div class="actions">
+      <button id="markAllBtn" class="mark-all-btn" type="button">Mark all as read</button>
+    </div>
+    <div id="notificationsContainer">
+      <p class="empty-message">Loading notifications...</p>
+    </div>
   </div>
-</div>
 
-<footer>
-  <p>&copy; 2025 Pagla Clickers</p>
-</footer>
+  <footer>
+    <p>&copy; 2025 Pagla Clickers</p>
+  </footer>
 
-<script>
-  function toggleMenu() {
-    const navList = document.getElementById("navList");
-    navList.classList.toggle("active");
+  <!-- Nav toggle JS -->
+  <script>
+    (function () {
+      const btn = document.getElementById('menuBtn');
+      const nav = document.getElementById('navList');
+      if (!btn || !nav) return;
 
-    // On mobile, adjust logout button width
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (window.innerWidth <= 768) {
-      logoutBtn.style.width = '90%';
-    } else {
-      logoutBtn.style.width = 'auto';
-    }
-  }
+      function openMenu() { nav.classList.add('active'); btn.setAttribute('aria-expanded','true'); document.body.classList.add('nav-open'); }
+      function closeMenu() { nav.classList.remove('active'); btn.setAttribute('aria-expanded','false'); document.body.classList.remove('nav-open'); }
+      function toggleMenu(){ nav.classList.contains('active') ? closeMenu() : openMenu(); }
 
-  // Fix logout button width on page load & resize
-  function adjustLogoutBtnWidth() {
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (window.innerWidth <= 768) {
-      logoutBtn.style.width = '90%';
-    } else {
-      logoutBtn.style.width = 'auto';
-    }
-  }
-  window.addEventListener('resize', adjustLogoutBtnWidth);
-  document.addEventListener('DOMContentLoaded', adjustLogoutBtnWidth);
-</script>
+      btn.addEventListener('click', toggleMenu);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+      nav.addEventListener('click', e => { if (e.target.closest('a')) closeMenu(); });
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-  import { getFirestore, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+      let lastW = window.innerWidth;
+      window.addEventListener('resize', () => {
+        const w = window.innerWidth;
+        if (w !== lastW && w > 768) closeMenu();
+        lastW = w;
+      });
+    })();
+  </script>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
-    authDomain: "pagla-b1c17.firebaseapp.com",
-    projectId: "pagla-b1c17",
-    storageBucket: "pagla-b1c17.appspot.com",
-    messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:1595070cdac289170f5e27"
-  };
+  <!-- Firebase (module) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import {
+      getFirestore, collection, query, where, getDocs, orderBy, doc, updateDoc, arrayUnion
+    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+      authDomain: "pagla-b1c17.firebaseapp.com",
+      projectId: "pagla-b1c17",
+      storageBucket: "pagla-b1c17.appspot.com",
+      messagingSenderId: "192578902502",
+      appId: "1:192578902502:web:1595070cdac289170f5e27"
+    };
 
-  const container = document.getElementById("notificationsContainer");
-  const logoutBtn = document.getElementById("logoutBtn");
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  logoutBtn.addEventListener('click', () => {
-    signOut(auth).then(() => {
-      window.location.href = 'login.html';
-    }).catch((error) => {
-      alert('Error signing out: ' + error.message);
+    const container = document.getElementById("notificationsContainer");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const markAllBtn = document.getElementById("markAllBtn");
+
+    logoutBtn.addEventListener('click', async () => {
+      try { await signOut(auth); window.location.href = 'login.html'; }
+      catch (error) { alert('Error signing out: ' + (error?.message || error)); }
     });
-  });
 
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      alert("Please login to view notifications.");
-      window.location.href = "login.html";
-      return;
-    }
+    let CURRENT_UID = null;
+    let CURRENT_ITEMS = []; // [{id, read, createdAt, title, message}]
 
-    const q = query(
-      collection(db, "notifications"),
-      where("userId", "in", [user.uid, "all"]),
-      orderBy("createdAt", "desc")
-    );
-
-    const snapshot = await getDocs(q);
-    container.innerHTML = "";
-
-    if (snapshot.empty) {
-      container.innerHTML = `<p class="empty-message">No notifications found.</p>`;
-      return;
-    }
-
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const time = data.createdAt?.toDate?.().toLocaleString() || "Unknown time";
-
-      const div = document.createElement("div");
-      div.className = "notification";
-      div.innerHTML = `
-        <h4>${data.title || "Notification"}</h4>
-        <p>${data.message || ""}</p>
-        <div class="timestamp">${time}</div>
-      `;
-      container.appendChild(div);
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { window.location.href = "login.html"; return; }
+      CURRENT_UID = user.uid;
+      await loadNotifications(user.uid);
     });
-  });
-</script>
+
+    async function loadNotifications(uid){
+      try {
+        const qMine = query(
+          collection(db, "notifications"),
+          where("userId", "==", uid),
+          orderBy("createdAt","desc")
+        );
+        const qAll = query(
+          collection(db, "notifications"),
+          where("userId", "==", "all"),
+          orderBy("createdAt","desc")
+        );
+        const [snapMine, snapAll] = await Promise.all([getDocs(qMine), getDocs(qAll)]);
+
+        const items = [];
+        const push = (docSnap) => {
+          const d = docSnap.data() || {};
+          const createdAt = d.createdAt?.toDate?.() ? d.createdAt.toDate() : null;
+          const readBy = Array.isArray(d.readBy) ? d.readBy : [];
+          items.push({
+            id: docSnap.id,
+            read: readBy.includes(uid),
+            createdAt,
+            title: d.title || "Notification",
+            message: d.message || ""
+          });
+        };
+        snapMine.forEach(push);
+        snapAll.forEach(push);
+
+        items.sort((a,b)=> (b.createdAt?.getTime?.()||0) - (a.createdAt?.getTime?.()||0));
+        CURRENT_ITEMS = items;
+        renderList();
+      } catch (err) {
+        container.innerHTML = `<p class="empty-message">Couldn't load notifications.</p>`;
+        console.error(err);
+      }
+    }
+
+    function renderList(){
+      container.innerHTML = "";
+      if (!CURRENT_ITEMS.length){
+        container.innerHTML = `<p class="empty-message">No notifications found.</p>`;
+        return;
+      }
+
+      for (const n of CURRENT_ITEMS) {
+        const wrap = document.createElement("div");
+        wrap.className = "notification" + (n.read ? "" : " unread");
+        wrap.setAttribute("role","button");
+        wrap.setAttribute("tabindex","0");
+
+        const h = document.createElement("h4");
+        h.textContent = n.title;
+
+        const p = document.createElement("p");
+        p.textContent = n.message;
+
+        const t = document.createElement("div");
+        t.className = "timestamp";
+        t.textContent = n.createdAt ? n.createdAt.toLocaleString() : "Unknown time";
+
+        // Click/keyboard to mark as read
+        const markThis = async () => {
+          if (n.read) return;
+          try {
+            await markNotificationAsRead(n.id);
+            n.read = true;
+            wrap.classList.remove("unread");
+          } catch (e) {
+            console.error("Mark read failed:", e);
+          }
+        };
+        wrap.addEventListener("click", markThis);
+        wrap.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); markThis(); }
+        });
+
+        wrap.append(h, p, t);
+        container.appendChild(wrap);
+      }
+    }
+
+    async function markNotificationAsRead(id){
+      try {
+        const ref = doc(db, "notifications", id);
+        await updateDoc(ref, { readBy: arrayUnion(CURRENT_UID) });
+      } catch (e) {
+        // If rules prevent writing global notices, you can ignore the error on UI,
+        // or store read state per-user in a separate collection.
+        throw e;
+      }
+    }
+
+    markAllBtn.addEventListener("click", async () => {
+      const unread = CURRENT_ITEMS.filter(x => !x.read);
+      if (!unread.length) return;
+
+      try {
+        // Update Firestore in parallel
+        await Promise.all(unread.map(item => markNotificationAsRead(item.id)));
+        // Update local state + UI
+        CURRENT_ITEMS.forEach(i => { i.read = true; });
+        renderList();
+      } catch (e) {
+        alert("Couldn't mark all as read. Please try again.");
+        console.error(e);
+      }
+    });
+  </script>
 
 </body>
 </html>

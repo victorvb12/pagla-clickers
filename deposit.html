@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Container & styling */
+    /* Page-specific styling */
     .container {
       max-width: 480px;
       margin: 30px auto;
@@ -26,126 +26,49 @@
       display: inline-block;
       width: 100%;
     }
-
     /* Tabs styling */
-    .tabs {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-      gap: 15px;
-    }
+    .tabs { display: flex; justify-content: center; margin-bottom: 20px; gap: 15px; }
     .tab {
-      padding: 10px 25px;
-      cursor: pointer;
-      border-radius: 8px 8px 0 0;
-      background: #dcd6f7;
-      font-weight: 600;
-      color: #4a4175;
-      user-select: none;
-      transition: background-color 0.3s ease;
+      padding: 10px 25px; cursor: pointer; border-radius: 8px 8px 0 0;
+      background: #dcd6f7; font-weight: 600; color: #4a4175;
+      user-select: none; transition: background-color 0.3s ease;
     }
-    .tab.active {
-      background: #7a5dc7;
-      color: white;
-    }
-
-    /* Hide inactive tab content */
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
-
-    /* Form styling */
+    .tab.active { background: #7a5dc7; color: white; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    /* Form */
     label {
-      display: block;
-      font-weight: 600;
-      color: #4a4175;
-      margin-top: 15px;
-      margin-bottom: 6px;
-      font-size: 15px;
+      display: block; font-weight: 600; color: #4a4175;
+      margin-top: 15px; margin-bottom: 6px; font-size: 15px;
     }
-    input[type="number"],
-    input[type="text"],
-    input[type="tel"],
-    select {
-      width: 100%;
-      padding: 10px 12px;
-      font-size: 16px;
-      border: 1.5px solid #9b8bc3;
-      border-radius: 6px;
-      box-sizing: border-box;
+    input[type="number"], input[type="text"], input[type="tel"], select {
+      width: 100%; padding: 10px 12px; font-size: 16px;
+      border: 1.5px solid #9b8bc3; border-radius: 6px; box-sizing: border-box;
       transition: border-color 0.3s ease;
     }
-    input[type="number"]:focus,
-    input[type="text"]:focus,
-    input[type="tel"]:focus,
-    select:focus {
-      border-color: #7a5dc7;
-      outline: none;
-      box-shadow: 0 0 5px #7a5dc7aa;
-    }
+    input:focus, select:focus { border-color: #7a5dc7; outline: none; box-shadow: 0 0 5px #7a5dc7aa; }
     button[type="submit"] {
-      margin-top: 25px;
-      width: 100%;
-      background-color: #7a5dc7;
-      color: white;
-      font-weight: 700;
-      font-size: 16px;
-      padding: 12px 0;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+      margin-top: 25px; width: 100%; background-color: #7a5dc7; color: white;
+      font-weight: 700; font-size: 16px; padding: 12px 0;
+      border: none; border-radius: 8px; cursor: pointer;
+      transition: background-color 0.3s ease, opacity .2s ease;
     }
-    button[type="submit"]:hover,
-    button[type="submit"]:focus {
-      background-color: #5d41a1;
-      outline: none;
-    }
-
-    /* Message styling */
-    .message {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      font-size: 0.95rem;
-    }
-    .success {
-      color: green;
-    }
-    .error {
-      color: red;
-    }
-
-    /* History table */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    th, td {
-      padding: 10px 12px;
-      border: 1px solid #ccc;
-      text-align: left;
-      font-size: 14px;
-    }
-    th {
-      background-color: #7a5dc7;
-      color: white;
-    }
-    tbody tr:nth-child(even) {
-      background: #f0e9ff;
-    }
-
-    /* Balance display */
+    button[type="submit"]:hover, button[type="submit"]:focus { background-color: #5d41a1; outline: none; }
+    button[disabled] { opacity: .7; cursor: not-allowed; }
+    .note { color:#4a4175; margin-top:10px; font-size: 14px; }
+    /* Messages */
+    .message { text-align: center; margin: 1rem 0 0.5rem; font-size: 0.95rem; }
+    .success { color: green; }
+    .error { color: red; }
+    /* History */
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { padding: 10px 12px; border: 1px solid #ccc; text-align: left; font-size: 14px; }
+    th { background-color: #7a5dc7; color: white; }
+    tbody tr:nth-child(even) { background: #f0e9ff; }
+    /* Balance */
     #balanceDisplay {
-      font-weight: 600;
-      margin-bottom: 20px;
-      text-align: right;
-      color: #6743b8;
-      font-size: 16px;
-      user-select: none;
+      font-weight: 600; margin-bottom: 20px; text-align: right;
+      color: #6743b8; font-size: 16px; user-select: none;
     }
   </style>
 </head>
@@ -153,7 +76,12 @@
 
 <header>
   Pagla Clickers
-  <button class="hamburger" onclick="toggleMenu()">☰</button>
+  <button class="hamburger"
+          id="menuBtn"
+          type="button"
+          aria-label="Toggle menu"
+          aria-controls="navList"
+          aria-expanded="false">☰</button>
 </header>
 
 <nav>
@@ -164,15 +92,15 @@
     <li><a href="dashboard.html">Dashboard</a></li>
     <li><a href="postjob.html">Post Job</a></li>
     <li><a href="jobs.html">My Jobs</a></li>
-    <li><a href="referel.html">Referral</a></li>
+    <li><a href="referral.html">Referral</a></li> <!-- FIXED -->
     <li><a href="deposit.html" aria-current="page">Deposit</a></li>
     <li><a href="wallet.html">Wallet</a></li>
     <li><a href="withdrawal.html">Withdraw Money</a></li>
     <li><a href="terms.html">Terms</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="support.html">Support</a></li>
-    <li>
-      <button id="logoutBtn" class="logout-btn">Logout</button>
+    <li style="display:flex; justify-content:center; align-items:center;">
+      <button id="logoutBtn" type="button" class="logout-btn">Logout</button> <!-- FIXED -->
     </li>
   </ul>
 </nav>
@@ -191,9 +119,9 @@
   <!-- Deposit Form Tab -->
   <div id="depositTab" class="tab-content active">
     <h2>Deposit Funds</h2>
-    <form id="depositForm">
+    <form id="depositForm" novalidate>
       <label for="amount">Amount (৳)</label>
-      <input type="number" id="amount" required placeholder="Enter deposit amount" />
+      <input type="number" id="amount" inputmode="decimal" min="1" step="0.01" required placeholder="Enter deposit amount" />
 
       <label for="method">Payment Method</label>
       <select id="method" required>
@@ -204,16 +132,16 @@
       </select>
 
       <label for="txnId">Transaction ID</label>
-      <input type="text" id="txnId" placeholder="Enter transaction/reference ID" required />
+      <input type="text" id="txnId" placeholder="Enter transaction/reference ID" minlength="6" required />
 
       <label for="phone">Phone Number</label>
-      <input type="tel" id="phone" placeholder="Enter your phone number" required />
+      <input type="tel" id="phone" placeholder="01XXXXXXXXX" pattern="^01[0-9]{9}$" autocomplete="tel" inputmode="numeric" required />
 
       <div class="note">* Please ensure you send money before submitting this form.</div>
 
-      <div id="message" class="message"></div>
+      <div id="message" class="message" role="status" aria-live="polite"></div>
 
-      <button type="submit">Submit Deposit Request</button>
+      <button type="submit" id="submitBtn">Submit Deposit Request</button>
     </form>
   </div>
 
@@ -223,10 +151,10 @@
     <table aria-label="Deposit transaction history">
       <thead>
         <tr>
-          <th>Date</th>
-          <th>Amount (৳)</th>
-          <th>Payment Method</th>
-          <th>Status</th>
+          <th scope="col">Date</th> <!-- FIXED -->
+          <th scope="col">Amount (৳)</th> <!-- FIXED -->
+          <th scope="col">Payment Method</th> <!-- FIXED -->
+          <th scope="col">Status</th> <!-- FIXED -->
         </tr>
       </thead>
       <tbody id="historyBody">
@@ -241,35 +169,30 @@
   <p>&copy; 2025 Pagla Clickers</p>
 </footer>
 
+<!-- Nav toggle JS -->
 <script>
-  function toggleMenu() {
-    document.getElementById('navList').classList.toggle('active');
-  }
+  (function () {
+    const btn = document.getElementById('menuBtn');
+    const nav = document.getElementById('navList');
+    if (!btn || !nav) return;
 
-  // Tabs toggle
-  const tabs = document.querySelectorAll('.tab');
-  const tabContents = document.querySelectorAll('.tab-content');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const target = tab.dataset.tab;
-      tabs.forEach(t => t.classList.remove('active'));
-      tabContents.forEach(c => c.classList.remove('active'));
-      tab.classList.add('active');
-      document.getElementById(target).classList.add('active');
-      // Clear messages on tab switch
-      const msg = document.getElementById("message");
-      if (msg) msg.textContent = "";
-    });
-  });
+    function openMenu(){ nav.classList.add('active'); btn.setAttribute('aria-expanded','true'); document.body.classList.add('nav-open'); }
+    function closeMenu(){ nav.classList.remove('active'); btn.setAttribute('aria-expanded','false'); document.body.classList.remove('nav-open'); }
+    function toggleMenu(){ nav.classList.contains('active') ? closeMenu() : openMenu(); }
+
+    btn.addEventListener('click', toggleMenu);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+    nav.addEventListener('click', e => { if (e.target.closest('a')) closeMenu(); });
+
+    let lastW = innerWidth;
+    addEventListener('resize', () => { const w = innerWidth; if (w !== lastW && w > 768) closeMenu(); lastW = w; });
+  })();
 </script>
 
+<!-- Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import {
-    getAuth,
-    onAuthStateChanged,
-    signOut
-  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
   import {
     getFirestore,
     collection,
@@ -301,68 +224,58 @@
   const logoutBtn = document.getElementById('logoutBtn');
   const balanceDisplay = document.getElementById('balanceDisplay');
   const historyBody = document.getElementById('historyBody');
+  const submitBtn = document.getElementById('submitBtn');
 
   let userId = null;
   let userBalance = 0;
 
-  logoutBtn.addEventListener('click', () => {
-    signOut(auth)
-      .then(() => {
-        window.location.href = "login.html";
-      })
-      .catch(error => {
-        alert("Error signing out: " + error.message);
-      });
+  const fmt = (n) => `৳${Number(n || 0).toFixed(2)}`;
+
+  logoutBtn.addEventListener('click', async () => {
+    try { await signOut(auth); window.location.href = "login.html"; }
+    catch (error) { alert("Error signing out: " + (error?.message || error)); }
   });
 
   onAuthStateChanged(auth, async user => {
-    if (!user) {
-      window.location.href = "login.html";
-      return;
-    }
-
+    if (!user) { window.location.href = "login.html"; return; }
     userId = user.uid;
 
-    // Get user balance from "wallets" collection
-    const walletDoc = await getDoc(doc(db, "wallets", userId));
-    userBalance = walletDoc.exists() ? walletDoc.data().balance || 0 : 0;
-    balanceDisplay.textContent = `Current Balance: ৳${userBalance.toFixed(2)}`;
+    try {
+      const walletDoc = await getDoc(doc(db, "wallets", userId));
+      userBalance = walletDoc.exists() ? (walletDoc.data()?.balance || 0) : 0;
+      balanceDisplay.textContent = `Current Balance: ${fmt(userBalance)}`;
+    } catch {
+      balanceDisplay.textContent = `Current Balance: ${fmt(0)}`;
+    }
 
     loadHistory();
   });
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
-    messageDiv.textContent = "";
-    messageDiv.className = "message";
+    clearMsg();
 
-    const amount = parseFloat(document.getElementById('amount').value);
+    const amount = Number(document.getElementById('amount').value);
     const method = document.getElementById('method').value;
-    const txnId = document.getElementById('txnId').value.trim();
-    const phone = document.getElementById('phone').value.trim();
+    const txnId  = document.getElementById('txnId').value.trim();
+    const phone  = document.getElementById('phone').value.trim();
 
-    if (!amount || amount <= 0) {
-      messageDiv.textContent = "Please enter a valid deposit amount.";
-      messageDiv.classList.add("error");
-      return;
-    }
-    if (!method) {
-      messageDiv.textContent = "Please select a payment method.";
-      messageDiv.classList.add("error");
-      return;
-    }
-    if (!txnId) {
-      messageDiv.textContent = "Please enter a transaction ID.";
-      messageDiv.classList.add("error");
-      return;
-    }
-    if (!phone) {
-      messageDiv.textContent = "Please enter your phone number.";
-      messageDiv.classList.add("error");
-      return;
-    }
+    if (!Number.isFinite(amount) || amount <= 0) return showErr("Please enter a valid deposit amount.");
+    if (!method) return showErr("Please select a payment method.");
+    if (!txnId || txnId.length < 6) return showErr("Please enter a valid transaction ID.");
+    if (!/^01[0-9]{9}$/.test(phone)) return showErr("Enter a valid Bangladeshi phone.");
 
+    submitBtn.disabled = true;
     try {
+      // Check duplicate txnId
+      const dupQ = query(collection(db, "deposits"), where("txnId", "==", txnId));
+      const dupSnap = await getDocs(dupQ);
+      if (!dupSnap.empty) {
+        showErr("This transaction ID has already been used.");
+        submitBtn.disabled = false;
+        return;
+      }
+
       await addDoc(collection(db, "deposits"), {
         userId,
         amount,
@@ -372,21 +285,18 @@
         status: "pending",
         createdAt: serverTimestamp()
       });
-      messageDiv.textContent = "Deposit request submitted. Please wait for admin approval.";
-      messageDiv.classList.add("success");
+      showOk("Deposit request submitted. Please wait for admin approval.");
       form.reset();
-
-      // Reload history (balance update depends on admin approval backend logic)
       loadHistory();
     } catch (err) {
-      messageDiv.textContent = "Error submitting deposit: " + err.message;
-      messageDiv.classList.add("error");
+      showErr("Error submitting deposit: " + (err?.message || err));
+    } finally {
+      submitBtn.disabled = false;
     }
   });
 
   async function loadHistory() {
     historyBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Loading history...</td></tr>`;
-
     try {
       const q = query(
         collection(db, "deposits"),
@@ -400,32 +310,50 @@
         return;
       }
 
-      let rows = "";
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
-        const date = data.createdAt?.toDate
-          ? data.createdAt.toDate().toLocaleString()
-          : "-";
-        rows += `
-          <tr>
-            <td>${date}</td>
-            <td>৳${data.amount.toFixed(2)}</td>
-            <td>${data.method}</td>
-            <td>${capitalize(data.status)}</td>
-          </tr>
-        `;
+      historyBody.innerHTML = "";
+      querySnapshot.forEach(d => {
+        const data = d.data() || {};
+        const tr = document.createElement("tr");
+
+        const tdDate = document.createElement("td");
+        tdDate.textContent = data.createdAt?.toDate ? data.createdAt.toDate().toLocaleString() : "-";
+
+        const tdAmt = document.createElement("td");
+        tdAmt.textContent = fmt(data.amount);
+
+        const tdMethod = document.createElement("td");
+        tdMethod.textContent = data.method || "";
+
+        const tdStatus = document.createElement("td");
+        tdStatus.textContent = capitalize(data.status);
+
+        tr.append(tdDate, tdAmt, tdMethod, tdStatus);
+        historyBody.appendChild(tr);
       });
-      historyBody.innerHTML = rows;
     } catch (error) {
       historyBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Error loading history</td></tr>`;
       console.error("Error loading deposit history:", error);
     }
   }
 
-  function capitalize(str) {
-    if (!str) return "";
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
+  function capitalize(str) { return str ? str.charAt(0).toUpperCase() + str.slice(1) : ""; }
+  function clearMsg(){ messageDiv.textContent = ""; messageDiv.className = "message"; }
+  function showErr(msg){ messageDiv.textContent = msg; messageDiv.className = "message error"; }
+  function showOk(msg){ messageDiv.textContent = msg; messageDiv.className = "message success"; }
+
+  // Tabs toggle
+  const tabs = document.querySelectorAll('.tab');
+  const tabContents = document.querySelectorAll('.tab-content');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      tabs.forEach(t => t.classList.remove('active'));
+      tabContents.forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(target).classList.add('active');
+      clearMsg();
+    });
+  });
 </script>
 
 </body>

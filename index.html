@@ -22,7 +22,7 @@
     .topbar {
       background-color: #003366;
       padding: 0.75rem 1rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* optional subtle shadow */
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .topbar nav ul {
@@ -32,7 +32,7 @@
       display: flex;
       gap: 1.5rem;
       align-items: center;
-      justify-content: flex-end; /* right align */
+      justify-content: flex-end;
     }
 
     .topbar nav ul li a,
@@ -75,10 +75,11 @@
       font-size: 18px;
       color: #444;
       max-width: 700px;
-      margin: 0 auto 30px;
+      margin: 0 auto 10px;
     }
 
-    .hero button {
+    .hero a {
+      display: inline-block;
       background-color: #1976d2;
       color: white;
       border: none;
@@ -86,9 +87,11 @@
       font-size: 16px;
       border-radius: 5px;
       cursor: pointer;
+      text-decoration: none;
+      margin: 10px;
     }
 
-    .hero button:hover {
+    .hero a:hover {
       background-color: #155a9c;
     }
 
@@ -96,7 +99,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      margin: 40px 10px;
+      margin: 10px 10px;
     }
 
     .feature {
@@ -126,38 +129,40 @@
 <body>
 
 <header class="topbar">
-  <nav>
+  <nav role="navigation" aria-label="Primary">
     <ul id="navList">
       <li id="loginItem"><a href="login.html">Login</a></li>
       <li id="registerItem"><a href="register.html">Register</a></li>
       <li id="dashboardItem" style="display: none;"><a href="dashboard.html">Dashboard</a></li>
-      <li id="logoutItem" style="display: none;"><button id="logoutBtn">Logout</button></li>
+      <li id="logoutItem" style="display: none;"><button id="logoutBtn" type="button">Logout</button></li>
     </ul>
   </nav>
 </header>
 
-<section class="hero">
-  <h1>Earn by Just Clicking!</h1>
-  <p>Join Pagla Clickers and start earning rewards by completing small tasks like clicks, views, referrals, and more. No investment, just fun and earnings.</p>
-  <a href="register.html"><button>Get Started</button></a>
-  <p>If you are already registered </p>
-  <a href="login.html"><button>Login</button></a>
-</section>
+<main>
+  <section class="hero">
+    <h1>Earn by Just Clicking!</h1>
+    <p>Join Pagla Clickers and start earning rewards by completing small tasks like clicks, views, referrals, and more. No investment, just fun and earnings.</p>
+    <a href="register.html">Get Started</a>
+    <p>If you are already registered</p>
+    <a href="login.html">Login</a>
+  </section>
 
-<section class="features">
-  <div class="feature">
-    <h3>Easy to Use</h3>
-    <p>Simple and mobile-friendly platform anyone can use.</p>
-  </div>
-  <div class="feature">
-    <h3>Instant Rewards</h3>
-    <p>Earn points and redeem them for cash or vouchers.</p>
-  </div>
-  <div class="feature">
-    <h3>Referral Program</h3>
-    <p>Refer friends and earn bonus rewards instantly.</p>
-  </div>
-</section>
+  <section class="features">
+    <div class="feature">
+      <h3>Easy to Use</h3>
+      <p>Simple and mobile-friendly platform anyone can use.</p>
+    </div>
+    <div class="feature">
+      <h3>Instant Rewards</h3>
+      <p>Earn points and redeem them for cash or vouchers.</p>
+    </div>
+    <div class="feature">
+      <h3>Referral Program</h3>
+      <p>Refer friends and earn bonus rewards instantly.</p>
+    </div>
+  </section>
+</main>
 
 <footer>
   <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>

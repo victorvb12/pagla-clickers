@@ -5,120 +5,127 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pagla Clickers - Login</title>
   <style>
+    :root {
+      --brand:#003366; --brand-dark:#002244; --bg:#f4f6f8;
+      --text:#111; --muted:#666; --error:#c62828; --success:#2e7d32;
+    }
+    * { box-sizing: border-box; }
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      margin: 0; font-family: Arial, sans-serif; background: var(--bg);
+      display: flex; flex-direction: column; min-height: 100vh; color: var(--text);
     }
     header, footer {
-      background-color: #003366;
-      color: white;
-      text-align: center;
-      padding: 1rem 0;
+      background-color: var(--brand); color: #fff; text-align: center; padding: 1rem 0;
     }
     main {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
+      flex: 1; display: flex; justify-content: center; align-items: center; padding: 2rem;
     }
     form {
-      background: white;
-      padding: 2rem 3rem;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      max-width: 400px;
-      width: 100%;
+      background: #fff; padding: 2rem 3rem; border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,.1); max-width: 420px; width: 100%;
     }
-    form h2 {
-      margin-top: 0;
-      margin-bottom: 1.5rem;
-      color: #003366;
-      text-align: center;
-    }
+    form h2 { margin: 0 0 1rem; color: var(--brand); text-align: center; }
+    .field { margin-bottom: 1rem; }
+    .field label { display: block; margin-bottom: .4rem; font-size: .95rem; color: var(--muted); }
     input[type="email"],
     input[type="password"] {
-      width: 100%;
-      padding: 10px 12px;
-      margin-bottom: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 1rem;
+      width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;
     }
-    .checkbox-group {
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    button {
-      width: 100%;
-      background-color: #003366;
-      color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 6px;
-      font-size: 1.1rem;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #002244;
-    }
+    input:focus { outline: 2px solid #b3c7e6; border-color: var(--brand); }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .checkbox-group { display: flex; align-items: center; gap: 8px; }
     .message {
-      margin-bottom: 1rem;
-      font-size: 0.95rem;
-      color: red;
-      text-align: center;
-      min-height: 24px;
+      margin: .25rem 0 1rem; font-size: .95rem; text-align: center; min-height: 20px;
+      color: var(--error);
     }
-    .message.success {
-      color: green;
+    .message.success { color: var(--success); }
+    .actions { margin-bottom: 1rem; } /* space above Login button */
+    button[type="submit"] {
+      width: 100%; background: var(--brand); color: #fff; padding: 12px;
+      border: 0; border-radius: 6px; font-size: 1.05rem; cursor: pointer;
     }
-    .extra-links {
-      text-align: center;
-      font-size: 0.9rem;
+    button[type="submit"]:hover { background: var(--brand-dark); }
+    button[disabled] { opacity: .7; cursor: not-allowed; }
+    .extra-links { text-align: center; font-size: .9rem; margin-top: 1rem; color: var(--muted); }
+    .extra-links a { color: var(--brand); text-decoration: none; margin: 0 8px; }
+    .extra-links a:hover { text-decoration: underline; }
+
+    /* simple modal for reset */
+    dialog {
+      border: 0; border-radius: 12px; padding: 1.25rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,.2); max-width: 420px; width: 92%;
+    }
+    dialog::backdrop { background: rgba(0,0,0,.35); }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 1rem; }
+    .btn {
+      padding: .6rem .9rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer;
+    }
+    .btn.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+
+    /* spacing above "Forgot password?" */
+    .hint {
+      font-size: .95rem;
+      color: var(--muted);
       margin-top: 1rem;
-    }
-    .extra-links a {
-      color: #003366;
-      text-decoration: none;
-      margin: 0 8px;
-    }
-    .extra-links a:hover {
-      text-decoration: underline;
+margin-bottom: 1rem; /* space ABOVE forgot password */
     }
   </style>
 </head>
 <body>
-
 <header>
   <h1>Pagla Clickers</h1>
 </header>
 
 <main>
-  <form id="loginForm">
+  <form id="loginForm" novalidate>
     <h2>Login</h2>
-    <div class="message" id="message"></div>
 
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="Password" required />
+    <div class="message" id="message" role="status" aria-live="polite"></div>
 
-    <div class="checkbox-group">
-      <input type="checkbox" id="rememberMe" />
-      <label for="rememberMe">Remember Me</label>
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" placeholder="you@example.com" required autocomplete="email" />
     </div>
 
-    <button type="submit">Login</button>
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" placeholder="••••••••" required autocomplete="current-password" />
+    </div>
+
+    <!-- separate block so spacing applies correctly -->
+    <div class="hint">
+      <a href="#" id="resetPassword">Forgot password?</a>
+    </div>
+
+    <div class="row actions">
+      <div class="checkbox-group">
+        <input type="checkbox" id="rememberMe" />
+        <label for="rememberMe">Stay signed in</label>
+      </div>
+    </div>
+
+    <button type="submit" id="loginBtn">Login</button>
 
     <div class="extra-links">
       <a href="register.html">Register</a> |
-      <a href="#" id="resetPassword">Forgot Password?</a>
+      <a href="#" id="helpLink">Contact support</a>
     </div>
   </form>
+
+  <!-- password reset modal -->
+  <dialog id="resetDialog" aria-labelledby="resetTitle">
+    <h3 id="resetTitle" style="margin-top:0">Reset your password</h3>
+    <p class="hint">Enter your account email. We’ll send you a reset link.</p>
+    <div class="field" style="margin-top:.5rem">
+      <label for="resetEmail">Email</label>
+      <input id="resetEmail" type="email" autocomplete="email" />
+    </div>
+    <div id="resetMsg" class="message" aria-live="polite" role="status"></div>
+    <div class="modal-actions">
+      <button class="btn" id="resetCancel">Cancel</button>
+      <button class="btn primary" id="resetSend">Send reset link</button>
+    </div>
+  </dialog>
 </main>
 
 <footer>
@@ -136,6 +143,7 @@
     browserSessionPersistence
   } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
+  // --- Firebase ---
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
     authDomain: "pagla-b1c17.firebaseapp.com",
@@ -144,69 +152,104 @@
     messagingSenderId: "192578902502",
     appId: "1:192578902502:web:1595070cdac289170f5e27"
   };
-
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  const loginForm = document.getElementById("loginForm");
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-  const rememberMeCheckbox = document.getElementById("rememberMe");
-  const message = document.getElementById("message");
+  // --- Elements ---
+  const form = document.getElementById("loginForm");
+  const emailEl = document.getElementById("email");
+  const passEl = document.getElementById("password");
+  const rememberEl = document.getElementById("rememberMe");
+  const msg = document.getElementById("message");
+  const btn = document.getElementById("loginBtn");
+
   const resetLink = document.getElementById("resetPassword");
+  const resetDialog = document.getElementById("resetDialog");
+  const resetEmail = document.getElementById("resetEmail");
+  const resetSend = document.getElementById("resetSend");
+  const resetCancel = document.getElementById("resetCancel");
+  const resetMsg = document.getElementById("resetMsg");
 
-  loginForm.addEventListener("submit", async (e) => {
+  // --- Helpers ---
+  const ERRORS = {
+    "auth/user-not-found": "User not found. Please register first.",
+    "auth/wrong-password": "Incorrect password.",
+    "auth/invalid-credential": "User not found or password is incorrect.",
+    "auth/invalid-email": "Invalid email address.",
+    "auth/too-many-requests": "Too many failed attempts. Try again later.",
+  };
+  function setMessage(text, ok=false, target=msg) {
+    target.textContent = text || "";
+    target.classList.toggle("success", !!ok);
+  }
+  function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  function setLoading(on){
+    btn.disabled = on;
+    btn.textContent = on ? "Signing in…" : "Login";
+  }
+
+  // clear message on input
+  [emailEl, passEl].forEach(el => el.addEventListener("input", () => setMessage("")));
+
+  // --- Submit ---
+  let inFlight = false;
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    message.textContent = "";
-    message.classList.remove("success");
+    if (inFlight) return;
 
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-    const rememberMe = rememberMeCheckbox.checked;
+    const email = emailEl.value.trim();
+    const password = passEl.value;
+
+    // basic client validation
+    if (!email || !isValidEmail(email)) { setMessage("Please enter a valid email."); emailEl.focus(); return; }
+    if (!password) { setMessage("Please enter your password."); passEl.focus(); return; }
 
     try {
-      await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
+      inFlight = true; setLoading(true); setMessage("");
+      await setPersistence(auth, rememberEl.checked ? browserLocalPersistence : browserSessionPersistence);
       await signInWithEmailAndPassword(auth, email, password);
-      message.classList.add("success");
-      message.textContent = "Login successful! Redirecting...";
-      setTimeout(() => {
-        window.location.href = "dashboard.html";
-      }, 1500);
+
+      setMessage("Login successful! Redirecting…", true);
+      // optional prefetch for next page
+      try { const link = document.createElement("link"); link.rel="prefetch"; link.href="dashboard.html"; document.head.appendChild(link); } catch {}
+      const next = new URLSearchParams(location.search).get("next") || "dashboard.html";
+      setTimeout(() => { window.location.href = next; }, 900);
     } catch (error) {
-      if (error.code === 'auth/user-not-found') {
-        message.textContent = "User not found. Please register first.";
-      } else if (error.code === 'auth/wrong-password') {
-        message.textContent = "Incorrect password.";
-      } else if (error.code === 'auth/invalid-credential') {
-        message.textContent = "User not found or password is incorrect.";
-      } else if (error.code === 'auth/invalid-email') {
-        message.textContent = "Invalid email address.";
-      } else if (error.code === 'auth/too-many-requests') {
-        message.textContent = "Too many failed attempts. Try again later.";
-      } else {
-        message.textContent = "Error: " + error.message;
-      }
+      setMessage(ERRORS[error.code] || "Something went wrong. Please try again.");
+    } finally {
+      inFlight = false; setLoading(false);
     }
   });
 
-  resetLink.addEventListener("click", async (e) => {
+  // --- Reset password (modal) ---
+  resetLink.addEventListener("click", (e) => {
     e.preventDefault();
-    const email = prompt("Enter your email to reset password:");
-    if (!email) return;
-
+    resetEmail.value = emailEl.value.trim();
+    setMessage("", false, resetMsg);
+    if (typeof resetDialog.showModal === "function") resetDialog.showModal();
+  });
+  resetCancel.addEventListener("click", (e) => {
+    e.preventDefault();
+    resetDialog.close();
+  });
+  resetSend.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const email = resetEmail.value.trim();
+    if (!isValidEmail(email)) { setMessage("Enter a valid email.", false, resetMsg); return; }
     try {
+      setMessage("Sending…", false, resetMsg);
       await sendPasswordResetEmail(auth, email);
-      message.classList.add("success");
-      message.textContent = "Password reset email sent!";
+      setMessage("Password reset email sent!", true, resetMsg);
     } catch (error) {
-      if (error.code === 'auth/user-not-found') {
-        message.textContent = "No account found with that email.";
-      } else {
-        message.textContent = "Error: " + error.message;
-      }
+      setMessage(ERRORS[error.code] || "Could not send reset email.", false, resetMsg);
     }
+  });
+
+  // (optional) support link
+  document.getElementById("helpLink").addEventListener("click", (e) => {
+    e.preventDefault();
+    alert("Need help? Email support@paglaclickers.example");
   });
 </script>
-
 </body>
 </html>

@@ -1,10 +1,12 @@
+/* ========== Base ========== */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
 body {
   font-family: Arial, sans-serif;
   background-color: #D1CBDF;
-  margin: 0;
-  padding: 0;
 }
 
+/* ========== Header ========== */
 header {
   background: #7a5dc7;
   color: white;
@@ -15,6 +17,7 @@ header {
   position: relative;
 }
 
+/* ========== Nav ========== */
 nav {
   background: #6743b8;
   position: relative;
@@ -22,21 +25,19 @@ nav {
   user-select: none;
 }
 
+/* Desktop/Tablet navigation */
 .nav-links {
   margin: 0;
   padding: 0;
   list-style: none;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;                  /* desktop can wrap to second row */
   justify-content: center;
   align-items: center;
-  overflow-x: hidden;
+  gap: 4px 6px;
+  overflow: visible;
 }
-
-.nav-links li {
-  margin: 0 6px;
-}
-
+.nav-links li { margin: 0; }
 .nav-links li a {
   display: block;
   color: white;
@@ -45,25 +46,29 @@ nav {
   font-size: 15px;
   padding: 15px 8px;
   border-radius: 6px;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.15s ease;
+  transition: background-color .3s ease, color .3s ease, transform .15s ease;
   white-space: nowrap;
+  will-change: transform;
+  transform-origin: center;
 }
-
 .nav-links li a:hover,
 .nav-links li a:focus {
   background-color: #8f7ad1cc;
   color: #f0eaff;
-  transform: scale(1.05);
-  box-shadow: 0 2px 6px rgba(143, 122, 209, 0.5);
+  transform: scale(1.03);
+  box-shadow: 0 2px 6px rgba(143,122,209,.5);
   outline: none;
 }
 
-.blue-strip-below-nav {
-  background-color: #7a5dc7;
-  height: 15px;
-  width: 100%;
+/* Mid-width tighten */
+@media (min-width: 769px) and (max-width: 1100px) {
+  .nav-links li a { padding: 10px 8px; font-size: 14px; }
 }
 
+/* Decorative strip */
+.blue-strip-below-nav { background-color: #7a5dc7; height: 15px; width: 100%; }
+
+/* Hamburger (shown on mobile by media query) */
 .hamburger {
   display: none;
   font-size: 28px;
@@ -76,8 +81,16 @@ nav {
   top: 22px;
   user-select: none;
 }
+/* 🔹 Hover/tap background for hamburger */
+@media (max-width: 768px) {
+  .hamburger:hover,
+  .hamburger:focus {
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+  }
+}
 
-/* Logout Button - Desktop & Mobile Shared */
+/* Logout button */
 .logout-btn {
   background: #a46ee0;
   color: white;
@@ -87,122 +100,104 @@ nav {
   cursor: pointer;
   font-weight: 600;
   font-size: 14px;
-  transition: background-color 0.3s ease, transform 0.15s ease;
+  transition: background-color .3s ease, transform .15s ease;
   white-space: nowrap;
+  will-change: transform;
+  transform-origin: center;
 }
-
 .logout-btn:hover,
-.logout-btn:focus {
-  background: #7d4cbc;
-  transform: scale(1.03);
-  outline: none;
-}
+.logout-btn:focus { background: #7d4cbc; transform: scale(1.03); outline: none; }
 
+/* ========== Content ========== */
 .container {
   max-width: 800px;
   margin: 30px auto;
   padding: 25px 20px;
   background: #f5f0ff;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(161, 133, 207, 0.15);
+  box-shadow: 0 2px 8px rgba(161,133,207,.15);
 }
 
-h2 {
-  color: #6743b8;
-  text-align: center;
-  margin-bottom: 30px;
-  border-bottom: 3px solid #7a5dc7;
-  display: inline-block;
-  padding-bottom: 8px;
-  font-weight: 700;
-}
+/* Headings */
+h1, h2 { color: #6743b8; text-align: center; font-weight: 700; }
+h1 { margin-bottom: 24px; border-bottom: 3px solid #7a5dc7; display: inline-block; padding-bottom: 8px; }
+h2 { margin-bottom: 30px; border-bottom: 3px solid #7a5dc7; display: inline-block; padding-bottom: 8px; }
 
+/* Footer */
 footer {
-  background: #7a5dc7;
-  color: white;
-  text-align: center;
-  padding: 18px 10px;
-  margin-top: 60px;
-  font-size: 15px;
-  user-select: none;
-  box-shadow: 0 -2px 8px rgba(138, 115, 202, 0.25);
+  background: #7a5dc7; color: white; text-align: center;
+  padding: 18px 10px; margin-top: 60px; font-size: 15px;
+  box-shadow: 0 -2px 8px rgba(138,115,202,.25);
 }
 
-button:hover,
-button:focus {
-  opacity: 0.9;
-  transform: scale(1.03);
-  transition: transform 0.2s ease, opacity 0.2s ease;
-  outline: none;
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: 15px; color: #4a4175; }
+th, td { padding: 12px 15px; border: 1px solid #9b8bc3; text-align: left; }
+thead tr { background-color: #7a5dc7; color: white; font-weight: 600; }
+
+/* Focus styles */
+.nav-links li a:focus-visible,
+.logout-btn:focus-visible,
+button:focus-visible {
+  outline: 2px solid #f0eaff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(143,122,209,.35);
 }
 
-/* Table Styles */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 15px;
-  color: #4a4175;
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; transform: none !important; }
 }
 
-th, td {
-  padding: 12px 15px;
-  border: 1px solid #9b8bc3;
-  text-align: left;
-}
+/* ========== Mobile: show ALL items in one column (no fixed panel) ========== */
+:root { --header-h: 64px; }
 
-thead tr {
-  background-color: #7a5dc7;
-  color: white;
-  font-weight: 600;
-}
-
-/* Mobile Styles */
 @media (max-width: 768px) {
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    background-color: #6743b8;
-    width: 100%;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    z-index: 10000;
+  /* Keep header fixed; offset page so content starts below it */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10001;
+    min-height: var(--header-h);
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 56px 0 16px; box-sizing: border-box;
   }
+  body { padding-top: var(--header-h); }
 
-  .nav-links.active {
-    display: flex;
-  }
-
-  .nav-links li {
-    margin: 8px 0;
-    text-align: center;
-  }
-
-  .nav-links li a {
-    padding: 12px 0;
-    font-size: 17px;
-  }
-
+  /* Hamburger visibility & alignment */
   .hamburger {
     display: block;
+    position: absolute; right: 12px; top: 50%;
+    transform: translateY(-50%);
+    width: 40px; height: 40px; padding: 0;
+    color: #fff; filter: drop-shadow(0 1px 0 rgba(0,0,0,.45));
   }
 
-  header {
-    position: relative;
-  }
+  /* Let menu OPEN INTO THE PAGE (no fixed panel) */
+  nav { position: static; top: auto; z-index: 1; }
+  .blue-strip-below-nav { display: none; }
 
-  /* Make logout button full-width on mobile */
-  .nav-links li:last-child {
+  .nav-links {
+    position: static;
+    height: auto;
+    display: none; /* hidden by default */
+    flex-direction: column;
+    flex-wrap: nowrap !important;
+    align-items: stretch;
     width: 100%;
-    display: flex;
-    justify-content: center;
+    background: #6743b8;
+    padding: 8px 16px 12px;
+    gap: 12px;
+    overflow: visible;
+    z-index: 2;
   }
+  .nav-links.active { display: flex; }
 
-  .logout-btn {
-    width: 90%;
-    max-width: 320px;
-    margin: 10px auto;
-    display: block;
-    text-align: center;
-  }
+  .nav-links li { width: 100%; text-align: center; }
+  .nav-links li a { width: 100%; font-size: 16px; font-weight: 700; padding: 6px 0; }
+
+  /* Logout wide but compact */
+  .nav-links li:last-child { margin-top: 8px; display: flex; justify-content: center; }
+  .logout-btn { width: 92%; max-width: 340px; min-height: 44px; font-size: 16px; border-radius: 10px; }
+
+  /* Since menu is not fixed anymore, allow the PAGE to scroll normally */
+  body.nav-open { overflow: auto; height: auto; }
 }

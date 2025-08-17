@@ -10,7 +10,12 @@
 
 <header>
   Pagla Clickers
-  <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()">☰</button>
+  <button class="hamburger"
+          id="menuBtn"
+          type="button"
+          aria-label="Toggle menu"
+          aria-controls="navList"
+          aria-expanded="false">☰</button>
 </header>
 
 <nav>
@@ -21,61 +26,75 @@
     <li><a href="dashboard.html">Dashboard</a></li>
     <li><a href="postjob.html">Post Job</a></li>
     <li><a href="jobs.html">My Jobs</a></li>
-    <li><a href="referel.html">Referral</a></li>
+    <li><a href="referral.html">Referral</a></li>
     <li><a href="deposit.html">Deposit</a></li>
     <li><a href="wallet.html">Wallet</a></li>
     <li><a href="withdrawal.html">Withdraw Money</a></li>
     <li><a href="terms.html">Terms</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="support.html">Support</a></li>
-    <li><button id="logoutBtn" class="logout-btn">Logout</button></li>
+    <li style="display:flex; justify-content:center; align-items:center;">
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </li>
   </ul>
 </nav>
 
 <div class="blue-strip-below-nav"></div>
 
 <div class="container" style="max-width:600px; margin:40px auto; padding:32px; background:#fdfdfd; border-radius:16px; box-shadow:0 10px 25px rgba(0,0,0,0.08); border:1px solid #e0e0e0;">
-  <h2 style="color:#007bff; text-align:center; margin-bottom:35px; font-weight:700;">User Profile</h2>
+  <h2 style="color:#6743b8; text-align:center; margin-bottom:35px; font-weight:700; border-bottom:3px solid #7a5dc7; display:inline-block; padding-bottom:8px;">User Profile</h2>
 
-  <div class="profile-info" style="display:flex; flex-direction:column; gap:20px;">
+  <form class="profile-info" style="display:flex; flex-direction:column; gap:20px;" novalidate>
     <div class="info-item" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-      <span style="flex:1; min-width:130px; font-weight:600; color:#333;">Name:</span>
-      <input type="text" id="user-name" readonly style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
+      <label for="user-name" style="flex:1; min-width:130px; font-weight:600; color:#333;">Name:</label>
+      <input type="text" id="user-name" readonly autocomplete="name"
+             style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
     </div>
     <div class="info-item" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-      <span style="flex:1; min-width:130px; font-weight:600; color:#333;">Phone Number:</span>
-      <input type="text" id="user-phone" readonly style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
+      <label for="user-phone" style="flex:1; min-width:130px; font-weight:600; color:#333;">Phone Number:</label>
+      <input type="tel" id="user-phone" readonly autocomplete="tel"
+             style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
     </div>
     <div class="info-item" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-      <span style="flex:1; min-width:130px; font-weight:600; color:#333;">Email:</span>
-      <input type="text" id="user-email" readonly style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
+      <label for="user-email" style="flex:1; min-width:130px; font-weight:600; color:#333;">Email:</label>
+      <input type="email" id="user-email" readonly autocomplete="email"
+             style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
     </div>
     <div class="info-item" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-      <span style="flex:1; min-width:130px; font-weight:600; color:#333;">Current Balance (৳):</span>
-      <input type="text" id="user-points" readonly style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
+      <label for="user-points" style="flex:1; min-width:130px; font-weight:600; color:#333;">Current Balance (৳):</label>
+      <input type="text" id="user-points" readonly
+             style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
     </div>
     <div class="info-item" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-      <span style="flex:1; min-width:130px; font-weight:600; color:#333;">Referral Code:</span>
-      <input type="text" id="user-ref" readonly style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
+      <label for="user-ref" style="flex:1; min-width:130px; font-weight:600; color:#333;">Referral Code:</label>
+      <input type="text" id="user-ref" readonly autocomplete="off"
+             style="flex:2; padding:10px 14px; font-size:15px; border:1.5px solid #ccc; border-radius:8px; background:#f9f9f9;" />
     </div>
-  </div>
+  </form>
 
   <div class="buttons" style="text-align:center; margin-top:30px;">
-    <button id="editBtn" onclick="enableEdit()" style="background-color:#007bff; color:white; padding:10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer; margin-right:15px;">Edit Profile</button>
-    <button id="saveBtn" onclick="saveProfile()" style="display:none; background-color:#007bff; color:white; padding:10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer; margin-right:15px;">Save</button>
-    <button onclick="togglePasswordForm()" style="background-color:#6c757d; color:white; padding:10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer;">Reset Password</button>
+    <button id="editBtn" type="button" style="background-color:#007bff; color:white; padding:10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer; margin-right:15px;">Edit Profile</button>
+    <button id="saveBtn" type="button" style="display:none; background-color:#007bff; color:white; padding:10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer; margin-right:15px;">Save</button>
+    <button id="resetPwBtn" type="button" style="background-color:#6c757d; color:white; padding:10px 24px; border-radius:8px; border:none; font-weight:600; cursor:pointer;">Reset Password</button>
   </div>
 
   <div id="pwBox" style="display:none; margin-top:25px;">
-    <input type="password" id="old-pw" placeholder="Old Password" style="width:100%; padding:10px 14px; margin-bottom:12px; border:1.5px solid #ccc; border-radius:8px;" />
-    <input type="password" id="new-pw" placeholder="New Password" style="width:100%; padding:10px 14px; margin-bottom:12px; border:1.5px solid #ccc; border-radius:8px;" />
-    <input type="password" id="confirm-pw" placeholder="Confirm Password" style="width:100%; padding:10px 14px; margin-bottom:12px; border:1.5px solid #ccc; border-radius:8px;" />
-    <button onclick="changePassword()" style="width:100%; background:#28a745; color:white; padding:10px; border:none; border-radius:8px; font-weight:600;">Update Password</button>
+    <input type="password" id="old-pw" placeholder="Old Password" autocomplete="current-password"
+           style="width:100%; padding:10px 14px; margin-bottom:12px; border:1.5px solid #ccc; border-radius:8px;" />
+    <input type="password" id="new-pw" placeholder="New Password" autocomplete="new-password"
+           style="width:100%; padding:10px 14px; margin-bottom:12px; border:1.5px solid #ccc; border-radius:8px;" />
+    <input type="password" id="confirm-pw" placeholder="Confirm Password" autocomplete="new-password"
+           style="width:100%; padding:10px 14px; margin-bottom:12px; border:1.5px solid #ccc; border-radius:8px;" />
+    <button id="updatePwBtn" type="button"
+            style="width:100%; background:#28a745; color:white; padding:10px; border:none; border-radius:8px; font-weight:600;">Update Password</button>
   </div>
 </div>
 
-<footer><p style="text-align:center; padding:20px;">&copy; 2025 Pagla Clickers. All rights reserved.</p></footer>
+<footer>
+  <p style="text-align:center; padding:20px;">&copy; 2025 Pagla Clickers. All rights reserved.</p>
+</footer>
 
+<!-- Firebase (module) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, EmailAuthProvider, reauthenticateWithCredential, updatePassword, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
@@ -103,36 +122,49 @@
   const saveBtn = document.getElementById("saveBtn");
   const editBtn = document.getElementById("editBtn");
   const logoutBtn = document.getElementById("logoutBtn");
+  const resetPwBtn = document.getElementById("resetPwBtn");
+  const updatePwBtn = document.getElementById("updatePwBtn");
+  const pwBox = document.getElementById("pwBox");
 
+  // Auth state + user doc load with safe error handling
   onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      currentUser = user;
+    if (!user) {
+      window.location.href = "login.html";
+      return;
+    }
+    currentUser = user;
+
+    try {
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
+
       if (userSnap.exists()) {
         const data = userSnap.data();
         nameInput.value = data.username || "";
         phoneInput.value = data.phone || "";
         emailInput.value = user.email || "";
-        pointsInput.value = data.points || 0;
+        pointsInput.value = data.points ?? 0;
         refInput.value = data.referralCode || "";
       } else {
-        alert("User data not found.");
+        alert("We couldn't find your profile data. Please try again later.");
+        console.warn("User doc missing for uid:", user.uid);
       }
-    } else {
-      window.location.href = "login.html";
+    } catch (e) {
+      alert("Network issue loading your profile. Please retry.");
+      console.error("getDoc error:", e);
     }
   });
 
-  window.enableEdit = () => {
+  // Edit / Save (no inline handlers)
+  function enableEdit() {
     nameInput.readOnly = false;
     phoneInput.readOnly = false;
     nameInput.focus();
     saveBtn.style.display = "inline-block";
     editBtn.style.display = "none";
-  };
+  }
 
-  window.saveProfile = async () => {
+  async function saveProfile() {
     const newName = nameInput.value.trim();
     const newPhone = phoneInput.value.trim();
     if (!newName || !newPhone) {
@@ -142,63 +174,98 @@
 
     try {
       const userRef = doc(db, "users", currentUser.uid);
-      await updateDoc(userRef, {
-        username: newName,
-        phone: newPhone
-      });
+      await updateDoc(userRef, { username: newName, phone: newPhone });
       alert("Profile updated.");
       nameInput.readOnly = true;
       phoneInput.readOnly = true;
       saveBtn.style.display = "none";
       editBtn.style.display = "inline-block";
     } catch (error) {
-      alert("Update failed.");
+      alert("Couldn't update your profile. Please try again.");
+      console.error("updateDoc error:", error);
     }
-  };
+  }
 
-  window.togglePasswordForm = () => {
-    const pwBox = document.getElementById("pwBox");
+  function togglePasswordForm() {
     pwBox.style.display = pwBox.style.display === "none" ? "block" : "none";
-  };
+  }
 
-  window.changePassword = async () => {
+  async function changePassword() {
     const oldPw = document.getElementById("old-pw").value.trim();
     const newPw = document.getElementById("new-pw").value.trim();
     const confirmPw = document.getElementById("confirm-pw").value.trim();
 
     if (!oldPw || !newPw || !confirmPw) {
-      alert("Fill all fields.");
+      alert("Fill all password fields.");
       return;
     }
-
     if (newPw !== confirmPw) {
       alert("New passwords don't match.");
       return;
     }
 
-    const credential = EmailAuthProvider.credential(currentUser.email, oldPw);
-
     try {
+      const credential = EmailAuthProvider.credential(currentUser.email, oldPw);
       await reauthenticateWithCredential(currentUser, credential);
       await updatePassword(currentUser, newPw);
       alert("Password updated.");
-      document.getElementById("pwBox").style.display = "none";
+      pwBox.style.display = "none";
     } catch (err) {
-      alert("Failed: " + err.message);
+      alert("Couldn't update password. Please check your current password and try again.");
+      console.error("Password change error:", err);
     }
-  };
+  }
 
-  logoutBtn.addEventListener("click", () => {
-    signOut(auth)
-      .then(() => (window.location.href = "login.html"))
-      .catch((error) => alert("Logout error: " + error.message));
+  // Wire up events
+  editBtn.addEventListener("click", enableEdit);
+  saveBtn.addEventListener("click", saveProfile);
+  resetPwBtn.addEventListener("click", togglePasswordForm);
+  updatePwBtn.addEventListener("click", changePassword);
+
+  logoutBtn.addEventListener("click", async () => {
+    try {
+      await signOut(auth);
+      window.location.href = "login.html";
+    } catch (error) {
+      alert("Logout failed. Please try again.");
+      console.error("Logout error:", error);
+    }
   });
 </script>
 
+<!-- Nav toggle JS (same pattern across pages) -->
 <script>
-  function toggleMenu() {
-    document.getElementById("navList").classList.toggle("active");
-  }
+  (function () {
+    const btn = document.getElementById('menuBtn');
+    const nav = document.getElementById('navList');
+    if (!btn || !nav) return;
+
+    function openMenu() {
+      nav.classList.add('active');
+      btn.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('nav-open');
+    }
+    function closeMenu() {
+      nav.classList.remove('active');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('nav-open');
+    }
+    function toggleMenu() {
+      nav.classList.contains('active') ? closeMenu() : openMenu();
+    }
+
+    btn.addEventListener('click', toggleMenu);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+    nav.addEventListener('click', (e) => { if (e.target.closest('a')) closeMenu(); });
+
+    // Reset if resizing up to desktop
+    let lastW = window.innerWidth;
+    window.addEventListener('resize', () => {
+      const w = window.innerWidth;
+      if (w !== lastW && w > 768) closeMenu();
+      lastW = w;
+    });
+  })();
 </script>
 
 </body>

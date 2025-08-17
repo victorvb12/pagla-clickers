@@ -34,98 +34,128 @@
     .container p, .container ul {
       line-height: 1.6;
       margin-bottom: 18px;
-      user-select: text;
     }
-    .container ul {
-      padding-left: 1.5rem;
-    }
-    .container ul li {
-      margin-bottom: 8px;
-    }
+    .container ul { padding-left: 1.5rem; }
+    .container ul li { margin-bottom: 8px; }
   </style>
 </head>
 <body>
 
-<header>
-  Pagla Clickers
-  <button class="hamburger" aria-label="Toggle navigation menu" onclick="toggleMenu()">☰</button>
-</header>
+  <header>
+    Pagla Clickers
+    <button class="hamburger"
+            id="menuBtn"
+            type="button"
+            aria-label="Toggle navigation menu"
+            aria-controls="navList"
+            aria-expanded="false">☰</button>
+  </header>
 
-<nav>
-  <ul class="nav-links" id="navList">
-    <li><a href="about.html">About</a></li>
-    <li><a href="notifications.html">Notifications</a></li>
-    <li><a href="profile.html">Profile</a></li>
-    <li><a href="dashboard.html">Dashboard</a></li>
-    <li><a href="postjob.html">Post Job</a></li>
-    <li><a href="jobs.html">My Jobs</a></li>
-    <li><a href="referel.html">Referral</a></li>
-    <li><a href="deposit.html">Deposit</a></li>
-    <li><a href="wallet.html">Wallet</a></li>
-    <li><a href="withdrawal.html">Withdraw Money</a></li>
-    <li><a href="terms.html" aria-current="page">Terms</a></li>
-    <li><a href="faq.html">FAQ</a></li>
-    <li><a href="support.html">Support</a></li>
-    <li>
-      <button id="logoutBtn" class="logout-btn">Logout</button>
-    </li>
-  </ul>
-</nav>
+  <nav>
+    <ul class="nav-links" id="navList">
+      <li><a href="about.html">About</a></li>
+      <li><a href="notifications.html">Notifications</a></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="postjob.html">Post Job</a></li>
+      <li><a href="jobs.html">My Jobs</a></li>
+      <li><a href="referel.html">Referral</a></li>
+      <li><a href="deposit.html">Deposit</a></li>
+      <li><a href="wallet.html">Wallet</a></li>
+      <li><a href="withdrawal.html">Withdraw Money</a></li>
+      <li><a href="terms.html" aria-current="page">Terms</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="support.html">Support</a></li>
+      <li style="display:flex; justify-content:center;">
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+      </li>
+    </ul>
+  </nav>
 
-<div class="blue-strip-below-nav"></div>
+  <div class="blue-strip-below-nav" aria-hidden="true"></div>
 
-<div class="container" role="main" tabindex="0">
-  <h2>Terms & Conditions</h2>
-  <p>By accessing or using Pagla Clickers, you agree to the following terms and conditions. Please read them carefully before registering or using the site.</p>
+  <div class="container" role="main" tabindex="0">
+    <h2>Terms & Conditions</h2>
+    <p>By accessing or using Pagla Clickers, you agree to the following terms and conditions. Please read them carefully before registering or using the site.</p>
 
-  <h3>1. Eligibility</h3>
-  <p>You must be at least 13 years old to use Pagla Clickers. By registering, you confirm that all information you provide is true and accurate.</p>
+    <h3>1. Eligibility</h3>
+    <p>You must be at least 13 years old to use Pagla Clickers. By registering, you confirm that all information you provide is true and accurate.</p>
 
-  <h3>2. Account Responsibility</h3>
-  <p>You are responsible for maintaining the confidentiality of your login credentials. Do not share your account with others.</p>
+    <h3>2. Account Responsibility</h3>
+    <p>You are responsible for maintaining the confidentiality of your login credentials. Do not share your account with others.</p>
 
-  <h3>3. Usage</h3>
-  <ul>
-    <li>Only one account per person is allowed.</li>
-    <li>Automated or bot activities are strictly prohibited.</li>
-    <li>Users must follow task instructions honestly. Any form of cheating will result in account suspension.</li>
-  </ul>
+    <h3>3. Usage</h3>
+    <ul>
+      <li>Only one account per person is allowed.</li>
+      <li>Automated or bot activities are strictly prohibited.</li>
+      <li>Users must follow task instructions honestly. Any form of cheating will result in account suspension.</li>
+    </ul>
 
-  <h3>4. Payments</h3>
-  <p>Payments are made according to the rates and methods specified on the platform. Fraudulent activity will result in loss of earnings.</p>
+    <h3>4. Payments</h3>
+    <p>Payments are made according to the rates and methods specified on the platform. Fraudulent activity will result in loss of earnings.</p>
 
-  <h3>5. Changes to Terms</h3>
-  <p>Pagla Clickers may modify these terms at any time. Continued use of the site after changes indicates acceptance of the updated terms.</p>
+    <h3>5. Changes to Terms</h3>
+    <p>Pagla Clickers may modify these terms at any time. Continued use of the site after changes indicates acceptance of the updated terms.</p>
 
-  <h3>6. Termination</h3>
-  <p>We reserve the right to suspend or delete any account that violates our rules without prior notice or refund.</p>
+    <h3>6. Termination</h3>
+    <p>We reserve the right to suspend or delete any account that violates our rules without prior notice or refund.</p>
 
-  <h3>7. Contact</h3>
-  <p>If you have any questions about these terms, please contact us at <strong>support@paglaclickers.com</strong>.</p>
-</div>
+    <h3>7. Contact</h3>
+    <p>If you have any questions about these terms, please contact us at <strong>support@paglaclickers.com</strong>.</p>
+  </div>
 
-<footer>
-  <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
-</footer>
+  <footer>
+    <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+  </footer>
 
-<script>
-  function toggleMenu() {
-    document.getElementById('navList').classList.toggle('active');
-  }
+  <!-- Nav toggle JS (same pattern across pages) -->
+  <script>
+    (function () {
+      const btn = document.getElementById('menuBtn');
+      const nav = document.getElementById('navList');
+      if (!btn || !nav) return;
 
-  // Firebase logout script
-  import('https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js').then(({ getAuth, signOut }) => {
+      function openMenu(){ nav.classList.add('active'); btn.setAttribute('aria-expanded','true'); document.body.classList.add('nav-open'); }
+      function closeMenu(){ nav.classList.remove('active'); btn.setAttribute('aria-expanded','false'); document.body.classList.remove('nav-open'); }
+      function toggleMenu(){ nav.classList.contains('active') ? closeMenu() : openMenu(); }
+
+      btn.addEventListener('click', toggleMenu);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+      nav.addEventListener('click', e => { if (e.target.closest('a')) closeMenu(); });
+
+      let lastW = innerWidth;
+      addEventListener('resize', () => { const w = innerWidth; if (w !== lastW && w > 768) closeMenu(); lastW = w; });
+    })();
+  </script>
+
+  <!-- Firebase logout (module, with init) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+      authDomain: "pagla-b1c17.firebaseapp.com",
+      projectId: "pagla-b1c17",
+      storageBucket: "pagla-b1c17.appspot.com",
+      messagingSenderId: "192578902502",
+      appId: "1:192578902502:web:1595070cdac289170f5e27"
+    };
+
+    // Initialize app (safe to call on each page)
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
     const logoutBtn = document.getElementById('logoutBtn');
-    const auth = getAuth();
-    logoutBtn.addEventListener('click', () => {
-      signOut(auth).then(() => {
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
         window.location.href = 'login.html';
-      }).catch((error) => {
-        alert('Error signing out: ' + error.message);
-      });
+      } catch (err) {
+        alert('Error signing out: ' + (err?.message || err));
+      }
     });
-  });
-</script>
+  </script>
 
 </body>
 </html>

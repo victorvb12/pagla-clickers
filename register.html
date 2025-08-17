@@ -5,167 +5,187 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pagla Clickers - Register</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #71b7e6, #9b59b6);
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 15px;
-      color: #333;
-      position: relative;
-    }
-    h1.title {
-      position: absolute;
-      top: 20px;
-      text-align: center;
-      width: 100%;
-      font-size: 28px;
-      color: white;
-      font-weight: bold;
-      margin: 0;
-    }
-    .container {
-      background: #fff;
-      padding: 30px 40px;
-      border-radius: 12px;
-      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-      max-width: 420px;
-      width: 100%;
-      margin-top: 80px;
-    }
-    h2 {
-      margin-bottom: 25px;
-      text-align: center;
-      color: #4a148c;
-    }
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: #4a148c;
-    }
-    input, select {
-      width: 100%;
-      padding: 12px 15px;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      border: 1.8px solid #b39ddb;
-      font-size: 16px;
-      transition: border-color 0.3s ease;
-    }
-    input:focus, select:focus {
-      border-color: #7e57c2;
-      outline: none;
-    }
-    .phone-group {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 18px;
-    }
-    .phone-group select {
-      max-width: 100px;
-    }
-    button {
-      width: 100%;
-      padding: 14px;
-      background: #7e57c2;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 18px;
-      cursor: pointer;
-      box-shadow: 0 6px 12px rgba(126, 87, 194, 0.5);
-      transition: background 0.3s ease;
-      margin-top: 8px;
-    }
-    button:hover {
-      background: #5e35b1;
-    }
-    .message {
-      text-align: center;
-      font-size: 14px;
-      margin-top: 10px;
-      min-height: 22px;
-      color: #d32f2f;
-    }
-    .message.success {
-      color: #388e3c;
-    }
-    p.bottom-text {
-      text-align: center;
-      margin-top: 20px;
-      color: #5e35b1;
-    }
-    p.bottom-text a {
-      color: #311b92;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    p.bottom-text a:hover {
-      text-decoration: underline;
-    }
+* { box-sizing: border-box; }
 
-    @media (max-width: 480px) {
-      .container {
-        padding: 25px 20px;
-        max-width: 100%;
-        margin: 0 10px;
-        margin-top: 80px;
-      }
-      .phone-group {
-        flex-direction: column;
-      }
-      .phone-group select {
-        max-width: 100%;
-        margin-bottom: 12px;
-      }
-    }
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #b6a1d8;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: #333;
+}
+
+header, footer {
+  background-color: #003366;
+  color: #fff;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+
+.container {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(0,0,0,.15);
+  max-width: 420px;
+  width: 100%;
+}
+
+h2 { margin-bottom: 25px; text-align: center; color: #4a148c; }
+label { display: block; margin-bottom: 6px; font-weight: 600; color: #4a148c; }
+
+input, select {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1.8px solid #b39ddb;
+  font-size: 16px;
+  transition: border-color .3s ease;
+}
+
+input:focus, select:focus { border-color: #7e57c2; outline: none; }
+
+.phone-group { display: flex; gap: 8px; margin-bottom: 18px; }
+.phone-group select { max-width: 120px; }
+
+button {
+  width: 100%;
+  padding: 14px;
+  background: #7e57c2;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(126,87,194,.5);
+  transition: background .3s ease;
+  margin-top: 8px;
+}
+
+button:hover { background: #5e35b1; }
+
+.message {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 10px;
+  min-height: 22px;
+  color: #d32f2f;
+}
+.message.success { color: #388e3c; }
+
+p.bottom-text { text-align: center; margin-top: 20px; color: #5e35b1; }
+p.bottom-text a { color: #311b92; text-decoration: none; font-weight: 600; }
+p.bottom-text a:hover { text-decoration: underline; }
+
+/* --- BIG checkbox (restored) --- */
+.terms-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .95rem;
+  margin: 12px 0 16px;
+  color: #333;
+  cursor: pointer;
+}
+.terms-label input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #8aa0b8;
+  border-radius: 3px;
+  background: #fff;
+  position: relative;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+  margin: 0;
+  padding: 0;
+}
+.terms-label input[type="checkbox"]:checked {
+  background: #003366;
+  border-color: #003366;
+}
+.terms-label input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.terms-label a { color: #003366; font-weight: 600; text-decoration: none; }
+.terms-label a:hover { text-decoration: underline; }
+
+@media (max-width: 480px) {
+  .container { padding: 25px 20px; max-width: 100%; }
+  .phone-group { flex-direction: column; }
+  .phone-group select { max-width: 100%; margin-bottom: 12px; }
+}
+
   </style>
 </head>
 <body>
 
-  <h1 class="title">Pagla Clickers</h1>
+<header>
+  <h1>Pagla Clickers</h1>
+</header>
 
+<main>
   <div class="container" role="main" aria-label="Register Form">
     <h2>Create Account</h2>
 
     <label for="username">Username</label>
-    <input type="text" id="username" placeholder="Choose your username" autocomplete="off" />
+    <input type="text" id="username" placeholder="Choose your username" autocomplete="username" />
 
     <label for="email">Email</label>
-    <input type="email" id="email" placeholder="Your email address" autocomplete="off" />
+    <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
 
-    <label for="phoneCountry">Country Code</label>
-    <select id="phoneCountry" aria-label="Country Code">
-      <option value="+1">US +1</option>
-      <option value="+44">GB +44</option>
-      <option value="+91">IN +91</option>
-      <option value="+880" selected>BD +880</option>
-      <option value="+61">AU +61</option>
-      <option value="+81">JP +81</option>
-      <option value="+49">DE +49</option>
-      <option value="+33">FR +33</option>
-      <option value="+7">RU +7</option>
-    </select>
-
-    <label for="phone">Phone Number</label>
-    <input type="tel" id="phone" placeholder="e.g. 1912345678" autocomplete="off" />
+    <div class="phone-group">
+      <div style="flex:0 0 120px;">
+        <label for="phoneCountry">Country Code</label>
+        <select id="phoneCountry" aria-label="Country Code">
+          <option value="+880" selected>BD +880</option>
+          <option value="+91">IN +91</option>
+          <option value="+1">US +1</option>
+          <option value="+44">GB +44</option>
+          <option value="+61">AU +61</option>
+        </select>
+      </div>
+      <div style="flex:1 1 auto;">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" placeholder="e.g. 1912345678" autocomplete="tel-national" />
+      </div>
+    </div>
 
     <label for="referralCode">Referral Code (optional)</label>
     <input type="text" id="referralCode" placeholder="Enter referral code if any" autocomplete="off" />
 
     <label for="password">Password</label>
-    <input type="password" id="password" placeholder="Create password" autocomplete="off" />
+    <input type="password" id="password" placeholder="Create password" autocomplete="new-password" />
 
     <label for="confirmPassword">Confirm Password</label>
-    <input type="password" id="confirmPassword" placeholder="Confirm password" autocomplete="off" />
+    <input type="password" id="confirmPassword" placeholder="Confirm password" autocomplete="new-password" />
+
+    <label class="terms-label" for="agreeTerms">
+      <input type="checkbox" id="agreeTerms" />
+      I agree to the <a href="terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a>
+    </label>
 
     <button id="registerBtn">Register</button>
 
@@ -173,138 +193,113 @@
 
     <p class="bottom-text">Already have an account? <a href="login.html">Login here</a></p>
   </div>
+</main>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-    import { getFirestore, collection, query, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+<footer>
+  <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+</footer>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
-      authDomain: "pagla-b1c17.firebaseapp.com",
-      projectId: "pagla-b1c17",
-      storageBucket: "pagla-b1c17.appspot.com",
-      messagingSenderId: "192578902502",
-      appId: "1:192578902502:web:1595070cdac289170f5e27"
-    };
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getFirestore, collection, query, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  const firebaseConfig = {
+    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+    authDomain: "pagla-b1c17.firebaseapp.com",
+    projectId: "pagla-b1c17",
+    storageBucket: "pagla-b1c17.appspot.com",
+    messagingSenderId: "192578902502",
+    appId: "1:192578902502:web:1595070cdac289170f5e27"
+  };
 
-    const usernameInput = document.getElementById("username");
-    const emailInput = document.getElementById("email");
-    const phoneCountrySelect = document.getElementById("phoneCountry");
-    const phoneInput = document.getElementById("phone");
-    const referralInput = document.getElementById("referralCode");
-    const passwordInput = document.getElementById("password");
-    const confirmPasswordInput = document.getElementById("confirmPassword");
-    const registerBtn = document.getElementById("registerBtn");
-    const message = document.getElementById("message");
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    function validateEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const usernameInput = document.getElementById("username");
+  const emailInput = document.getElementById("email");
+  const phoneCountrySelect = document.getElementById("phoneCountry");
+  const phoneInput = document.getElementById("phone");
+  const referralInput = document.getElementById("referralCode");
+  const passwordInput = document.getElementById("password");
+  const confirmPasswordInput = document.getElementById("confirmPassword");
+  const agreeTermsCheckbox = document.getElementById("agreeTerms");
+  const registerBtn = document.getElementById("registerBtn");
+  const message = document.getElementById("message");
+
+  const validEmail = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+  const validPhone = (p) => /^\d{6,15}$/.test(p);
+
+  async function usernameExists(username) {
+    if (!username) return false;
+    const q = query(collection(db, "users"), where("username", "==", username));
+    const snapshot = await getDocs(q);
+    return !snapshot.empty;
+  }
+
+  registerBtn.addEventListener("click", async () => {
+    message.textContent = "";
+    message.classList.remove("success");
+
+    const username = (usernameInput.value || "").trim().toLowerCase();
+    const email = (emailInput.value || "").trim();
+    const countryCode = phoneCountrySelect.value;
+    const phoneNumber = (phoneInput.value || "").trim();
+    const referredBy = (referralInput.value || "").trim() || null;
+    const password = passwordInput.value || "";
+    const confirmPassword = confirmPasswordInput.value || "";
+
+    if (!agreeTermsCheckbox.checked) {
+      message.textContent = "You must agree to the Terms & Conditions.";
+      agreeTermsCheckbox.focus();
+      return;
     }
 
-    function validatePhone(phone) {
-      return /^\d{6,15}$/.test(phone);
+    registerBtn.disabled = true;
+    registerBtn.textContent = "Validating…";
+
+    if (!username) { message.textContent = "Please enter a username."; done(); usernameInput.focus(); return; }
+
+    try {
+      if (await usernameExists(username)) { message.textContent = "Username already exists."; done(); usernameInput.focus(); return; }
+      if (!email || !validEmail(email)) { message.textContent = "Enter a valid email."; done(); emailInput.focus(); return; }
+      if (!validPhone(phoneNumber)) { message.textContent = "Phone must be 6–15 digits."; done(); phoneInput.focus(); return; }
+      if (password.length < 6) { message.textContent = "Password must be at least 6 characters."; done(); passwordInput.focus(); return; }
+      if (password !== confirmPassword) { message.textContent = "Passwords do not match."; done(); confirmPasswordInput.focus(); return; }
+
+      registerBtn.textContent = "Registering…";
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      const user = cred.user;
+      const referralCode = user.uid.substring(0, 6).toUpperCase();
+
+      await setDoc(doc(db, "users", user.uid), {
+        username,
+        email,
+        phone: countryCode + phoneNumber,
+        referredBy,
+        referralCode,
+        referralCount: 0,
+        balance: 0,
+        createdAt: new Date().toISOString()
+      });
+
+      message.classList.add("success");
+      message.textContent = "Registration successful! Redirecting…";
+      setTimeout(() => { window.location.href = "dashboard.html"; }, 1500);
+
+    } catch (err) {
+      message.textContent = "Error: " + (err?.message || err);
+    } finally {
+      done();
     }
+  });
 
-    async function usernameExists(username) {
-      if (!username) return false;
-      const q = query(collection(db, "users"), where("username", "==", username));
-      const snapshot = await getDocs(q);
-      return !snapshot.empty;
-    }
+  function done(){
+    registerBtn.disabled = false;
+    registerBtn.textContent = "Register";
+  }
+</script>
 
-    registerBtn.addEventListener("click", async () => {
-      message.textContent = "";
-      message.classList.remove("success");
-      const username = usernameInput.value.trim().toLowerCase();
-      const email = emailInput.value.trim();
-      const countryCode = phoneCountrySelect.value;
-      const phoneNumber = phoneInput.value.trim();
-      const referredBy = referralInput.value.trim() || null;
-      const password = passwordInput.value;
-      const confirmPassword = confirmPasswordInput.value;
-
-      if (!username) {
-        message.textContent = "Please enter a username.";
-        usernameInput.focus();
-        return;
-      }
-
-      registerBtn.disabled = true;
-      registerBtn.textContent = "Checking username...";
-      if (await usernameExists(username)) {
-        message.textContent = "Username already exists, please choose another.";
-        registerBtn.disabled = false;
-        registerBtn.textContent = "Register";
-        usernameInput.focus();
-        return;
-      }
-
-      if (!email || !validateEmail(email)) {
-        message.textContent = "Please enter a valid email.";
-        emailInput.focus();
-        registerBtn.disabled = false;
-        registerBtn.textContent = "Register";
-        return;
-      }
-
-      if (!validatePhone(phoneNumber)) {
-        message.textContent = "Phone must be 6–15 digits.";
-        phoneInput.focus();
-        registerBtn.disabled = false;
-        registerBtn.textContent = "Register";
-        return;
-      }
-
-      if (password.length < 6) {
-        message.textContent = "Password must be at least 6 characters.";
-        passwordInput.focus();
-        registerBtn.disabled = false;
-        registerBtn.textContent = "Register";
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        message.textContent = "Passwords do not match.";
-        confirmPasswordInput.focus();
-        registerBtn.disabled = false;
-        registerBtn.textContent = "Register";
-        return;
-      }
-
-      try {
-        registerBtn.textContent = "Registering...";
-        const userCred = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCred.user;
-        const referralCode = user.uid.substring(0, 6).toUpperCase();
-
-        await setDoc(doc(db, "users", user.uid), {
-          username,
-          email,
-          phone: countryCode + phoneNumber,
-          referredBy,
-          referralCode,
-          referralCount: 0,
-          balance: 0,
-          createdAt: new Date().toISOString()
-        });
-
-        message.classList.add("success");
-        message.textContent = "Registration successful! Redirecting...";
-        setTimeout(() => {
-          window.location.href = "dashboard.html";
-        }, 2000);
-      } catch (error) {
-        message.textContent = "Error: " + error.message;
-      } finally {
-        registerBtn.disabled = false;
-        registerBtn.textContent = "Register";
-      }
-    });
-  </script>
 </body>
 </html>

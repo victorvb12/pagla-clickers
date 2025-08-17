@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Referral - Pagla Clickers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* Page-specific styles */
+    .ref-container {
+      background: #f5f0ff;
+      padding: 25px 20px;
+      border-radius: 10px;
+      max-width: 700px;
+      margin: 30px auto;
+      box-shadow: 0 2px 8px rgba(161,133,207,0.15);
+      text-align: center;
+      color: #4a4175;
+    }
+    .ref-container h2 {
+      color: #6743b8;
+      margin-bottom: 20px;
+      font-weight: 700;
+      border-bottom: 3px solid #7a5dc7;
+      padding-bottom: 8px;
+      display: inline-block;
+    }
+    .ref-box {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 25px 0;
+    }
+    .ref-box input[type="url"] {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 60%;
+      max-width: 400px;
+      font-size: 16px;
+      background: #fff;
+    }
+    .ref-box button.copy {
+      background-color: #7a5dc7;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .ref-box button.copy:hover { background-color: #5a3a9f; }
+
+    .copied-msg { color: green; font-size: 13px; margin-top: 5px; min-height: 18px; }
+
+    .share-buttons { display: flex; justify-content: center; gap: 14px; margin-top: 15px; }
+    .share-buttons a,
+    .share-buttons button {
+      background: #7a5dc7; color: white; padding: 10px 18px; border-radius: 6px;
+      font-size: 14px; text-decoration: none; border: none; cursor: pointer;
+    }
+    .share-buttons a:hover, .share-buttons button:hover { background-color: #5a3a9f; }
+
+    .tab-buttons { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; }
+    .tab-buttons button {
+      padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700;
+      background: #e0d7fb; color: #4a4175;
+    }
+    .tab-buttons .is-active { background: #7a5dc7; color: #fff; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    table th, table td { border: 1px solid #ccc; padding: 10px; }
+    table th { background: #7a5dc7; color: white; }
+
+    /* simple toast */
+    .toast {
+      position: fixed; left: 50%; transform: translateX(-50%);
+      bottom: 24px; background: #333; color:#fff; padding:10px 16px;
+      border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity .25s ease;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<header>
+  Pagla Clickers
+  <button class="hamburger"
+          id="menuBtn"
+          type="button"
+          aria-label="Toggle menu"
+          aria-controls="navList"
+          aria-expanded="false">☰</button>
+</header>
+
+<nav>
+  <ul class="nav-links" id="navList">
+    <li><a href="about.html">About</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="postjob.html">Post Job</a></li>
+    <li><a href="jobs.html">My Jobs</a></li>
+    <li><a href="referral.html" aria-current="page">Referral</a></li>
+    <li><a href="deposit.html">Deposit</a></li>
+    <li><a href="wallet.html">Wallet</a></li>
+    <li><a href="withdrawal.html">Withdraw Money</a></li>
+    <li><a href="terms.html">Terms</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="support.html">Support</a></li>
+    <li style="display:flex; justify-content:center; align-items:center;">
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </li>
+  </ul>
+</nav>
+
+<div class="blue-strip-below-nav"></div>
+
+<div class="ref-container">
+  <div class="tab-buttons">
+    <button id="tabEarn" class="is-active" type="button">Refer & Earn</button>
+    <button id="tabIncome" type="button">Referral Income</button>
+  </div>
+
+  <div id="earnSection">
+    <h2>Refer & Earn</h2>
+    <p>
+      Activate your account and get an instant <strong>৳0.20</strong> bonus.<br>
+      Earn <strong>5%</strong> deposit bonus and <strong>3%</strong> task bonus per referral!
+    </p>
+
+    <div class="ref-box">
+      <label for="refLink" class="visually-hidden" style="position:absolute;left:-9999px;">Referral link</label>
+      <input type="url" id="refLink" readonly aria-describedby="copiedMsg" />
+      <button class="copy" id="copyBtn" type="button">Copy</button>
+    </div>
+
+    <div class="copied-msg" id="copiedMsg" aria-live="polite" role="status"></div>
+
+    <div class="share-buttons" id="shareButtons" style="display:none;">
+      <a id="waShare" href="#" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>
+      <a id="fbShare" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>
+      <button id="msgrShare" type="button" aria-label="Share on Messenger">Messenger</button>
+    </div>
+  </div>
+
+  <div id="incomeSection" style="display:none;">
+    <h2>Referral Income</h2>
+    <p id="refCount">Total Referrals: Loading...</p>
+    <table id="refTable">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Earnings from Them</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+</footer>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<!-- Nav toggle JS (same pattern across pages) -->
+<script>
+  (function () {
+    const btn = document.getElementById('menuBtn');
+    const nav = document.getElementById('navList');
+    if (!btn || !nav) return;
+
+    function openMenu(){ nav.classList.add('active'); btn.setAttribute('aria-expanded','true'); document.body.classList.add('nav-open'); }
+    function closeMenu(){ nav.classList.remove('active'); btn.setAttribute('aria-expanded','false'); document.body.classList.remove('nav-open'); }
+    function toggleMenu(){ nav.classList.contains('active') ? closeMenu() : openMenu(); }
+
+    btn.addEventListener('click', toggleMenu);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+    nav.addEventListener('click', e => { if (e.target.closest('a')) closeMenu(); });
+
+    let lastW = innerWidth;
+    addEventListener('resize', () => { const w = innerWidth; if (w !== lastW && w > 768) closeMenu(); lastW = w; });
+  })();
+</script>
+
+<!-- Firebase (module) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+  const app = initializeApp({
+    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+    authDomain: "pagla-b1c17.firebaseapp.com",
+    projectId: "pagla-b1c17",
+    storageBucket: "pagla-b1c17.appspot.com",
+    messagingSenderId: "192578902502",
+    appId: "1:192578902502:web:1595070cdac289170f5e27"
+  });
+
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // Elements
+  const logoutBtn   = document.getElementById("logoutBtn");
+  const refInput    = document.getElementById("refLink");
+  const copyBtn     = document.getElementById("copyBtn");
+  const copiedMsg   = document.getElementById("copiedMsg");
+  const shareButtons= document.getElementById("shareButtons");
+  const waShare     = document.getElementById("waShare");
+  const fbShare     = document.getElementById("fbShare");
+  const msgrShare   = document.getElementById("msgrShare");
+  const refCount    = document.getElementById("refCount");
+  const refTableBody= document.querySelector("#refTable tbody");
+  const toast       = document.getElementById("toast");
+
+  // tiny toast helper
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+
+  // Tabs
+  const tabEarn = document.getElementById("tabEarn");
+  const tabIncome = document.getElementById("tabIncome");
+  const earnSection = document.getElementById("earnSection");
+  const incomeSection = document.getElementById("incomeSection");
+
+  tabEarn.addEventListener("click", () => {
+    earnSection.style.display = "block";
+    incomeSection.style.display = "none";
+    tabEarn.classList.add("is-active");
+    tabIncome.classList.remove("is-active");
+  });
+  tabIncome.addEventListener("click", () => {
+    earnSection.style.display = "none";
+    incomeSection.style.display = "block";
+    tabIncome.classList.add("is-active");
+    tabEarn.classList.remove("is-active");
+  });
+
+  // Copy referral link
+  copyBtn.addEventListener("click", async () => {
+    const txt = refInput.value || "";
+    if (!txt) { copiedMsg.textContent = "Nothing to copy"; return; }
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(txt);
+      } else {
+        const prev = refInput.readOnly;
+        refInput.readOnly = false; refInput.select(); refInput.setSelectionRange(0,99999);
+        document.execCommand && document.execCommand('copy');
+        refInput.readOnly = prev;
+        window.getSelection()?.removeAllRanges?.();
+      }
+      copiedMsg.textContent = "Copied to clipboard ✅";
+      setTimeout(()=> copiedMsg.textContent="", 1500);
+    } catch {
+      copiedMsg.textContent = "Failed to copy";
+    }
+  });
+
+  // Logout
+  logoutBtn.addEventListener("click", async () => {
+    try { await signOut(auth); window.location.href = 'login.html'; }
+    catch (e) { showToast("Logout failed, please try again"); console.error(e); }
+  });
+
+  // Auth + data
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = "login.html"; return; }
+
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+      const data = userSnap.exists() ? (userSnap.data() || {}) : {};
+
+      const origin = location.origin.replace(/\/$/, "");
+      const referralCode = data.referralCode || user.uid.slice(0,8);
+
+      const referralURL = new URL('/register', origin);
+      referralURL.searchParams.set('ref', referralCode);
+
+      refInput.value = referralURL.toString();
+
+      // Show share buttons
+      shareButtons.style.display = "flex";
+
+      // WhatsApp
+      waShare.href = `https://wa.me/?text=${encodeURIComponent("Join Pagla Clickers and earn! " + referralURL.toString())}`;
+
+      // Facebook
+      fbShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralURL.toString())}`;
+
+      // Messenger (best-effort: try native scheme; fallback to FB send dialog if you later add an App ID)
+      msgrShare.addEventListener('click', () => {
+        const appId = ""; // if you have a Facebook App ID, put it here
+        const tryNative = () => {
+          // Attempt native Messenger on mobile
+          window.location.href = `fb-messenger://share/?link=${encodeURIComponent(referralURL.toString())}`;
+          // If it doesn't work, user stays; we also provide dialog fallback below if appId exists
+        };
+        if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+          tryNative();
+        } else if (appId) {
+          const sendUrl = `https://www.facebook.com/dialog/send?app_id=${encodeURIComponent(appId)}&link=${encodeURIComponent(referralURL.toString())}&redirect_uri=${encodeURIComponent(referralURL.toString())}`;
+          window.open(sendUrl, '_blank', 'noopener');
+        } else {
+          // Fallback: open Facebook share dialog (not direct Messenger, but safe fallback)
+          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralURL.toString())}`,'_blank','noopener');
+          showToast("Tip: Add a Facebook App ID for true Messenger sharing.");
+        }
+      });
+
+      // List referrals
+      const q = query(collection(db, "users"), where("referredBy", "==", referralCode));
+      const referralSnap = await getDocs(q);
+      refCount.textContent = `Total Referrals: ${referralSnap.size}`;
+      refTableBody.innerHTML = "";
+
+      if (referralSnap.empty) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 2;
+        td.textContent = "No referrals yet.";
+        tr.appendChild(td);
+        refTableBody.appendChild(tr);
+      } else {
+        referralSnap.forEach(d => {
+          const u = d.data() || {};
+          const tr = document.createElement("tr");
+          const tdName = document.createElement("td");
+          const tdAmt = document.createElement("td");
+
+          tdName.textContent = u.name || "Unnamed";
+          const earned = Number(u.earnedFromMe ?? 0);
+          tdAmt.textContent = new Intl.NumberFormat('bn-BD', { style: 'currency', currency: 'BDT' }).format(earned);
+
+          tr.append(tdName, tdAmt);
+          refTableBody.appendChild(tr);
+        });
+      }
+    } catch (err) {
+      refCount.textContent = "Total Referrals: 0";
+      refTableBody.innerHTML = "<tr><td colspan='2'>Couldn't load referrals.</td></tr>";
+      console.error(err);
+    }
+  });
+</script>
+
+</body>
+</html>

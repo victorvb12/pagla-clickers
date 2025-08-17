@@ -4,9 +4,12 @@
   <meta charset="UTF-8" />
   <title>Post Job - Pagla Clickers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Global site styles -->
   <link rel="stylesheet" href="style.css" />
+
   <style>
-    /* Internal style ONLY for form inside .container */
+    /* Page-only styles (nav/header come from style.css) */
     .container {
       max-width: 600px;
       margin: 30px auto;
@@ -15,307 +18,323 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-
     .container h2 {
       text-align: center;
-      color: #007bff;
+      color: #6743b8;
       margin-bottom: 25px;
+      font-weight: 700;
+      border-bottom: 3px solid #7a5dc7;
+      padding-bottom: 8px;
+      display: inline-block;
+      width: 100%;
     }
-
     .container label {
-      font-weight: bold;
-      margin-top: 15px;
+      font-weight: 700;
+      margin-top: 14px;
       display: block;
-      color: #333;
+      color: #4a4175;
     }
-
     .container input,
     .container textarea,
     .container select {
       width: 100%;
       padding: 12px;
       margin-top: 8px;
-      margin-bottom: 15px;
+      margin-bottom: 14px;
       font-size: 16px;
-      border: 1px solid #ccc;
+      border: 1.5px solid #9b8bc3;
       border-radius: 6px;
       box-sizing: border-box;
+      color: #4a4175;
     }
-
     .container textarea {
       resize: vertical;
-      min-height: 100px;
+      min-height: 110px;
     }
-
+    .container input:focus,
+    .container textarea:focus,
+    .container select:focus {
+      border-color: #7a5dc7;
+      outline: none;
+      box-shadow: 0 0 6px #7a5dc7aa;
+    }
+    .hint {
+      font-size: 12px;
+      color: #6b66a1;
+      margin-top: -8px;
+      margin-bottom: 10px;
+    }
     .container button[type="submit"] {
       width: 100%;
       padding: 12px;
-      background-color: #007bff;
+      background-color: #7a5dc7;
       color: white;
-      font-weight: bold;
+      font-weight: 800;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
+      transition: background-color .25s ease, transform .15s ease, opacity .2s ease;
     }
+    .container button[type="submit"]:hover { background-color: #5f469a; transform: scale(1.02); }
+    .container button[type="submit"][disabled] { opacity: .7; cursor: not-allowed; }
 
-    .container button[type="submit"]:hover {
-      background-color: #005bb5;
-    }
-
-    .container .message {
-      margin-top: 15px;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .container .message.success {
-      color: green;
-    }
-
-    .container .message.error {
-      color: red;
-    }
+    .message { margin-top: 12px; text-align: center; font-weight: 700; }
+    .message.success { color: green; }
+    .message.error { color: #c1272d; }
   </style>
 </head>
 <body>
 
-<header>
-  Pagla Clickers
-  <button class="hamburger" aria-label="Toggle menu">☰</button>
-</header>
+  <header>
+    Pagla Clickers
+    <button class="hamburger"
+            id="menuBtn"
+            type="button"
+            aria-label="Toggle menu"
+            aria-controls="navList"
+            aria-expanded="false">☰</button>
+  </header>
 
-<nav>
-  <ul class="nav-links" id="navList">
-    <li><a href="about.html">About</a></li>
-    <li><a href="notifications.html">Notifications</a></li>
-    <li><a href="profile.html">Profile</a></li>
-    <li><a href="dashboard.html">Dashboard</a></li>
-    <li><a href="postjob.html" aria-current="page">Post Job</a></li>
-    <li><a href="jobs.html">My Jobs</a></li>
-    <li><a href="referel.html">Referral</a></li>
-    <li><a href="deposit.html">Deposit</a></li>
-    <li><a href="wallet.html">Wallet</a></li>
-    <li><a href="withdrawal.html">Withdraw Money</a></li>
-    <li><a href="terms.html">Terms</a></li>
-    <li><a href="faq.html">FAQ</a></li>
-    <li><a href="support.html">Support</a></li>
-    <li><button id="logoutBtn" class="logout-btn">Logout</button></li>
-  </ul>
-</nav>
+  <nav>
+    <ul class="nav-links" id="navList">
+      <li><a href="about.html">About</a></li>
+      <li><a href="notifications.html">Notifications</a></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="postjob.html" aria-current="page">Post Job</a></li>
+      <li><a href="jobs.html">My Jobs</a></li>
+      <li><a href="referral.html">Referral</a></li>
+      <li><a href="deposit.html">Deposit</a></li>
+      <li><a href="wallet.html">Wallet</a></li>
+      <li><a href="withdrawal.html">Withdraw Money</a></li>
+      <li><a href="terms.html">Terms</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="support.html">Support</a></li>
+      <li style="display:flex; justify-content:center;">
+        <button id="logoutBtn" type="button" class="logout-btn">Logout</button>
+      </li>
+    </ul>
+  </nav>
 
-<div class="blue-strip-below-nav"></div>
+  <div class="blue-strip-below-nav"></div>
 
-<div class="container" role="main" tabindex="0">
-  <h2>Post a New Job</h2>
-  <form id="postJobForm" novalidate enctype="multipart/form-data">
-    <label for="title">Job Title</label>
-    <input type="text" id="title" required placeholder="Enter job title" />
+  <div class="container" role="main" tabindex="0">
+    <h2>Post a New Job</h2>
 
-    <label for="description">Job Description</label>
-    <textarea id="description" required placeholder="Enter job details"></textarea>
+    <form id="postJobForm" novalidate>
+      <label for="title">Job Title</label>
+      <input type="text" id="title" required minlength="4" maxlength="100" placeholder="Enter job title" />
 
-    <label for="category">Category</label>
-    <select id="category" required>
-      <option value="" disabled selected>Select category</option>
-      <option value="Marketing">Marketing</option>
-      <option value="Design">Design</option>
-      <option value="Writing">Writing</option>
-      <option value="Development">Development</option>
-      <option value="Research">Research</option>
-      <option value="Other">Other</option>
-    </select>
+      <label for="description">Job Description</label>
+      <textarea id="description" required minlength="20" maxlength="2000" placeholder="Enter job details (what to do, step-by-step, deadlines)"></textarea>
+      <div class="hint">Tip: Add clear steps + what proof you expect.</div>
 
-    <label for="reward">Reward per Task ($)</label>
-    <input type="number" id="reward" min="0.01" step="0.01" required placeholder="0.10" />
+      <label for="category">Category</label>
+      <select id="category" required>
+        <option value="" disabled selected>Select category</option>
+        <option value="Marketing">Marketing</option>
+        <option value="Design">Design</option>
+        <option value="Writing">Writing</option>
+        <option value="Development">Development</option>
+        <option value="Research">Research</option>
+        <option value="Other">Other</option>
+      </select>
 
-    <label for="slots">Available Slots</label>
-    <input type="number" id="slots" min="1" required placeholder="Enter number of workers" />
+      <label for="reward">Reward per Task (৳)</label>
+      <input type="number" id="reward" min="1" step="0.01" required placeholder="e.g., 5.00" inputmode="decimal" />
 
-    <label for="proofType">Proof Required</label>
-    <select id="proofType" required>
-      <option value="" disabled selected>Select proof type</option>
-      <option value="text">Text Proof</option>
-      <option value="screenshot">Screenshot</option>
-    </select>
+      <label for="slots">Available Slots</label>
+      <input type="number" id="slots" min="1" max="100000" required placeholder="Enter number of workers" inputmode="numeric" />
 
-    <label for="proof1">Additional Proof 1 (optional)</label>
-    <select id="proof1">
-      <option value="" selected>None</option>
-      <option value="text">Text Proof</option>
-      <option value="screenshot">Screenshot</option>
-    </select>
+      <label for="proofType">Proof Required</label>
+      <select id="proofType" required>
+        <option value="" disabled selected>Select proof type</option>
+        <option value="text">Text Proof</option>
+        <option value="screenshot">Screenshot</option>
+      </select>
 
-    <label for="proof2">Additional Proof 2 (optional)</label>
-    <select id="proof2">
-      <option value="" selected>None</option>
-      <option value="text">Text Proof</option>
-      <option value="screenshot">Screenshot</option>
-    </select>
+      <label for="proof1">Additional Proof 1 (optional)</label>
+      <select id="proof1">
+        <option value="" selected>None</option>
+        <option value="text">Text Proof</option>
+        <option value="screenshot">Screenshot</option>
+      </select>
 
-    <label for="proof3">Additional Proof 3 (optional)</label>
-    <select id="proof3">
-      <option value="" selected>None</option>
-      <option value="text">Text Proof</option>
-      <option value="screenshot">Screenshot</option>
-    </select>
+      <label for="proof2">Additional Proof 2 (optional)</label>
+      <select id="proof2">
+        <option value="" selected>None</option>
+        <option value="text">Text Proof</option>
+        <option value="screenshot">Screenshot</option>
+      </select>
 
-    <label for="exampleScreenshot">Example Screenshot (optional)</label>
-    <input type="file" id="exampleScreenshot" accept="image/*" />
+      <label for="proof3">Additional Proof 3 (optional)</label>
+      <select id="proof3">
+        <option value="" selected>None</option>
+        <option value="text">Text Proof</option>
+        <option value="screenshot">Screenshot</option>
+      </select>
 
-    <div id="message" class="message"></div>
+      <label for="exampleScreenshot">Example Screenshot (optional)</label>
+      <input type="file" id="exampleScreenshot" accept="image/png,image/jpeg,image/webp,image/gif" />
+      <div class="hint">PNG/JPG/WebP/GIF — Max 3 MB</div>
 
-    <button type="submit">Submit Job</button>
-  </form>
-</div>
+      <div id="message" class="message" role="status" aria-live="polite"></div>
 
-<footer>
-  <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
-</footer>
+      <button type="submit" id="submitBtn">Submit Job</button>
+    </form>
+  </div>
 
-<script>
-  // Hamburger toggle
-  const hamburger = document.querySelector('.hamburger');
-  const navList = document.getElementById('navList');
-  hamburger.addEventListener('click', () => {
-    navList.classList.toggle('active');
-  });
-</script>
+  <footer>
+    <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+  </footer>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import {
-    getAuth,
-    onAuthStateChanged,
-    signOut,
-  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-  import {
-    getFirestore,
-    collection,
-    addDoc,
-    serverTimestamp,
-    doc,
-    getDoc
-  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-  import {
-    getStorage,
-    ref as storageRef,
-    uploadBytes,
-    getDownloadURL
-  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
+  <!-- Nav toggle JS (same pattern across pages) -->
+  <script>
+    (function () {
+      const btn = document.getElementById('menuBtn');
+      const nav = document.getElementById('navList');
+      if (!btn || !nav) return;
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
-    authDomain: "pagla-b1c17.firebaseapp.com",
-    projectId: "pagla-b1c17",
-    storageBucket: "pagla-b1c17.appspot.com",
-    messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:1595070cdac289170f5e27",
-  };
+      function openMenu(){ nav.classList.add('active'); btn.setAttribute('aria-expanded','true'); document.body.classList.add('nav-open'); }
+      function closeMenu(){ nav.classList.remove('active'); btn.setAttribute('aria-expanded','false'); document.body.classList.remove('nav-open'); }
+      function toggleMenu(){ nav.classList.contains('active') ? closeMenu() : openMenu(); }
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const storage = getStorage(app);
+      btn.addEventListener('click', toggleMenu);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+      nav.addEventListener('click', e => { if (e.target.closest('a')) closeMenu(); });
 
-  const form = document.getElementById("postJobForm");
-  const messageDiv = document.getElementById("message");
-  const logoutBtn = document.getElementById("logoutBtn");
+      let lastW = innerWidth;
+      addEventListener('resize', () => { const w = innerWidth; if (w !== lastW && w > 768) closeMenu(); lastW = w; });
+    })();
+  </script>
 
-  logoutBtn.addEventListener("click", () => {
-    signOut(auth)
-      .then(() => (window.location.href = "login.html"))
-      .catch((error) => alert("Error signing out: " + error.message));
-  });
+  <!-- Firebase: auth, firestore, storage -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
 
-  let currentUser = null;
-  let posterName = "Unknown";
+    const firebaseConfig = {
+      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+      authDomain: "pagla-b1c17.firebaseapp.com",
+      projectId: "pagla-b1c17",
+      storageBucket: "pagla-b1c17.appspot.com",
+      messagingSenderId: "192578902502",
+      appId: "1:192578902502:web:1595070cdac289170f5e27",
+    };
 
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const form = document.getElementById("postJobForm");
+    const messageDiv = document.getElementById("message");
+    const submitBtn = document.getElementById("submitBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    logoutBtn.addEventListener("click", async () => {
+      try { await signOut(auth); window.location.href = "login.html"; }
+      catch (e) { alert("Error signing out: " + (e?.message || e)); }
+    });
+
+    let currentUser = null;
+    let posterName = "Unknown";
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { window.location.href = "login.html"; return; }
       currentUser = user;
-      // Fetch username from Firestore users collection
+
       try {
         const userDoc = await getDoc(doc(db, "users", currentUser.uid));
         if (userDoc.exists()) {
-          const userData = userDoc.data();
-          posterName = userData.username || currentUser.displayName || "Unknown";
+          const data = userDoc.data() || {};
+          posterName = data.username || currentUser.displayName || "Unknown";
         } else {
           posterName = currentUser.displayName || "Unknown";
         }
-      } catch (error) {
+      } catch {
         posterName = currentUser.displayName || "Unknown";
       }
-    } else {
-      window.location.href = "login.html";
-    }
-  });
+    });
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    messageDiv.textContent = "";
-    messageDiv.className = "message";
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setMsg("", false);
 
-    if (!currentUser) {
-      messageDiv.textContent = "User not authenticated.";
-      messageDiv.classList.add("error");
-      return;
-    }
+      if (!currentUser) return setMsg("User not authenticated.", true);
 
-    const userId = currentUser.uid;
+      const title = document.getElementById("title").value.trim();
+      const description = document.getElementById("description").value.trim();
+      const category = document.getElementById("category").value;
+      const reward = Number(document.getElementById("reward").value);
+      const slots = Number(document.getElementById("slots").value);
+      const proofType = document.getElementById("proofType").value;
+      const proof1 = document.getElementById("proof1").value || null;
+      const proof2 = document.getElementById("proof2").value || null;
+      const proof3 = document.getElementById("proof3").value || null;
+      const exampleFile = document.getElementById("exampleScreenshot").files[0] || null;
 
-    const title = document.getElementById("title").value.trim();
-    const description = document.getElementById("description").value.trim();
-    const category = document.getElementById("category").value;
-    const reward = parseFloat(document.getElementById("reward").value);
-    const slots = parseInt(document.getElementById("slots").value);
-    const proofType = document.getElementById("proofType").value;
-    const proof1 = document.getElementById("proof1").value || null;
-    const proof2 = document.getElementById("proof2").value || null;
-    const proof3 = document.getElementById("proof3").value || null;
-    const exampleFile = document.getElementById("exampleScreenshot").files[0] || null;
+      // Basic validations
+      if (!title || title.length < 4) return setMsg("Please enter a longer title (min 4 chars).", true);
+      if (!description || description.length < 20) return setMsg("Please provide more details in the description (min 20 chars).", true);
+      if (!category) return setMsg("Select a category.", true);
+      if (!Number.isFinite(reward) || reward < 1) return setMsg("Enter a valid reward (৳1 or higher).", true);
+      if (!Number.isInteger(slots) || slots < 1) return setMsg("Enter a valid number of slots (1 or more).", true);
+      if (!proofType) return setMsg("Select the main proof type.", true);
 
-    if (!title || !description || !category || !reward || !slots || !proofType) {
-      messageDiv.textContent = "Please fill out all required fields.";
-      messageDiv.classList.add("error");
-      return;
-    }
-
-    try {
+      // File guards
       let exampleUrl = null;
       if (exampleFile) {
-        const fileRef = storageRef(storage, `example_screenshots/${userId}_${Date.now()}_${exampleFile.name}`);
-        await uploadBytes(fileRef, exampleFile);
-        exampleUrl = await getDownloadURL(fileRef);
+        const allowed = ["image/png","image/jpeg","image/webp","image/gif"];
+        const maxMB = 3;
+        if (!allowed.includes(exampleFile.type)) return setMsg("Example must be an image (PNG/JPG/WebP/GIF).", true);
+        if (exampleFile.size > maxMB * 1024 * 1024) return setMsg(`Image too large. Max ${maxMB} MB.`, true);
       }
 
-      await addDoc(collection(db, "jobs"), {
-        posterName,
-        userId,
-        title,
-        description,
-        category,
-        reward,
-        slots,
-        proofType,
-        proof1,
-        proof2,
-        proof3,
-        exampleUrl,
-        createdAt: serverTimestamp(),
-        status: "pending"
-      });
+      submitBtn.disabled = true;
 
-      messageDiv.textContent = "Job submitted successfully for approval.";
-      messageDiv.classList.add("success");
-      form.reset();
+      try {
+        if (exampleFile) {
+          const cleanName = exampleFile.name.replace(/[^\w.\-()+]/g, "_");
+          const fileRef = storageRef(storage, `example_screenshots/${currentUser.uid}/${Date.now()}_${cleanName}`);
+          await uploadBytes(fileRef, exampleFile);
+          exampleUrl = await getDownloadURL(fileRef);
+        }
 
-    } catch (error) {
-      messageDiv.textContent = "Error posting job: " + error.message;
-      messageDiv.classList.add("error");
+        await addDoc(collection(db, "jobs"), {
+          posterName,
+          userId: currentUser.uid,
+          title,
+          description,
+          category,
+          reward,             // store as number
+          slots,              // store as number
+          proofType,
+          proof1,
+          proof2,
+          proof3,
+          exampleUrl: exampleUrl || null,
+          createdAt: serverTimestamp(),
+          status: "pending"
+        });
+
+        setMsg("Job submitted successfully for approval.", false);
+        form.reset();
+      } catch (error) {
+        setMsg("Error posting job: " + (error?.message || error), true);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    function setMsg(msg, isErr) {
+      messageDiv.textContent = msg;
+      messageDiv.className = "message " + (isErr ? "error" : "success");
     }
-  });
-</script>
+  </script>
 
 </body>
 </html>

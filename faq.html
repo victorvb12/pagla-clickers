@@ -6,9 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Mobile logout button width */
+    /* Mobile logout button width (page-specific tweak; optional if your global CSS already handles it) */
     @media (max-width: 768px) {
-      .logout-wrapper button.logout-btn {
+      .logout-wrapper .logout-btn {
         width: 90% !important;
         max-width: 320px !important;
         margin: 10px auto !important;
@@ -18,22 +18,21 @@
     }
 
     /* FAQ content styling */
+    .container { user-select: text; }
     .faq-item {
       margin-bottom: 20px;
       border-bottom: 1px solid #ddd;
       padding-bottom: 12px;
     }
-
     .faq-question {
       font-weight: 700;
       color: #007bff;
       margin-bottom: 8px;
       font-size: 1.1rem;
     }
-
     .faq-answer {
       color: #333;
-      line-height: 1.5;
+      line-height: 1.6;
       font-size: 1rem;
       white-space: pre-line;
     }
@@ -41,88 +40,124 @@
 </head>
 <body>
 
-<header>
-  Pagla Clickers
-  <button class="hamburger" aria-label="Toggle navigation menu" onclick="toggleMenu()">☰</button>
-</header>
+  <header>
+    Pagla Clickers
+    <button class="hamburger"
+            id="menuBtn"
+            type="button"
+            aria-label="Toggle navigation menu"
+            aria-controls="navList"
+            aria-expanded="false">☰</button>
+  </header>
 
-<nav>
-  <ul class="nav-links" id="navList">
-    <li><a href="about.html">About</a></li>
-    <li><a href="notifications.html">Notifications</a></li>
-    <li><a href="profile.html">Profile</a></li>
-    <li><a href="dashboard.html">Dashboard</a></li>
-    <li><a href="postjob.html">Post Job</a></li>
-    <li><a href="jobs.html">My Jobs</a></li>
-    <li><a href="referel.html">Referral</a></li>
-    <li><a href="deposit.html">Deposit</a></li>
-    <li><a href="wallet.html">Wallet</a></li>
-    <li><a href="withdrawal.html">Withdraw Money</a></li>
-    <li><a href="terms.html">Terms</a></li>
-    <li><a href="faq.html" aria-current="page">FAQ</a></li>
-    <li><a href="support.html">Support</a></li>
-    <li class="logout-wrapper" style="display:flex; justify-content:center; align-items:center;">
-      <button id="logoutBtn" class="logout-btn" style="width:auto; max-width:100%; text-align:center;">Logout</button>
-    </li>
-  </ul>
-</nav>
+  <nav>
+    <ul class="nav-links" id="navList">
+      <li><a href="about.html">About</a></li>
+      <li><a href="notifications.html">Notifications</a></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="postjob.html">Post Job</a></li>
+      <li><a href="jobs.html">My Jobs</a></li>
+      <li><a href="referel.html">Referral</a></li>
+      <li><a href="deposit.html">Deposit</a></li>
+      <li><a href="wallet.html">Wallet</a></li>
+      <li><a href="withdrawal.html">Withdraw Money</a></li>
+      <li><a href="terms.html">Terms</a></li>
+      <li><a href="faq.html" aria-current="page">FAQ</a></li>
+      <li><a href="support.html">Support</a></li>
+      <li class="logout-wrapper" style="display:flex; justify-content:center; align-items:center;">
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+      </li>
+    </ul>
+  </nav>
 
-<div class="blue-strip-below-nav"></div>
+  <div class="blue-strip-below-nav"></div>
 
-<div class="container">
-  <h2>Frequently Asked Questions (FAQ)</h2>
+  <div class="container" role="main" tabindex="0">
+    <h2>Frequently Asked Questions (FAQ)</h2>
 
-  <div class="faq-item">
-    <div class="faq-question">Q1: What is Pagla Clickers?</div>
-    <div class="faq-answer">Pagla Clickers is an online platform where you can earn rewards by completing small tasks like clicking, watching, referring, and more.</div>
+    <div class="faq-item">
+      <div class="faq-question">Q1: What is Pagla Clickers?</div>
+      <div class="faq-answer">Pagla Clickers is an online platform where you can earn rewards by completing small tasks like clicking, watching, referring, and more.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q2: How do I register?</div>
+      <div class="faq-answer">Click on the "Register" button on the homepage and fill in your details. After signing up, you can log in and start earning.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q3: Is registration free?</div>
+      <div class="faq-answer">Yes, registration is completely free. No payment is required to join.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q4: How do I earn rewards?</div>
+      <div class="faq-answer">You can earn rewards by completing available tasks, referring friends, and staying active on the platform.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q5: When will I get paid?</div>
+      <div class="faq-answer">Payouts are processed according to the schedule on the site, typically within 24–72 hours after your withdrawal request.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q6: Can I use multiple accounts?</div>
+      <div class="faq-answer">No. Using multiple accounts is strictly prohibited and may result in permanent suspension.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q7: Who can I contact for help?</div>
+      <div class="faq-answer">You can contact our support team at <strong>support@paglaclickers.com</strong> for any help or questions.</div>
+    </div>
   </div>
 
-  <div class="faq-item">
-    <div class="faq-question">Q2: How do I register?</div>
-    <div class="faq-answer">Click on the "Register" button on the homepage and fill in your details. After signing up, you can log in and start earning.</div>
-  </div>
+  <footer>
+    <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+  </footer>
 
-  <div class="faq-item">
-    <div class="faq-question">Q3: Is registration free?</div>
-    <div class="faq-answer">Yes, registration is completely free. No payment is required to join.</div>
-  </div>
+  <!-- Nav toggle JS (same pattern across pages) -->
+  <script>
+    (function () {
+      const btn = document.getElementById('menuBtn');
+      const nav = document.getElementById('navList');
+      if (!btn || !nav) return;
 
-  <div class="faq-item">
-    <div class="faq-question">Q4: How do I earn rewards?</div>
-    <div class="faq-answer">You can earn rewards by completing available tasks, referring friends, and staying active on the platform.</div>
-  </div>
+      function openMenu(){ nav.classList.add('active'); btn.setAttribute('aria-expanded','true'); document.body.classList.add('nav-open'); }
+      function closeMenu(){ nav.classList.remove('active'); btn.setAttribute('aria-expanded','false'); document.body.classList.remove('nav-open'); }
+      function toggleMenu(){ nav.classList.contains('active') ? closeMenu() : openMenu(); }
 
-  <div class="faq-item">
-    <div class="faq-question">Q5: When will I get paid?</div>
-    <div class="faq-answer">Payouts are processed according to the schedule on the site, typically within 24–72 hours after your withdrawal request.</div>
-  </div>
+      btn.addEventListener('click', toggleMenu);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+      nav.addEventListener('click', e => { if (e.target.closest('a')) closeMenu(); });
 
-  <div class="faq-item">
-    <div class="faq-question">Q6: Can I use multiple accounts?</div>
-    <div class="faq-answer">No. Using multiple accounts is strictly prohibited and may result in permanent suspension.</div>
-  </div>
+      let lastW = innerWidth;
+      addEventListener('resize', () => { const w = innerWidth; if (w !== lastW && w > 768) closeMenu(); lastW = w; });
+    })();
+  </script>
 
-  <div class="faq-item">
-    <div class="faq-question">Q7: Who can I contact for help?</div>
-    <div class="faq-answer">You can contact our support team at <strong>support@paglaclickers.com</strong> for any help or questions.</div>
-  </div>
-</div>
+  <!-- Firebase logout (module) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
-<footer>
-  <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
-</footer>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+      authDomain: "pagla-b1c17.firebaseapp.com",
+      projectId: "pagla-b1c17",
+      storageBucket: "pagla-b1c17.appspot.com",
+      messagingSenderId: "192578902502",
+      appId: "1:192578902502:web:1595070cdac289170f5e27"
+    };
 
-<script>
-  function toggleMenu() {
-    const navList = document.getElementById('navList');
-    navList.classList.toggle('active');
-  }
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-  // Firebase logout (replace with actual logic)
-  document.getElementById('logoutBtn').addEventListener('click', () => {
-    alert('Logout clicked — add Firebase signOut here');
-  });
-</script>
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      try { await signOut(auth); window.location.href = 'login.html'; }
+      catch (err) { alert('Error signing out: ' + (err?.message || err)); }
+    });
+  </script>
 
 </body>
 </html>

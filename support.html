@@ -51,6 +51,14 @@
       margin-bottom: 10px;
       display: inline-block;
       clear: both;
+      position: relative;
+    }
+
+    .meta {
+      display: block;
+      font-size: 12px;
+      opacity: .85;
+      margin-top: 6px;
     }
 
     /* User messages on the right with different background */
@@ -59,7 +67,7 @@
       color: white;
       margin-left: auto;
       border-bottom-right-radius: 2px;
-      text-align: right;
+      text-align: left;
     }
 
     /* Admin messages on the left */
@@ -69,6 +77,14 @@
       margin-right: auto;
       border-bottom-left-radius: 2px;
       text-align: left;
+    }
+
+    .preview-img {
+      max-width: 180px;
+      max-height: 120px;
+      border-radius: 8px;
+      display: block;
+      margin-bottom: 6px;
     }
 
     #inputRow {
@@ -96,9 +112,7 @@
       box-shadow: 0 0 6px #7a5dc7aa;
     }
 
-    #attachmentInput {
-      display: none;
-    }
+    #attachmentInput { display: none; }
 
     #attachmentLabel {
       cursor: pointer;
@@ -107,16 +121,13 @@
       justify-content: center;
       width: 40px;
       height: 40px;
-      background-color: #4a3a88; /* Changed for visibility */
+      background-color: #4a3a88;
       border-radius: 8px;
       color: white;
       font-size: 22px;
       flex-shrink: 0;
     }
-
-    #attachmentLabel:hover {
-      background-color: #362a6e;
-    }
+    #attachmentLabel:hover { background-color: #362a6e; }
 
     #sendBtn {
       background-color: #7a5dc7;
@@ -128,189 +139,319 @@
       border: none;
       cursor: pointer;
       user-select: none;
-      transition: background-color 0.3s ease, transform 0.15s ease;
+      transition: background-color 0.3s ease, transform 0.15s ease, opacity .2s ease;
       flex-shrink: 0;
     }
-
-    #sendBtn:hover {
-      background-color: #5a3ea7;
-      transform: scale(1.03);
-    }
+    #sendBtn:hover { background-color: #5a3ea7; transform: scale(1.03); }
+    #sendBtn[disabled] { opacity: .7; cursor: not-allowed; }
   </style>
 </head>
 <body>
 
-<header>
-  Pagla Clickers
-  <button class="hamburger" onclick="toggleMenu()">☰</button>
-</header>
+  <header>
+    Pagla Clickers
+    <button class="hamburger"
+            id="menuBtn"
+            type="button"
+            aria-label="Toggle navigation menu"
+            aria-controls="navList"
+            aria-expanded="false">☰</button>
+  </header>
 
-<nav>
-  <ul class="nav-links" id="navList">
-    <li><a href="about.html">About</a></li>
-    <li><a href="notifications.html">Notifications</a></li>
-    <li><a href="profile.html">Profile</a></li>
-    <li><a href="dashboard.html">Dashboard</a></li>
-    <li><a href="postjob.html">Post Job</a></li>
-    <li><a href="jobs.html">My Jobs</a></li>
-    <li><a href="referel.html">Referral</a></li>
-    <li><a href="deposit.html">Deposit</a></li>
-    <li><a href="wallet.html">Wallet</a></li>
-    <li><a href="withdrawal.html">Withdraw Money</a></li>
-    <li><a href="terms.html">Terms</a></li>
-    <li><a href="faq.html">FAQ</a></li>
-    <li><a href="support.html" aria-current="page">Support</a></li>
-    <li><button id="logoutBtn" class="logout-btn">Logout</button></li>
-  </ul>
-</nav>
+  <nav>
+    <ul class="nav-links" id="navList">
+      <li><a href="about.html">About</a></li>
+      <li><a href="notifications.html">Notifications</a></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="postjob.html">Post Job</a></li>
+      <li><a href="jobs.html">My Jobs</a></li>
+      <li><a href="referral.html">Referral</a></li>
+      <li><a href="deposit.html">Deposit</a></li>
+      <li><a href="wallet.html">Wallet</a></li>
+      <li><a href="withdrawal.html">Withdraw Money</a></li>
+      <li><a href="terms.html">Terms</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="support.html" aria-current="page">Support</a></li>
+      <li style="display:flex; justify-content:center;">
+        <button id="logoutBtn" type="button" class="logout-btn">Logout</button>
+      </li>
+    </ul>
+  </nav>
 
-<div class="blue-strip-below-nav"></div>
+  <div class="blue-strip-below-nav"></div>
 
-<div class="container">
-  <h2>Support Live Chat</h2>
-  <div id="chatMessages"></div>
+  <div class="container">
+    <h2>Support Live Chat</h2>
+    <div id="chatMessages" aria-live="polite"></div>
 
-  <form id="supportForm" novalidate>
-    <div id="inputRow">
-      <textarea id="messageInput" rows="2" placeholder="Type your message..." required></textarea>
-      <label for="attachmentInput" id="attachmentLabel" title="Add attachment">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24">
-          <path d="M17.657 6.343a6 6 0 0 0-8.485 0l-6.01 6.01a5 5 0 0 0 7.071 7.071l6.364-6.364a4 4 0 1 0-5.657-5.657l-5.657 5.657" stroke="white" stroke-width="2" fill="none"/>
-        </svg>
-      </label>
-      <input type="file" id="attachmentInput" accept="image/*,.pdf,.doc,.docx" />
-      <button type="submit" id="sendBtn">Send</button>
-    </div>
-  </form>
-</div>
+    <form id="supportForm" novalidate>
+      <div id="inputRow">
+        <textarea id="messageInput"
+                  rows="2"
+                  placeholder="Type your message… (Enter to send, Shift+Enter for newline)"
+                  required></textarea>
 
-<footer>
-  <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
-</footer>
+        <label for="attachmentInput" id="attachmentLabel" title="Add attachment" aria-label="Add attachment">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M17.657 6.343a6 6 0 0 0-8.485 0l-6.01 6.01a5 5 0 0 0 7.071 7.071l6.364-6.364a4 4 0 1 0-5.657-5.657l-5.657 5.657" stroke="white" stroke-width="2" fill="none"/>
+          </svg>
+        </label>
+        <input type="file" id="attachmentInput" accept="image/*,.pdf,.doc,.docx" />
+        <button type="submit" id="sendBtn">Send</button>
+      </div>
+    </form>
+  </div>
 
-<script>
-  function toggleMenu() {
-    document.getElementById('navList').classList.toggle('active');
-  }
-</script>
+  <footer>
+    <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+  </footer>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  <!-- Nav toggle JS (same pattern across pages) -->
+  <script>
+    (function () {
+      const btn = document.getElementById('menuBtn');
+      const nav = document.getElementById('navList');
+      if (!btn || !nav) return;
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
-    authDomain: "pagla-b1c17.firebaseapp.com",
-    projectId: "pagla-b1c17",
-    storageBucket: "pagla-b1c17.appspot.com",
-    messagingSenderId: "192578902502",
-    appId: "1:192578902502:web:1595070cdac289170f5e27"
-  };
+      function openMenu(){ nav.classList.add('active'); btn.setAttribute('aria-expanded','true'); document.body.classList.add('nav-open'); }
+      function closeMenu(){ nav.classList.remove('active'); btn.setAttribute('aria-expanded','false'); document.body.classList.remove('nav-open'); }
+      function toggleMenu(){ nav.classList.contains('active') ? closeMenu() : openMenu(); }
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const storage = getStorage(app);
-  const auth = getAuth(app);
+      btn.addEventListener('click', toggleMenu);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+      nav.addEventListener('click', e => { if (e.target.closest('a')) closeMenu(); });
 
-  const chatMessages = document.getElementById("chatMessages");
-  const supportForm = document.getElementById("supportForm");
-  const messageInput = document.getElementById("messageInput");
-  const attachmentInput = document.getElementById("attachmentInput");
-  const logoutBtn = document.getElementById("logoutBtn");
+      let lastW = innerWidth;
+      addEventListener('resize', () => { const w = innerWidth; if (w !== lastW && w > 768) closeMenu(); lastW = w; });
+    })();
+  </script>
 
-  let userEmail = null;
+  <!-- Firebase: auth, firestore, storage -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
-  logoutBtn.addEventListener("click", async () => {
-    await signOut(auth);
-    window.location.href = "login.html";
-  });
+    const firebaseConfig = {
+      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+      authDomain: "pagla-b1c17.firebaseapp.com",
+      projectId: "pagla-b1c17",
+      storageBucket: "pagla-b1c17.appspot.com",
+      messagingSenderId: "192578902502",
+      appId: "1:192578902502:web:1595070cdac289170f5e27"
+    };
 
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      window.location.href = "login.html";
-      return;
-    }
-    userEmail = user.email;
-    listenForMessages();
-  });
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+    const auth = getAuth(app);
 
-  function listenForMessages() {
-    const q = query(collection(db, "supportChatMessages"), orderBy("createdAt", "asc"));
-    onSnapshot(q, (snapshot) => {
-      chatMessages.innerHTML = "";
-      snapshot.forEach(doc => {
-        const msg = doc.data();
-        appendMessage(msg);
-      });
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+    const chatMessages = document.getElementById("chatMessages");
+    const supportForm  = document.getElementById("supportForm");
+    const messageInput = document.getElementById("messageInput");
+    const attachmentInput = document.getElementById("attachmentInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    let userEmail = null;
+    let userId = null;
+
+    logoutBtn.addEventListener("click", async () => {
+      try { await signOut(auth); window.location.href = "login.html"; }
+      catch (e) { alert("Error signing out: " + (e?.message || e)); }
     });
-  }
 
-  function appendMessage(msg) {
-    const div = document.createElement("div");
-    div.classList.add("message-item");
-    div.classList.add(msg.userEmail === userEmail ? "message-user" : "message-admin");
+    onAuthStateChanged(auth, (user) => {
+      if (!user) { window.location.href = "login.html"; return; }
+      userEmail = user.email;
+      userId = user.uid;
+      listenForMessages();
+    });
 
-    let content = "";
-    if (msg.attachmentURL) {
-      const ext = msg.attachmentURL.split('.').pop().toLowerCase();
-      if (["png", "jpg", "jpeg", "gif", "bmp", "webp"].includes(ext)) {
-        content += `<img src="${msg.attachmentURL}" alt="Attachment" style="max-width:180px;max-height:120px;border-radius:8px;display:block;margin-bottom:6px;">`;
-      } else {
-        content += `<a href="${msg.attachmentURL}" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline;">Attachment</a><br>`;
+    // Live read: prefer per-user thread if available, otherwise fallback
+    function listenForMessages() {
+      chatMessages.innerHTML = "";
+      const base = collection(db, "supportChatMessages");
+
+      // Try "thread == user.uid" structure first (recommended)
+      let qRef = query(base, where("thread", "==", userId), orderBy("createdAt", "asc"));
+
+      // Attach snapshot with graceful fallback if index/field not present
+      const attach = (qTry, fallback = null) => {
+        try {
+          return onSnapshot(qTry, (snapshot) => {
+            if (snapshot.metadata.fromCache && snapshot.empty && fallback) {
+              // likely missing index/field in this dataset; try fallback
+              fallback();
+              return;
+            }
+            renderSnapshot(snapshot);
+          }, (err) => {
+            // On error (e.g., missing index), fallback to userEmail filter
+            if (fallback) fallback();
+            else console.error(err);
+          });
+        } catch (e) {
+          if (fallback) fallback();
+          else console.error(e);
+        }
+      };
+
+      // Fallback to: messages where (to == userId OR to == 'all') OR posted by this user
+      const attachFallback = () => {
+        const qEmail = query(base, orderBy("createdAt", "asc")); // minimal fallback; filter client-side
+        onSnapshot(qEmail, (snapshot) => {
+          // Client-side filter: show if (thread==userId) or (to in [userId,"all"]) or (userEmail==me)
+          const filtered = [];
+          snapshot.forEach(doc => {
+            const d = doc.data() || {};
+            if (d.thread === userId) filtered.push({id: doc.id, ...d});
+            else if (d.to && (d.to === userId || d.to === "all")) filtered.push({id: doc.id, ...d});
+            else if (d.userEmail === userEmail) filtered.push({id: doc.id, ...d});
+          });
+          renderArray(filtered);
+        });
+      };
+
+      attach(qRef, attachFallback);
+    }
+
+    function renderSnapshot(snapshot) {
+      chatMessages.innerHTML = "";
+      snapshot.forEach(doc => appendMessage(doc.data()));
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function renderArray(arr) {
+      chatMessages.innerHTML = "";
+      arr.sort((a,b) => (a.createdAt?.seconds||0) - (b.createdAt?.seconds||0));
+      arr.forEach(d => appendMessage(d));
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function appendMessage(msg) {
+      const isMe = msg.userEmail === userEmail || msg.sender === userId;
+      const div = document.createElement("div");
+      div.classList.add("message-item", isMe ? "message-user" : "message-admin");
+
+      // Attachment (image vs file)
+      if (msg.attachmentURL) {
+        const url = String(msg.attachmentURL);
+        const ext = url.split("?")[0].split(".").pop().toLowerCase();
+        const isImg = ["png","jpg","jpeg","gif","bmp","webp","svg"].includes(ext);
+        if (isImg) {
+          const img = document.createElement("img");
+          img.src = url;
+          img.alt = "Attachment";
+          img.className = "preview-img";
+          div.appendChild(img);
+        } else {
+          const a = document.createElement("a");
+          a.href = url;
+          a.target = "_blank";
+          a.rel = "noopener";
+          a.style.color = isMe ? "#fff" : "#4a4175";
+          a.style.textDecoration = "underline";
+          a.textContent = "Attachment";
+          div.appendChild(a);
+          div.appendChild(document.createElement("br"));
+        }
       }
-    }
-    content += `<span>${escapeHtml(msg.message)}</span>`;
-    div.innerHTML = content;
-    chatMessages.appendChild(div);
-  }
 
-  function escapeHtml(text) {
-    const div = document.createElement("div");
-    div.innerText = text;
-    return div.innerHTML;
-  }
+      // Message text
+      if (msg.message) {
+        const span = document.createElement("span");
+        span.textContent = String(msg.message);
+        div.appendChild(span);
+      }
 
-  supportForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const messageText = messageInput.value.trim();
-    const file = attachmentInput.files[0];
-    if (!messageText && !file) {
-      alert("Type a message or attach a file.");
-      return;
+      // Meta (sender/time)
+      const meta = document.createElement("span");
+      const when = msg.createdAt?.toDate ? msg.createdAt.toDate().toLocaleString() : "";
+      meta.className = "meta";
+      meta.textContent = `${isMe ? "You" : (msg.senderName || "Support")} • ${when}`;
+      div.appendChild(meta);
+
+      chatMessages.appendChild(div);
     }
 
-    messageInput.disabled = true;
-    attachmentInput.disabled = true;
-    let attachmentURL = "";
+    // Send message
+    supportForm.addEventListener("submit", sendMessage);
+    // Enter to send (Shift+Enter = newline)
+    messageInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage(e);
+      }
+    });
 
-    try {
+    async function sendMessage(e) {
+      e.preventDefault();
+      const text = messageInput.value.trim();
+      const file = attachmentInput.files[0];
+
+      if (!text && !file) {
+        alert("Type a message or attach a file.");
+        return;
+      }
+
+      // File guard
       if (file) {
-        const fileRef = ref(storage, "support_attachments/" + Date.now() + "_" + file.name);
-        await uploadBytes(fileRef, file);
-        attachmentURL = await getDownloadURL(fileRef);
+        const allowed = ["image/png","image/jpeg","image/gif","image/webp","application/pdf",
+                         "application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+        const maxMB = 5;
+        if (!allowed.includes(file.type)) {
+          alert("Unsupported file type.");
+          return;
+        }
+        if (file.size > maxMB * 1024 * 1024) {
+          alert(`File too large. Max ${maxMB} MB.`);
+          return;
+        }
       }
 
-      await addDoc(collection(db, "supportChatMessages"), {
-        userEmail,
-        message: messageText,
-        attachmentURL,
-        createdAt: serverTimestamp()
-      });
+      // Disable inputs during send
+      setSending(true);
 
-      messageInput.value = "";
-      attachmentInput.value = null;
-    } catch (error) {
-      alert("Error sending message: " + error.message);
-    } finally {
-      messageInput.disabled = false;
-      attachmentInput.disabled = false;
-      messageInput.focus();
+      try {
+        let attachmentURL = "";
+        if (file) {
+          const cleanName = file.name.replace(/[^\w.\-()+]/g, "_");
+          const fileRef = ref(storage, `support_attachments/${userId}/${Date.now()}_${cleanName}`);
+          await uploadBytes(fileRef, file);
+          attachmentURL = await getDownloadURL(fileRef);
+        }
+
+        await addDoc(collection(db, "supportChatMessages"), {
+          thread: userId,             // recommended per-user thread id
+          sender: userId,             // who sent
+          senderName: userEmail,      // can be username later
+          userEmail,                  // keep for backward-compat
+          to: "support",              // optional routing
+          message: text || "",
+          attachmentURL: attachmentURL || "",
+          createdAt: serverTimestamp()
+        });
+
+        // Reset input
+        messageInput.value = "";
+        attachmentInput.value = "";
+        messageInput.focus();
+      } catch (err) {
+        alert("Error sending message: " + (err?.message || err));
+      } finally {
+        setSending(false);
+      }
     }
-  });
-</script>
+
+    function setSending(sending) {
+      messageInput.disabled = sending;
+      attachmentInput.disabled = sending;
+      sendBtn.disabled = sending;
+    }
+  </script>
 
 </body>
 </html>
