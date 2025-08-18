@@ -7,69 +7,43 @@
   <link rel="stylesheet" href="style.css" />
   <style>
     .wallet-container {
-      max-width: 800px;
-      margin: 30px auto;
-      padding: 25px 20px;
-      background: #f5f0ff;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(161, 133, 207, 0.15);
+      max-width: 800px; margin: 30px auto; padding: 25px 20px;
+      background: #f5f0ff; border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(161,133,207,.15);
+      font-family: Arial, sans-serif;
     }
     .wallet-container h2 {
-      color: #6743b8;
-      text-align: center;
-      margin-bottom: 30px;
-      border-bottom: 3px solid #7a5dc7;
-      display: inline-block;
-      padding-bottom: 8px;
-      font-weight: 700;
+      color:#6743b8; text-align:center; margin-bottom:30px;
+      border-bottom:3px solid #7a5dc7; display:inline-block; padding-bottom:8px; font-weight:700;
     }
     .balance {
-      background: #e0d7ff;
-      padding: 1rem 2rem;
-      border-radius: 8px;
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 30px;
-      color: #4a2cbd;
-      text-align: center;
-      user-select: text;
+      background:#e0d7ff; padding:1rem 2rem; border-radius:8px;
+      font-size:1.5rem; font-weight:700; margin-bottom:30px; color:#4a2cbd; text-align:center;
     }
-    .transactions { overflow-x: auto; margin-top: 10px; }
-    .transactions table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      font-size: 15px;
-      color: #4a4175;
-      box-shadow: 0 2px 8px rgba(161, 133, 207, 0.1);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .transactions thead tr {
-      background-color: #7a5dc7;
-      color: #fff;
-      font-weight: 600;
-    }
-    .transactions th, .transactions td {
-      padding: 12px 20px;
-      border-bottom: 1px solid #9b8bc3;
-      text-align: left;
-    }
-    .transactions tbody tr:last-child td { border-bottom: none; }
-    .transactions tbody tr:hover { background-color: #ede7ff; }
-    .no-transactions { text-align: center; font-style: italic; color: #888; padding: 1rem; }
+    .transactions { overflow-x:auto; margin-top:10px; }
+    .transactions table { width:100%; border-collapse:separate; border-spacing:0; font-size:15px; color:#4a4175;
+      box-shadow:0 2px 8px rgba(161,133,207,.1); border-radius:8px; overflow:hidden; }
+    thead tr { background:#7a5dc7; color:#fff; font-weight:600; }
+    th, td { padding:12px 20px; border-bottom:1px solid #9b8bc3; text-align:left; }
+    tbody tr:last-child td { border-bottom:none; }
+    tbody tr:hover { background:#ede7ff; }
+    .no-transactions { text-align:center; font-style:italic; color:#888; padding:1rem; }
+
+    .chip { display:inline-block; padding:2px 8px; border-radius:12px; font-weight:600; font-size:12px; }
+    .chip.deposit { background:#dff5e1; color:#1a7f37; }
+    .chip.withdrawal { background:#ffe7d9; color:#b35300; }
+
+    .status { font-weight:600; text-transform:capitalize; }
+    .status.approved { color:#1a7f37; }
+    .status.pending  { color:#a67c00; }
+    .status.rejected { color:#b00020; }
   </style>
 </head>
 <body>
 
 <header>
   Pagla Clickers
-  <button class="hamburger"
-          id="menuBtn"
-          type="button"
-          aria-label="Toggle navigation menu"
-          aria-controls="navList"
-          aria-expanded="false">☰</button>
+  <button class="hamburger" id="menuBtn" type="button" aria-label="Toggle navigation menu" aria-controls="navList" aria-expanded="false">☰</button>
 </header>
 
 <nav>
@@ -80,7 +54,7 @@
     <li><a href="dashboard.html">Dashboard</a></li>
     <li><a href="postjob.html">Post Job</a></li>
     <li><a href="jobs.html">My Jobs</a></li>
-    <li><a href="referral.html">Referral</a></li> <!-- fixed typo -->
+    <li><a href="referral.html">Referral</a></li>
     <li><a href="deposit.html">Deposit</a></li>
     <li><a href="wallet.html" aria-current="page">Wallet</a></li>
     <li><a href="withdrawal.html">Withdraw Money</a></li>
@@ -88,7 +62,7 @@
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="support.html">Support</a></li>
     <li style="display:flex; justify-content:center;">
-      <button id="logoutBtn" type="button" class="logout-btn">Logout</button> <!-- added type="button" -->
+      <button id="logoutBtn" type="button" class="logout-btn">Logout</button>
     </li>
   </ul>
 </nav>
@@ -104,7 +78,7 @@
     <table id="transactionsTable" aria-label="Wallet transactions">
       <thead>
         <tr>
-          <th scope="col">Date</th> <!-- added scope -->
+          <th scope="col">Date</th>
           <th scope="col">Type</th>
           <th scope="col">Amount</th>
           <th scope="col">Status</th>
@@ -126,15 +100,12 @@
     const btn = document.getElementById('menuBtn');
     const nav = document.getElementById('navList');
     if (!btn || !nav) return;
-
     function openMenu(){ nav.classList.add('active'); btn.setAttribute('aria-expanded','true'); document.body.classList.add('nav-open'); }
     function closeMenu(){ nav.classList.remove('active'); btn.setAttribute('aria-expanded','false'); document.body.classList.remove('nav-open'); }
     function toggleMenu(){ nav.classList.contains('active') ? closeMenu() : openMenu(); }
-
     btn.addEventListener('click', toggleMenu);
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
     nav.addEventListener('click', e => { if (e.target.closest('a')) closeMenu(); });
-
     let lastW = innerWidth;
     addEventListener('resize', () => { const w = innerWidth; if (w !== lastW && w > 768) closeMenu(); lastW = w; });
   })();
@@ -143,7 +114,9 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  import {
+    getFirestore, doc, getDoc, collection, query, where, orderBy, getDocs
+  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -172,6 +145,7 @@
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = "login.html"; return; }
 
+    // Balance from /wallets/{uid}
     try {
       const walletDoc = await getDoc(doc(db, "wallets", user.uid));
       const bal = walletDoc.exists() ? (walletDoc.data()?.balance ?? 0) : 0;
@@ -180,24 +154,61 @@
       balanceEl.textContent = fmt(0);
     }
 
-    await loadTransactions(user.uid);
+    loadTransactionsCombined(user.uid);
   });
 
-  async function loadTransactions(uid) {
+  async function loadTransactionsCombined(uid) {
     txBody.innerHTML = `<tr><td colspan="4" class="no-transactions">Loading…</td></tr>`;
     try {
-      const txRef = collection(db, "wallets", uid, "transactions");
-      const q = query(txRef, orderBy("date", "desc"));
-      const snap = await getDocs(q);
+      // 1) Deposits
+      const depQ = query(
+        collection(db, "deposits"),
+        where("userId", "==", uid),
+        orderBy("createdAt", "desc")
+      );
+      const depSnap = await getDocs(depQ);
+      const deposits = depSnap.docs.map(d => {
+        const x = d.data() || {};
+        return {
+          ts: x.createdAt?.toDate ? x.createdAt.toDate() : null,
+          type: "Deposit",
+          amount: Number(x.amount || 0),
+          status: (x.status || "pending").toString().toLowerCase()
+        };
+      });
 
-      if (snap.empty) {
+      // 2) Withdrawals (top-level: withdrawalRequests)
+      const wdrQ = query(
+        collection(db, "withdrawalRequests"),
+        where("userId", "==", uid),
+        orderBy("requestedAt", "desc")
+      );
+      const wdrSnap = await getDocs(wdrQ);
+      const withdrawals = wdrSnap.docs.map(d => {
+        const x = d.data() || {};
+        return {
+          ts: x.requestedAt?.toDate ? x.requestedAt.toDate() : null,
+          type: "Withdrawal",
+          amount: Number(x.amount || 0),
+          status: (x.status || "pending").toString().toLowerCase()
+        };
+      });
+
+      // Merge + sort by date desc
+      const rows = [...deposits, ...withdrawals].sort((a,b) => {
+        const ta = a.ts ? a.ts.getTime() : 0;
+        const tb = b.ts ? b.ts.getTime() : 0;
+        return tb - ta;
+      });
+
+      if (rows.length === 0) {
         txBody.innerHTML = `<tr><td colspan="4" class="no-transactions">No transactions yet.</td></tr>`;
         return;
       }
 
+      // Render
       txBody.innerHTML = "";
-      snap.forEach(d => {
-        const tx = d.data() || {};
+      for (const r of rows) {
         const tr = document.createElement("tr");
 
         const tdDate = document.createElement("td");
@@ -205,14 +216,14 @@
         const tdAmt  = document.createElement("td");
         const tdStat = document.createElement("td");
 
-        tdDate.textContent = tx.date?.toDate?.() ? tx.date.toDate().toLocaleString() : "N/A";
-        tdType.textContent = tx.type || "";
-        tdAmt.textContent  = fmt(tx.amount);
-        tdStat.textContent = (tx.status || "").toString();
+        tdDate.textContent = r.ts ? r.ts.toLocaleString() : "-";
+        tdType.innerHTML = `<span class="chip ${r.type.toLowerCase()}">${r.type}</span>`;
+        tdAmt.textContent  = fmt(r.amount);
+        tdStat.innerHTML   = `<span class="status ${r.status}">${r.status}</span>`;
 
         tr.append(tdDate, tdType, tdAmt, tdStat);
         txBody.appendChild(tr);
-      });
+      }
     } catch (err) {
       txBody.innerHTML = `<tr><td colspan="4" class="no-transactions" style="color:#c00;">Error loading transactions</td></tr>`;
       console.error(err);
