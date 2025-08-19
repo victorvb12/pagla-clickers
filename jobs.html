@@ -2,101 +2,265 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Approve Test</title>
+  <title>Pagla Clickers - My Jobs (Approve)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    .submission-box {
-      border: 1px solid #ccc;
-      padding: 15px;
-      margin: 20px 0;
-      border-radius: 8px;
-      width: 350px;
-    }
-    .approve-btn {
-      background: #28a745;
-      color: white;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .approve-btn:disabled {
-      background: #6c757d;
-      cursor: not-allowed;
-    }
+    /* small touches that align with your existing look */
+    .tabs { display:flex; border-bottom:2px solid #7a5dc7; margin-bottom:20px; }
+    .tab { padding:10px 20px; cursor:pointer; font-weight:700; color:#7a5dc7; border:2px solid transparent; border-bottom:none; user-select:none; outline:none; }
+    .tab.active { background:#7a5dc7; color:#fff; border-radius:8px 8px 0 0; border-color:#7a5dc7; border-bottom:2px solid #fff; }
+    .tab-content { display:none; } .tab-content.active { display:block; }
+
+    .job-card { background:#fff; border-radius:10px; padding:15px 20px; margin-bottom:15px; box-shadow:0 0 10px rgba(138,115,202,.2); user-select:text; }
+    .job-card h3 { margin:0 0 8px 0; color:#7a5dc7; font-weight:700; font-size:1.2rem; }
+    .job-info { font-weight:600; color:#444; font-size:1rem; margin:3px 0; }
+    .job-actions { margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; }
+    .btn-submissions { background:#007bff; color:#fff; padding:8px 14px; font-weight:700; border-radius:6px; border:none; cursor:pointer; }
+    .btn-submissions:hover { background:#0056b3; }
+
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.7); display:none; justify-content:center; align-items:center; z-index:3000; overflow-y:auto; padding:20px; }
+    .modal-overlay.open { display:flex; }
+    .modal-content { background:#fff; border-radius:12px; max-width:640px; width:100%; padding:24px; box-sizing:border-box; max-height:90vh; overflow-y:auto; position:relative; }
+    .closeBtn { position:absolute; top:12px; right:12px; background:#dc3545; color:#fff; font-weight:700; border:none; border-radius:6px; padding:6px 14px; cursor:pointer; }
+    .submission-list { max-height:420px; overflow-y:auto; border:1px solid #7a5dc7; border-radius:8px; padding:10px; background:#e9e9ff; }
+    .submission-item { padding:10px 12px; border-bottom:1px solid #cbd; }
+    .submission-item:last-child { border-bottom:none; }
+    .submission-item .approve { margin-top:10px; background:#28a745; color:#fff; border:none; border-radius:6px; padding:8px 12px; font-weight:700; cursor:pointer; }
+    .submission-item .approve:disabled { background:#6c757d; cursor:default; }
   </style>
 </head>
 <body>
 
-  <h2>Test Approve Submission</h2>
+  <header>
+    Pagla Clickers
+    <button class="hamburger" id="menuBtn" type="button" aria-label="Toggle menu" aria-controls="navList" aria-expanded="false">☰</button>
+  </header>
 
-  <div class="submission-box">
-    <p><strong>User:</strong> rakibbaaa</p>
-    <p><strong>Proof 1:</strong> Hello</p>
-    <p><strong>Proof 2:</strong> Gooo</p>
-    <button id="approveBtn" class="approve-btn">Approve</button>
+  <nav>
+    <ul class="nav-links" id="navList">
+      <li><a href="about.html">About</a></li>
+      <li><a href="notifications.html">Notifications</a></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="postjob.html">Post Job</a></li>
+      <li><a href="jobs.html" aria-current="page">My Jobs</a></li>
+      <li><a href="referral.html">Referral</a></li>
+      <li><a href="deposit.html">Deposit</a></li>
+      <li><a href="wallet.html">Wallet</a></li>
+      <li><a href="withdrawal.html">Withdraw Money</a></li>
+      <li><a href="terms.html">Terms</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="support.html">Support</a></li>
+      <li style="display:flex; justify-content:center;">
+        <button id="logoutBtn" type="button" class="logout-btn">Logout</button>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="blue-strip-below-nav"></div>
+
+  <div class="container">
+    <div class="tabs" role="tablist" aria-label="Job categories">
+      <div class="tab active" role="tab" tabindex="0" aria-selected="true" aria-controls="myJobsTab" id="myJobsTabBtn">My Jobs</div>
+      <div class="tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="completedJobsTab" id="completedJobsTabBtn">Completed Jobs</div>
+    </div>
+
+    <section id="myJobsTab" class="tab-content active" role="tabpanel" aria-labelledby="myJobsTabBtn">
+      <p id="myJobsLoading">Loading your jobs...</p>
+      <div id="myJobsList"></div>
+    </section>
+
+    <section id="completedJobsTab" class="tab-content" role="tabpanel" aria-labelledby="completedJobsTabBtn" hidden>
+      <p>No completed jobs to show.</p>
+      <div id="completedJobsList"></div>
+    </section>
   </div>
 
+  <!-- Submissions Modal -->
+  <div id="submissionsModal" role="dialog" aria-modal="true" aria-labelledby="subsTitle" class="modal-overlay" data-modal>
+    <div class="modal-content" role="document">
+      <button class="closeBtn" data-close aria-label="Close modal">Close</button>
+      <h3 id="subsTitle">Job Submissions</h3>
+      <div id="submissionList" class="submission-list"></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Pagla Clickers. All rights reserved.</p>
+  </footer>
+
+  <!-- nav + tabs + modal helpers -->
+  <script>
+    (function () {
+      const btn = document.getElementById('menuBtn');
+      const nav = document.getElementById('navList');
+      if (!btn || !nav) return;
+      function openMenu(){ nav.classList.add('active'); btn.setAttribute('aria-expanded','true'); document.body.classList.add('nav-open'); }
+      function closeMenu(){ nav.classList.remove('active'); btn.setAttribute('aria-expanded','false'); document.body.classList.remove('nav-open'); }
+      btn.addEventListener('click', () => nav.classList.contains('active') ? closeMenu() : openMenu());
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+      nav.addEventListener('click', e => { if (e.target.closest('a')) closeMenu(); });
+    })();
+
+    (function(){
+      const tabs = document.querySelectorAll('.tab');
+      function activate(tab){
+        tabs.forEach(t => {
+          t.classList.remove('active'); t.setAttribute('aria-selected','false'); t.setAttribute('tabindex','-1');
+          const p = document.getElementById(t.getAttribute('aria-controls'));
+          p.classList.remove('active'); p.setAttribute('hidden','');
+        });
+        tab.classList.add('active'); tab.setAttribute('aria-selected','true'); tab.setAttribute('tabindex','0'); tab.focus();
+        const panel = document.getElementById(tab.getAttribute('aria-controls'));
+        panel.classList.add('active'); panel.removeAttribute('hidden');
+      }
+      tabs.forEach(t => {
+        t.addEventListener('click', () => activate(t));
+        t.addEventListener('keydown', e => {
+          if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+            const arr=[...tabs]; let i=arr.indexOf(document.activeElement);
+            i = e.key==='ArrowRight' ? (i+1)%arr.length : (i-1+arr.length)%arr.length;
+            activate(arr[i]);
+          }
+        });
+      });
+    })();
+
+    (function(){
+      const modal = document.getElementById('submissionsModal');
+      function open(){ modal.classList.add('open'); document.body.style.overflow='hidden'; }
+      function close(){ modal.classList.remove('open'); document.body.style.overflow=''; }
+      modal.addEventListener('click', e => { if (e.target === modal || e.target.hasAttribute('data-close')) close(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+      window.__openSubs = open; window.__closeSubs = close;
+    })();
+  </script>
+
+  <!-- main logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
     import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-functions.js";
 
-    // 🔹 Your Firebase config
+    // Firebase config (yours)
     const firebaseConfig = {
       apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
       authDomain: "pagla-b1c17.firebaseapp.com",
-      projectId: "pagla-b1c17",
+      projectId: "pagla-b1c17"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
+    const functions = getFunctions(app, "us-central1"); // change if your function is in another region
+    const approveFn = httpsCallable(functions, "approveSubmission"); // callable CF
 
-    // 🔹 Use the same region you deployed the function to (default: us-central1)
-    const functions = getFunctions(app, "us-central1");
-    const approveFn = httpsCallable(functions, "approveSubmission");
+    const logoutBtn = document.getElementById('logoutBtn');
+    const myJobsList = document.getElementById('myJobsList');
+    const myJobsLoading = document.getElementById('myJobsLoading');
+    const submissionList = document.getElementById('submissionList');
 
-    const approveBtn = document.getElementById("approveBtn");
+    let currentUser = null;
 
-    // Auto-login test user (⚠️ replace with a real test account)
-    async function loginTestUser() {
+    logoutBtn.addEventListener('click', async () => {
+      try { await signOut(auth); location.href = "login.html"; } catch(e){ alert(e.message || e); }
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { location.href = "login.html"; return; }
+      currentUser = user;
+      await loadMyJobs();
+    });
+
+    async function loadMyJobs() {
+      myJobsLoading.style.display = 'block';
+      myJobsList.innerHTML = '';
       try {
-        await signInWithEmailAndPassword(auth, "test@example.com", "password123");
-        console.log("Signed in test user");
+        const qRef = query(collection(db, "jobs"), where("userId", "==", currentUser.uid));
+        const snap = await getDocs(qRef);
+        if (snap.empty) {
+          myJobsList.innerHTML = "<p>No jobs found.</p>";
+          return;
+        }
+        snap.forEach(docSnap => {
+          const j = { id: docSnap.id, ...docSnap.data() };
+          const card = document.createElement('div');
+          card.className = 'job-card';
+          card.innerHTML = `
+            <h3>${escapeHtml(j.title || 'Untitled Job')}</h3>
+            <div class="job-info">Category: ${escapeHtml(j.category || 'N/A')}</div>
+            <div class="job-info">Reward: ৳${Number(j.reward || 0).toFixed(2)}</div>
+            <div class="job-info">Slots: ${Number(j.slots || 0)}</div>
+            <div class="job-actions">
+              <button class="btn-submissions" type="button">View Submissions</button>
+            </div>
+          `;
+          card.querySelector('.btn-submissions').addEventListener('click', () => showSubmissions(j.id, Number(j.reward || 0)));
+          myJobsList.appendChild(card);
+        });
       } catch (e) {
-        console.error("Login failed", e);
+        myJobsList.innerHTML = `<p style="color:red">Failed to load: ${escapeHtml(e.message)}</p>`;
+      } finally {
+        myJobsLoading.style.display = 'none';
       }
     }
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("Logged in as:", user.email);
-      } else {
-        loginTestUser();
-      }
-    });
+    async function showSubmissions(jobId, reward) {
+      submissionList.innerHTML = "Loading submissions…";
+      window.__openSubs();
 
-    approveBtn.addEventListener("click", async () => {
-      approveBtn.disabled = true;
-      approveBtn.textContent = "Approving...";
       try {
-        const res = await approveFn({
-          jobId: "job123",          // ⚠️ replace with real jobId
-          submissionId: "sub123",   // ⚠️ replace with real submissionId
-          reward: 10
-        });
-        console.log("Function result:", res.data);
-        alert("✅ Approved and wallet credited!");
-        approveBtn.textContent = "Approved";
-      } catch (e) {
-        console.error("Approve error:", e);
-        alert("❌ Failed: " + (e.message || e));
-        approveBtn.disabled = false;
-        approveBtn.textContent = "Approve";
-      }
-    });
-  </script>
+        const subsSnap = await getDocs(collection(db, "jobs", jobId, "submissions"));
+        if (subsSnap.empty) {
+          submissionList.innerHTML = "<p>No submissions for this job.</p>";
+          return;
+        }
 
+        submissionList.innerHTML = "";
+        subsSnap.forEach(snap => {
+          const s = snap.data() || {};
+          const item = document.createElement('div');
+          item.className = 'submission-item';
+
+          const when = s.submittedAt?.toDate ? s.submittedAt.toDate().toLocaleString() : "";
+          item.innerHTML = `
+            <p><strong>User:</strong> ${escapeHtml(s.userName || s.userEmail || s.userId || 'Unknown')}</p>
+            <p><strong>Submitted:</strong> ${escapeHtml(when)}</p>
+            ${s.proof1 ? `<div><strong>Proof 1:</strong> ${escapeHtml(String(s.proof1))}</div>` : ""}
+            ${s.proof2 ? `<div><strong>Proof 2:</strong> ${escapeHtml(String(s.proof2))}</div>` : ""}
+            ${s.proof3 ? `<div><strong>Proof 3:</strong> ${escapeHtml(String(s.proof3))}</div>` : ""}
+            ${s.proof4 ? `<div><strong>Proof 4:</strong> ${escapeHtml(String(s.proof4))}</div>` : ""}
+            <button class="approve" type="button">${s.status==='approved' ? '✅ Approved' : 'Approve'}</button>
+          `;
+
+          const btn = item.querySelector('.approve');
+          if (s.status === 'approved') btn.disabled = true;
+
+          btn.addEventListener('click', async () => {
+            btn.disabled = true; btn.textContent = "Approving…";
+            try {
+              // call server function (it will verify job owner and credit wallet)
+              await approveFn({ jobId, submissionId: snap.id, reward: Number(reward || 0) });
+              btn.textContent = "✅ Approved";
+            } catch (e) {
+              alert("Failed: " + (e?.message || e));
+              btn.disabled = false; btn.textContent = "Approve";
+            }
+          });
+
+          submissionList.appendChild(item);
+        });
+      } catch (e) {
+        submissionList.innerHTML = `<p style="color:red">Error: ${escapeHtml(e.message)}</p>`;
+      }
+    }
+
+    function escapeHtml(str){
+      const d=document.createElement('div'); d.textContent=String(str ?? ''); return d.innerHTML;
+    }
+  </script>
 </body>
 </html>
