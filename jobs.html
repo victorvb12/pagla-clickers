@@ -424,14 +424,8 @@
           // Update job completion
           tx.update(jobRef, { completed: newCompleted });
 
-          // Update wallet balance
-          const currentBalance = wallSnap.exists() ? (Number(wallSnap.data().balance || 0)) : 0;
-          const newBalance = currentBalance + Number(reward || 0);
-          if (wallSnap.exists()) {
-            tx.update(walletRef, { balance: newBalance });
-          } else {
-            tx.set(walletRef, { balance: newBalance });
-          }
+// Update wallet balance
+tx.set(walletRef, { balance: increment(Number(reward || 0)) }, { merge: true });
 
           // Mark submission approved
           tx.update(submissionRef, { status: 'approved', approvedAt: serverTimestamp() });
@@ -460,3 +454,4 @@
   </script>
 </body>
 </html>
+
