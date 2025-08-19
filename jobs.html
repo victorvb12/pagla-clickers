@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Approve Sample</title>
+  <meta charset="UTF-8" />
+  <title>Approve Test</title>
   <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
     .submission-box {
       border: 1px solid #ccc;
       padding: 15px;
-      margin: 20px;
+      margin: 20px 0;
       border-radius: 8px;
-      width: 300px;
-      font-family: Arial, sans-serif;
+      width: 350px;
     }
     .approve-btn {
       background: #28a745;
@@ -29,6 +29,8 @@
 </head>
 <body>
 
+  <h2>Test Approve Submission</h2>
+
   <div class="submission-box">
     <p><strong>User:</strong> rakibbaaa</p>
     <p><strong>Proof 1:</strong> Hello</p>
@@ -38,37 +40,58 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
     import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-functions.js";
 
     // 🔹 Your Firebase config
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
+      apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
+      authDomain: "pagla-b1c17.firebaseapp.com",
+      projectId: "pagla-b1c17",
     };
 
     const app = initializeApp(firebaseConfig);
-    const functions = getFunctions(app);
+    const auth = getAuth(app);
 
-    // Cloud Function reference
+    // 🔹 Use the same region you deployed the function to (default: us-central1)
+    const functions = getFunctions(app, "us-central1");
     const approveFn = httpsCallable(functions, "approveSubmission");
 
     const approveBtn = document.getElementById("approveBtn");
 
+    // Auto-login test user (⚠️ replace with a real test account)
+    async function loginTestUser() {
+      try {
+        await signInWithEmailAndPassword(auth, "test@example.com", "password123");
+        console.log("Signed in test user");
+      } catch (e) {
+        console.error("Login failed", e);
+      }
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("Logged in as:", user.email);
+      } else {
+        loginTestUser();
+      }
+    });
+
     approveBtn.addEventListener("click", async () => {
       approveBtn.disabled = true;
       approveBtn.textContent = "Approving...";
-
       try {
-        const result = await approveFn({
-          jobId: "job123",
-          submissionId: "sub123",
+        const res = await approveFn({
+          jobId: "job123",          // ⚠️ replace with real jobId
+          submissionId: "sub123",   // ⚠️ replace with real submissionId
           reward: 10
         });
-        alert("✅ Approved! Wallet credited.");
+        console.log("Function result:", res.data);
+        alert("✅ Approved and wallet credited!");
         approveBtn.textContent = "Approved";
       } catch (e) {
-        alert("❌ Failed: " + e.message);
+        console.error("Approve error:", e);
+        alert("❌ Failed: " + (e.message || e));
         approveBtn.disabled = false;
         approveBtn.textContent = "Approve";
       }
