@@ -210,10 +210,11 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-    import {
-      getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc, runTransaction,
-      serverTimestamp, addDoc, getDoc
-    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+import {
+  getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc, runTransaction,
+  serverTimestamp, addDoc, getDoc, increment
+} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
 
     const firebaseConfig = {
       apiKey: "AIzaSyAg-6k48R9c7ZK0xGe0BtNOa-5lF5JfmdI",
@@ -454,4 +455,5 @@ tx.set(walletRef, { balance: increment(Number(reward || 0)) }, { merge: true });
   </script>
 </body>
 </html>
+
 
